@@ -4,7 +4,10 @@
 >
 > Web definitions
 >
-> PowerPC is a RISC instruction set architecture created by the 1991 Apple–IBM–Motorola alliance, known as AIM. PowerPC, as an evolving instruction set, has since 2006 been renamed Power ISA but lives on as a legacy trademark for some implementations of Power Architecture based processors. ...
+> PowerPC is a RISC instruction set architecture created by the 1991
+> Apple–IBM–Motorola alliance, known as AIM. PowerPC, as an evolving instruction
+> set, has since 2006 been renamed Power ISA but lives on as a legacy trademark
+> for some implementations of Power Architecture based processors. ...
 >
 > http://en.wikipedia.org/wiki/PPC32
 

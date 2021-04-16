@@ -4,7 +4,10 @@
 >
 > Web definitions
 >
-> PHY is an abbreviation for the physical layer of the OSI model. An instantiation of PHY connects a link layer device to a physical medium such as an optical fiber or copper cable. A PHY device typically includes a Physical Coding Sublayer and a Physical Medium Dependent layer. ...
+> PHY is an abbreviation for the physical layer of the OSI model. An
+> instantiation of PHY connects a link layer device to a physical medium such as
+> an optical fiber or copper cable. A PHY device typically includes a Physical
+> Coding Sublayer and a Physical Medium Dependent layer. ...
 >
 > http://en.wikipedia.org/wiki/PHY_(chip)
 
