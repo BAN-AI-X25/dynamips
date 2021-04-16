@@ -8,7 +8,9 @@
 >
 > noun: Ethernet; plural noun: Ethernets
 >
-> 1. a system for connecting a number of computer systems to form a local area network, with protocols to control the passing of information and to avoid simultaneous transmission by two or more systems.
+> 1. a system for connecting a number of computer systems to form a local area
+>    network, with protocols to control the passing of information and to avoid
+>    simultaneous transmission by two or more systems.
 
 https://www.google.com/search?q=define+ethernet
 

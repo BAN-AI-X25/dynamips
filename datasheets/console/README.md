@@ -4,7 +4,8 @@
 >
 > Web definitions
 >
-> A component of a router or switch through which commands are entered into a host.
+> A component of a router or switch through which commands are entered into a
+> host.
 >
 > http://www.proprofs.com/mwiki/index.php/Ultimate_Cisco_CCNA_INTRO_Glossary_&_Acr
 

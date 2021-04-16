@@ -6,9 +6,12 @@
 >
 > noun COMPUTING
 >
-> noun: motherboard; plural noun: motherboards; noun: mainboard; plural noun: mainboards
+> noun: motherboard; plural noun: motherboards; noun: mainboard; plural noun:
+> mainboards
 >
-> 1. a printed circuit board containing the principal components of a computer or other device, with connectors into which other circuit boards can be slotted.
+> 1. a printed circuit board containing the principal components of a computer
+>    or other device, with connectors into which other circuit boards can be
+>    slotted.
 
 https://www.google.com/search?q=define+motherboard
 
