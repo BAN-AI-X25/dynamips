@@ -1,19 +1,18 @@
-cisco
-=====
+# cisco
 
 > cisco ios
 >
 > Web definitions
 >
-> Cisco IOS is software used on most Cisco Systems routers and current Cisco network switches. IOS is a package of routing, switching, internetworking and telecommunications functions integrated into a multitasking operating system.
+> Cisco IOS is software used on most Cisco Systems routers and current Cisco
+> network switches. IOS is a package of routing, switching, internetworking and
+> telecommunications functions integrated into a multitasking operating system.
 >
 > http://en.wikipedia.org/wiki/Cisco_IOS
 
 https://www.google.com/search?q=define+cisco+ios
 
-
-ciscoiosprogrammguide1999.pdf
------------------------------
+## ciscoiosprogrammguide1999.pdf
 
 ```
 Cisco IOS Programmer’s Guide/Architecture Reference
