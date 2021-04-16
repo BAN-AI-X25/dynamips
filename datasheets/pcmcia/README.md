@@ -1,5 +1,4 @@
-pcmcia
-======
+# pcmcia
 
 > pcmcia card
 >
@@ -11,9 +10,7 @@ pcmcia
 
 https://www.google.com/search?q=define+pcmcia+card
 
-
-PD6729.pdf
-----------
+## PD6729.pdf
 
 ```
 PD6729
@@ -24,11 +21,10 @@ May 2001
 http://download.intel.com/design/interconnect/datashts/24937201.pdf
 
 Related code:
-* dev_clpd6729.c; device.h
 
+- dev_clpd6729.c; device.h
 
-pd6729db.pdf
-------------
+## pd6729db.pdf
 
 ```
 CL-PD6729

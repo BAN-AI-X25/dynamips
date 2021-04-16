@@ -1,5 +1,4 @@
-console
-=======
+# console
 
 > console port
 >
@@ -11,9 +10,7 @@ console
 
 https://www.google.com/search?q=define+console+port
 
-
-NS16552V.pdf
-------------
+## NS16552V.pdf
 
 ```
 PC16552C/NS16C552 Dual Universal Asynchronous Receiver/Transmitter with FIFOs
@@ -23,4 +20,5 @@ October 1990
 http://www.digchip.com/datasheets/parts/datasheet/321/NS16552V.php
 
 Related code:
-* dev_ns16552.c; dev_ns16552.h
+
+- dev_ns16552.c; dev_ns16552.h

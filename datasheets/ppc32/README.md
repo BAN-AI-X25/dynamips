@@ -1,5 +1,4 @@
-ppc32
-=====
+# ppc32
 
 > ppc32
 >
@@ -11,9 +10,7 @@ ppc32
 
 https://www.google.com/search?q=define+ppc32
 
-
-6xx_pem.pdf
-------------
+## 6xx_pem.pdf
 
 ```
 PowerPC™ Microprocessor Family: The Programming Environments for 32-Bit Microprocessors
@@ -24,4 +21,5 @@ G522-0290-01
 https://www-01.ibm.com/chips/techlib/techlib.nsf/techdocs/852569B20050FF778525699600719DF2
 
 Related code:
-* ppc32*.c; ppc32*.h
+
+- ppc32*.c; ppc32*.h

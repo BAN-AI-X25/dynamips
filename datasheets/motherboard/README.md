@@ -1,5 +1,4 @@
-motherboard
-===========
+# motherboard
 
 > moth·er·board
 >
@@ -13,9 +12,7 @@ motherboard
 
 https://www.google.com/search?q=define+motherboard
 
-
-MPC860MU.pdf
-------------
+## MPC860MU.pdf
 
 ```
 MPC860 PowerQUICC™ Family User’s Manual
@@ -27,5 +24,6 @@ Rev. 3
 http://cache.freescale.com/files/netcomm/doc/ref_manual/MPC860UM.pdf
 
 Related code:
-* dev_mpc860.c; dev_mpc860.h
-* https://github.com/torvalds/linux/blob/master/arch/powerpc/include/asm/8xx_immap.h
+
+- dev_mpc860.c; dev_mpc860.h
+- https://github.com/torvalds/linux/blob/master/arch/powerpc/include/asm/8xx_immap.h

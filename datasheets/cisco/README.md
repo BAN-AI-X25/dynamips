@@ -1,5 +1,4 @@
-cisco
-=====
+# cisco
 
 > cisco ios
 >
@@ -11,9 +10,7 @@ cisco
 
 https://www.google.com/search?q=define+cisco+ios
 
-
-ciscoiosprogrammguide1999.pdf
------------------------------
+## ciscoiosprogrammguide1999.pdf
 
 ```
 Cisco IOS Programmer’s Guide/Architecture Reference
