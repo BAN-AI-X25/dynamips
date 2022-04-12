@@ -54,7 +54,7 @@ int rommon_var_update_file(struct rommon_var_list *rvl)
    for(var=rvl->var_list;var;var=var->next)
       fprintf(fd,"%s=%s\n",var->name,var->value ? var->value : "");
 
-   fclose(fd);
+//   fclose(fd);
    return(0);
 }
 
