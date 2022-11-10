@@ -78,7 +78,7 @@ struct mips64_insn_jump {
 };
 
 /* Get the JIT instruction pointer in a translated block */
-static forced_inline 
+static forced_inline
 u_char *mips64_jit_tcb_get_host_ptr(mips64_jit_tcb_t *b,m_uint64_t vaddr)
 {
    m_uint32_t offset;
@@ -88,7 +88,7 @@ u_char *mips64_jit_tcb_get_host_ptr(mips64_jit_tcb_t *b,m_uint64_t vaddr)
 }
 
 /* Check if the specified address belongs to the specified block */
-static forced_inline 
+static forced_inline
 int mips64_jit_tcb_local_addr(mips64_jit_tcb_t *block,m_uint64_t vaddr,
                               u_char **jit_addr)
 {
@@ -101,7 +101,7 @@ int mips64_jit_tcb_local_addr(mips64_jit_tcb_t *block,m_uint64_t vaddr,
 }
 
 /* Check if PC register matches the compiled block virtual address */
-static forced_inline 
+static forced_inline
 int mips64_jit_tcb_match(cpu_mips_t *cpu,mips64_jit_tcb_t *block)
 {
    m_uint64_t vpage;
@@ -168,8 +168,8 @@ void mips64_emit_breakpoint(mips64_jit_tcb_t *b);
 /* Emit unhandled instruction code */
 int mips64_emit_invalid_delay_slot(mips64_jit_tcb_t *b);
 
-/* 
- * Increment count register and trigger the timer IRQ if value in compare 
+/*
+ * Increment count register and trigger the timer IRQ if value in compare
  * register is the same.
  */
 void mips64_inc_cp0_count_reg(mips64_jit_tcb_t *b);

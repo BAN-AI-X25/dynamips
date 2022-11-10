@@ -100,7 +100,7 @@ struct cpu_gen {
    void (*add_breakpoint)(cpu_gen_t *cpu,m_uint64_t addr);
    void (*remove_breakpoint)(cpu_gen_t *cpu,m_uint64_t addr);
    void (*set_idle_pc)(cpu_gen_t *cpu,m_uint64_t addr);
-   void (*get_idling_pc)(cpu_gen_t *cpu);   
+   void (*get_idling_pc)(cpu_gen_t *cpu);
    void (*mts_rebuild)(cpu_gen_t *cpu);
    void (*mts_show_stats)(cpu_gen_t *cpu);
 
@@ -117,10 +117,10 @@ struct cpu_gen {
    u_int jit_op_array_size;
    jit_op_t **jit_op_array;
    jit_op_t **jit_op_current;
-   
+
    /* Translation group ID and TCB descriptor local list */
    int tsg;
-   cpu_tc_t *tc_local_list; 
+   cpu_tc_t *tc_local_list;
 
    /* Current and free lists of TBs */
    cpu_tb_t *tb_list,*tb_free_list;

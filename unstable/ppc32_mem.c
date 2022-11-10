@@ -36,7 +36,7 @@ void ppc32_access_special(cpu_ppc_t *cpu,m_uint32_t vaddr,u_int cid,
             cpu_log(cpu->gen,
                     "MTS","MMU exception for address 0x%8.8x at ia=0x%8.8x "
                     "(%s access, size=%u)\n",
-                    vaddr,cpu->ia,(op_type == MTS_READ) ? 
+                    vaddr,cpu->ia,(op_type == MTS_READ) ?
                     "read":"write",op_size);
             //ppc32_dump_regs(cpu->gen);
 #if MEMLOG_ENABLE
@@ -56,7 +56,7 @@ void ppc32_access_special(cpu_ppc_t *cpu,m_uint32_t vaddr,u_int cid,
                ppc32_trigger_exception(cpu,PPC32_EXC_ISI);
                cpu_exec_loop_enter(cpu->gen);
             }
-         }        
+         }
          break;
 
       case MTS_ACC_U:
@@ -131,7 +131,7 @@ void ppc32_mem_show_stats(cpu_gen_t *gen_cpu)
 
 #if DEBUG_MTS_MAP_VIRT
    printf("Instruction cache:\n");
-   
+
    /* Valid hash entries for Instruction Cache */
    for(count=0,i=0;i<MTS32_HASH_SIZE;i++) {
       entry = &cpu->mts_cache[PPC32_MTS_ICACHE][i];
@@ -147,7 +147,7 @@ void ppc32_mem_show_stats(cpu_gen_t *gen_cpu)
 
 
    printf("Data cache:\n");
-   
+
    /* Valid hash entries for Instruction Cache */
    for(count=0,i=0;i<MTS32_HASH_SIZE;i++) {
       entry = &cpu->mts_cache[PPC32_MTS_DCACHE][i];
@@ -172,13 +172,13 @@ void ppc32_mem_show_stats(cpu_gen_t *gen_cpu)
 void ppc32_mem_invalidate_cache(cpu_ppc_t *cpu)
 {
    size_t len;
- 
+
    len = MTS32_HASH_SIZE * sizeof(mts32_entry_t);
    memset(cpu->mts_cache[PPC32_MTS_ICACHE],0xFF,len);
    memset(cpu->mts_cache[PPC32_MTS_DCACHE],0xFF,len);
 }
 
-/* 
+/*
  * MTS mapping.
  *
  * It is NOT inlined since it triggers a GCC bug on my config (x86, GCC 3.3.5)
@@ -238,7 +238,7 @@ static forced_inline int ppc32_bat_lookup(cpu_ppc_t *cpu,m_uint32_t vaddr,
 {
    m_uint32_t bepi,mask,bl,pr,ubat;
    int i;
-   
+
    pr = (cpu->msr & PPC32_MSR_PR) >> PPC32_MSR_PR_SHIFT;
    pr = ((~pr << 1) | pr) & 0x03;
 
@@ -250,7 +250,7 @@ static forced_inline int ppc32_bat_lookup(cpu_ppc_t *cpu,m_uint32_t vaddr,
 
       //bl = (ubat & PPC32_UBAT_BL_MASK) >> PPC32_UBAT_BL_SHIFT;
       bl = (ubat & PPC32_UBAT_XBL_MASK) >> PPC32_UBAT_XBL_SHIFT;
-      
+
       mask = ~bl << PPC32_BAT_ADDR_SHIFT;
       bepi = ubat & PPC32_UBAT_BEPI_MASK;
 
@@ -327,7 +327,7 @@ static mts32_entry_t *ppc32_slow_lookup(cpu_ppc_t *cpu,m_uint32_t vaddr,
    pteg_offset = (hash & 0x3FF) << 6;
    pteg_offset |= tmp << 16;
    pte_haddr = cpu->sdr1_hptr + pteg_offset;
-   
+
    pte_key = 0x80000000 | (vsid << 7);
    pte_key |= (vaddr >> 22) & 0x3F;
 
@@ -345,7 +345,7 @@ static mts32_entry_t *ppc32_slow_lookup(cpu_ppc_t *cpu,m_uint32_t vaddr,
    pteg_offset = (hash & 0x3FF) << 6;
    pteg_offset |= tmp << 16;
    pte_haddr = cpu->sdr1_hptr + pteg_offset;
-   
+
    pte_key = 0x80000040 | (vsid << 7);
    pte_key |= (vaddr >> 22) & 0x3F;
 
@@ -355,7 +355,7 @@ static mts32_entry_t *ppc32_slow_lookup(cpu_ppc_t *cpu,m_uint32_t vaddr,
       if (key == pte_key)
          goto pte_lookup_done;
    }
-   
+
  no_pte:
    /* No matching PTE for this virtual address */
    ppc32_access_special(cpu,vaddr,cid,MTS_ACC_T,op_code,op_type,op_size,data);
@@ -371,7 +371,7 @@ static mts32_entry_t *ppc32_slow_lookup(cpu_ppc_t *cpu,m_uint32_t vaddr,
    map.paddr  = paddr;
    map.offset = vaddr & PPC32_MIN_PAGE_IMASK;
    map.cached = FALSE;
-   
+
    if ((entry = ppc32_mem_map(cpu,op_type,&map,entry,alt_entry)))
       return entry;
 
@@ -391,7 +391,7 @@ static void ppc32_mem_invalidate_tcb(cpu_ppc_t *cpu,mts32_entry_t *entry)
 
    phys_page = entry->gppa >> VM_PAGE_SHIFT;
    hp = ppc32_jit_get_phys_hash(phys_page);
- 
+
    cpu->translate(cpu,cpu->ia,PPC32_MTS_ICACHE,&ia_phys_page);
 
    if (phys_page != ia_phys_page) {
@@ -407,7 +407,7 @@ static void ppc32_mem_invalidate_tcb(cpu_ppc_t *cpu,mts32_entry_t *entry)
             ppc32_jit_tcb_free(cpu,(*tcbp),TRUE);
             *tcbp = tcb_next;
          } else {
-            tcbp = &(*tcbp)->phys_next; 
+            tcbp = &(*tcbp)->phys_next;
          }
       entry->flags &= ~MTS_FLAG_EXEC;
    } else {
@@ -425,7 +425,7 @@ static void ppc32_mem_invalidate_tcb(cpu_ppc_t *cpu,mts32_entry_t *entry)
 static inline void *ppc32_mem_access(cpu_ppc_t *cpu,m_uint32_t vaddr,
                                      u_int cid,u_int op_code,u_int op_size,
                                      u_int op_type,m_uint64_t *data)
-{   
+{
    mts32_entry_t *entry,alt_entry;
    m_uint32_t hash_bucket;
    m_iptr_t haddr;
@@ -481,11 +481,11 @@ static inline void *ppc32_mem_access(cpu_ppc_t *cpu,m_uint32_t vaddr,
 /* Virtual address to physical page translation */
 static fastcall int ppc32_translate(cpu_ppc_t *cpu,m_uint32_t vaddr,u_int cid,
                                     m_uint32_t *phys_page)
-{   
+{
    mts32_entry_t *entry,alt_entry;
    m_uint32_t hash_bucket;
    m_uint64_t data = 0;
-   
+
    hash_bucket = MTS32_HASH(vaddr);
    entry = &cpu->mts_cache[cid][hash_bucket];
 
@@ -582,7 +582,7 @@ int ppc32_init_page_table(cpu_ppc_t *cpu)
 /* Map a page */
 int ppc32_map_page(cpu_ppc_t *cpu,u_int vsid,m_uint32_t vaddr,m_uint64_t paddr,
                    u_int wimg,u_int pp)
-{   
+{
    m_uint32_t hash,tmp,pteg_offset,key;
    m_uint8_t *pte_haddr;
    int i;
@@ -596,10 +596,10 @@ int ppc32_map_page(cpu_ppc_t *cpu,u_int vsid,m_uint32_t vaddr,m_uint64_t paddr,
    pteg_offset = (hash & 0x3FF) << 6;
    pteg_offset |= tmp << 16;
    pte_haddr = cpu->sdr1_hptr + pteg_offset;
-   
+
    for(i=0;i<8;i++,pte_haddr+=PPC32_PTE_SIZE) {
       key = vmtoh32(*(m_uint32_t *)pte_haddr);
-      
+
       if (!(key & PPC32_PTEU_V)) {
          hash = 0;
          goto free_pte_found;
@@ -616,7 +616,7 @@ int ppc32_map_page(cpu_ppc_t *cpu,u_int vsid,m_uint32_t vaddr,m_uint64_t paddr,
 
    for(i=0;i<8;i++,pte_haddr+=PPC32_PTE_SIZE) {
       key = vmtoh32(*(m_uint32_t *)pte_haddr);
-      
+
       if (!(key & PPC32_PTEU_V)) {
          hash = PPC32_PTEU_H;
          goto free_pte_found;
@@ -1039,7 +1039,7 @@ int ppc32_mem_restart(cpu_ppc_t *cpu)
 {
    m_uint32_t family;
 
-   ppc32_mem_shutdown(cpu);      
+   ppc32_mem_shutdown(cpu);
    ppc32_mem_init(cpu);
    ppc32_init_memop_vectors(cpu);
 

@@ -690,7 +690,7 @@ static int cmd_extract_config(hypervisor_conn_t *conn,int argc,char *argv[])
    if ((vm->platform->nvram_extract_config(vm,&startup_config,&startup_len,&private_config,&private_len)))
       goto err_nvram_extract;
 
-   /* 
+   /*
     * Convert config to base64. base64 generates 4 bytes for each group of 3 bytes.
     */
    if (!(startup_base64 = malloc(1 + (startup_len + 2) / 3 * 4)) ||

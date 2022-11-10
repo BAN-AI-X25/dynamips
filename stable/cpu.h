@@ -100,7 +100,7 @@ struct cpu_gen {
    void (*add_breakpoint)(cpu_gen_t *cpu,m_uint64_t addr);
    void (*remove_breakpoint)(cpu_gen_t *cpu,m_uint64_t addr);
    void (*set_idle_pc)(cpu_gen_t *cpu,m_uint64_t addr);
-   void (*get_idling_pc)(cpu_gen_t *cpu);   
+   void (*get_idling_pc)(cpu_gen_t *cpu);
    void (*mts_rebuild)(cpu_gen_t *cpu);
    void (*mts_show_stats)(cpu_gen_t *cpu);
 
@@ -117,7 +117,7 @@ struct cpu_gen {
    u_int jit_op_array_size;
    jit_op_t **jit_op_array;
    jit_op_t **jit_op_current;
-   
+
    /* JIT op pool */
    jit_op_t *jit_op_pool[JIT_OP_POOL_NR];
 };

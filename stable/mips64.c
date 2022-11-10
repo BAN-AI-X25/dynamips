@@ -165,8 +165,8 @@ void *mips64_timer_irq_run(cpu_mips_t *cpu)
       pthread_cond_timedwait(&ucond,&umutex,&t_spc);
       pthread_mutex_unlock(&umutex);
 
-      if (likely(!cpu->irq_disable) && 
-          likely(cpu->gen->state == CPU_STATE_RUNNING)) 
+      if (likely(!cpu->irq_disable) &&
+          likely(cpu->gen->state == CPU_STATE_RUNNING))
       {
          cpu->timer_irq_pending++;
 
@@ -268,7 +268,7 @@ int mips64_get_idling_pc(cpu_gen_t *cpu)
          printf("   0x%llx (count=%u)\n",
                 cpu->idle_pc_prop[i].pc,
                 cpu->idle_pc_prop[i].count);
-      }         
+      }
 
       printf("Restart the emulator with \"--idle-pc=0x%llx\" (for example)\n",
              cpu->idle_pc_prop[0].pc);
@@ -286,7 +286,7 @@ int mips64_get_idling_pc(cpu_gen_t *cpu)
                res->count = p->count;
             }
          }
-       
+
       printf("\n");
    }
 
@@ -370,7 +370,7 @@ void mips64_trigger_exception(cpu_mips_t *cpu,u_int exc_code,int bd_slot)
        case MIPS_CP0_CAUSE_TRAP:
        case MIPS_CP0_CAUSE_BP:
            if ((cpu->vm->gdb_server_running == TRUE))// && (mips64_is_breakpoint_at_pc(cpu)))
-           {  
+           {
               cpu->vm->gdb_ctx->signal = GDB_SIGINT;
               vm_suspend(cpu->vm);
               return;
@@ -421,7 +421,7 @@ void mips64_trigger_exception(cpu_mips_t *cpu,u_int exc_code,int bd_slot)
 }
 
 /*
- * Increment count register and trigger the timer IRQ if value in compare 
+ * Increment count register and trigger the timer IRQ if value in compare
  * register is the same.
  */
 fastcall void mips64_exec_inc_cp0_cnt(cpu_mips_t *cpu)
@@ -465,7 +465,7 @@ fastcall void mips64_exec_eret(cpu_mips_t *cpu)
    }
 
    /* We have to clear the LLbit */
-   cpu->ll_bit = 0;      
+   cpu->ll_bit = 0;
 
    /* Update the pending IRQ flag */
    mips64_update_irq_flag_fast(cpu);
@@ -478,10 +478,10 @@ fastcall void mips64_exec_syscall(cpu_mips_t *cpu)
    printf("MIPS64: SYSCALL at PC=0x%llx (RA=0x%llx)\n"
           "   a0=0x%llx, a1=0x%llx, a2=0x%llx, a3=0x%llx\n",
           cpu->pc, cpu->gpr[MIPS_GPR_RA],
-          cpu->gpr[MIPS_GPR_A0], cpu->gpr[MIPS_GPR_A1], 
+          cpu->gpr[MIPS_GPR_A0], cpu->gpr[MIPS_GPR_A1],
           cpu->gpr[MIPS_GPR_A2], cpu->gpr[MIPS_GPR_A3]);
 #endif
-   
+
    /* XXX TODO: Branch Delay slot */
    mips64_trigger_exception(cpu,MIPS_CP0_CAUSE_SYSCALL,0);
 }
@@ -498,7 +498,7 @@ fastcall void mips64_exec_break(cpu_mips_t *cpu,u_int code)
 
 /* Trigger a Trap Exception */
 fastcall void mips64_trigger_trap_exception(cpu_mips_t *cpu)
-{  
+{
    /* XXX TODO: Branch Delay slot */
    printf("MIPS64: TRAP exception, CPU=%p\n",cpu);
    mips64_trigger_exception(cpu,MIPS_CP0_CAUSE_TRAP,0);
@@ -594,7 +594,7 @@ int mips64_add_breakpoint(cpu_gen_t *cpu,m_uint64_t pc)
 
 /* Remove a virtual breakpoint */
 void mips64_remove_breakpoint(cpu_gen_t *cpu,m_uint64_t pc)
-{   
+{
    cpu_mips_t *mcpu = CPU_MIPS64(cpu);
    int i,j;
 
@@ -630,7 +630,7 @@ void mips64_reg_set(cpu_gen_t *cpu,u_int reg,m_uint64_t val)
 
 /* Dump registers of a MIPS64 processor */
 void mips64_dump_regs(cpu_gen_t *cpu)
-{ 
+{
    cpu_mips_t *mcpu = CPU_MIPS64(cpu);
    mips_insn_t *ptr,insn;
    char buffer[80];
@@ -647,7 +647,7 @@ void mips64_dump_regs(cpu_gen_t *cpu)
    printf("  lo = 0x%16.16llx, hi = 0x%16.16llx\n", mcpu->lo, mcpu->hi);
    printf("  pc = 0x%16.16llx, ll_bit = %u\n", mcpu->pc, mcpu->ll_bit);
 
-   /* Fetch the current instruction */ 
+   /* Fetch the current instruction */
    ptr = mcpu->mem_op_lookup(mcpu,mcpu->pc);
    if (ptr) {
       insn = vmtoh32(*ptr);
@@ -660,7 +660,7 @@ void mips64_dump_regs(cpu_gen_t *cpu)
 
    for(i=0;i<MIPS64_CP0_REG_NR/2;i++) {
       printf("  %-10s ($%2d) = 0x%16.16llx   %-10s ($%2d) = 0x%16.16llx\n",
-             mips64_cp0_reg_names[i*2], i*2, 
+             mips64_cp0_reg_names[i*2], i*2,
              mips64_cp0_get_reg(mcpu,i*2),
              mips64_cp0_reg_names[(i*2)+1], (i*2)+1,
              mips64_cp0_get_reg(mcpu,(i*2)+1));
@@ -683,13 +683,13 @@ void mips64_dump_memory(cpu_mips_t *cpu,m_uint64_t vaddr,u_int count)
    void *haddr;
    u_int i;
 
-   for(i=0;i<count;i++,vaddr+=4) 
+   for(i=0;i<count;i++,vaddr+=4)
    {
       if ((i & 3) == 0)
          printf("\n  0x%16.16llx: ",vaddr);
 
       haddr = cpu->mem_op_lookup(cpu,vaddr);
-      
+
       if (haddr)
          printf("0x%8.8x ",htovm32(*(m_uint32_t *)haddr));
       else
@@ -701,7 +701,7 @@ void mips64_dump_memory(cpu_mips_t *cpu,m_uint64_t vaddr,u_int count)
 
 /* Dump the stack */
 void mips64_dump_stack(cpu_mips_t *cpu,u_int count)
-{   
+{
    printf("MIPS Stack Dump at 0x%16.16llx:",cpu->gpr[MIPS_GPR_SP]);
    mips64_dump_memory(cpu,cpu->gpr[MIPS_GPR_SP],count);
 }
@@ -825,7 +825,7 @@ int mips64_restore_state(cpu_mips_t *cpu,char *filename)
       /* cp1 register ? */
       if ((len > 3) && (!strncmp(buffer,"fpu",3))) {
          index = atoi(buffer+3);
-         cpu->fpu.reg[index] = mips64_hex_u64(value,NULL);        
+         cpu->fpu.reg[index] = mips64_hex_u64(value,NULL);
       }
 
       /* tlb entry ? */
@@ -835,7 +835,7 @@ int mips64_restore_state(cpu_mips_t *cpu,char *filename)
          if (ep) {
             index = atoi(buffer+3);
             field = ep + 1;
-            
+
             if (!strcmp(field,"mask")) {
                cpu->cp0.tlb[index].mask = mips64_hex_u64(value,NULL);
                continue;
@@ -857,7 +857,7 @@ int mips64_restore_state(cpu_mips_t *cpu,char *filename)
             }
          }
       }
-      
+
       /* pc, lo, hi ? */
       if (!strcmp(buffer,"pc")) {
          cpu->pc = mips64_hex_u64(value,NULL);
@@ -886,7 +886,7 @@ int mips64_restore_state(cpu_mips_t *cpu,char *filename)
 
 /* Load a raw image into the simulated memory */
 int mips64_load_raw_image(cpu_mips_t *cpu,char *filename,m_uint64_t vaddr)
-{   
+{
    struct stat file_info;
    size_t len,clen;
    m_uint32_t remain;
@@ -911,7 +911,7 @@ int mips64_load_raw_image(cpu_mips_t *cpu,char *filename,m_uint64_t vaddr)
    while(len > 0)
    {
       haddr = cpu->mem_op_lookup(cpu,vaddr);
-   
+
       if (!haddr) {
          fprintf(stderr,"load_raw_image: invalid load address 0x%llx\n",
                  vaddr);
@@ -925,16 +925,16 @@ int mips64_load_raw_image(cpu_mips_t *cpu,char *filename,m_uint64_t vaddr)
 
       remain = MIPS_MIN_PAGE_SIZE;
       remain -= (vaddr - (vaddr & MIPS_MIN_PAGE_MASK));
-      
+
       clen = m_min(clen,remain);
 
       if (fread((u_char *)haddr,clen,1,bfd) != 1)
          break;
-      
+
       vaddr += clen;
       len -= clen;
    }
-   
+
    fclose(bfd);
    return(0);
 }
@@ -1011,11 +1011,11 @@ int mips64_load_elf_image(cpu_mips_t *cpu,char *filename,int skip_load,
             printf("   * Adding section at virtual address 0x%8.8llx "
                    "(len=0x%8.8lx)\n",vaddr & 0xFFFFFFFF,(u_long)len);
          }
-         
+
          while(len > 0)
          {
             haddr = cpu->mem_op_lookup(cpu,vaddr);
-   
+
             if (!haddr) {
                fprintf(stderr,"load_elf_image: invalid load address 0x%llx\n",
                        vaddr);
@@ -1072,7 +1072,7 @@ struct symbol *mips64_sym_insert(cpu_mips_t *cpu,char *name,m_uint64_t addr)
 
    if (!(sym = malloc(len+1+sizeof(*sym))))
       return NULL;
-   
+
    memcpy(sym->name,name,len+1);
    sym->addr = addr;
 

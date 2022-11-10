@@ -231,7 +231,7 @@ int ppc32_get_idling_pc(cpu_gen_t *cpu)
          printf("   0x%llx (count=%u)\n",
                 cpu->idle_pc_prop[i].pc,
                 cpu->idle_pc_prop[i].count);
-      }         
+      }
 
       printf("Restart the emulator with \"--idle-pc=0x%llx\" (for example)\n",
              cpu->idle_pc_prop[0].pc);
@@ -249,7 +249,7 @@ int ppc32_get_idling_pc(cpu_gen_t *cpu)
                res->count = p->count;
             }
          }
-       
+
       printf("\n");
    }
 
@@ -318,7 +318,7 @@ void ppc32_trigger_exception(cpu_ppc_t *cpu,u_int exc_vector)
 
    /* Save the return instruction address */
    cpu->srr0 = cpu->ia;
-   
+
    if (exc_vector == PPC32_EXC_SYSCALL)
       cpu->srr0 += sizeof(ppc_insn_t);
 
@@ -390,14 +390,14 @@ int ppc32_is_breakpoint_at_pc(cpu_ppc_t *cpu)
 {
    m_uint64_t pc = cpu->ia;
    int i;
-        
+
    for(i=0; i < PPC32_MAX_BREAKPOINTS; i++)
    {
       if (pc == cpu->breakpoints[i]) {
          return TRUE;
       }
    }
-   
+
    return FALSE;
 }
 
@@ -421,7 +421,7 @@ int ppc32_add_breakpoint(cpu_gen_t *cpu,m_uint64_t ia)
 
 /* Remove a virtual breakpoint */
 void ppc32_remove_breakpoint(cpu_gen_t *cpu,m_uint64_t ia)
-{   
+{
    cpu_ppc_t *pcpu = CPU_PPC32(cpu);
    int i,j;
 
@@ -452,10 +452,10 @@ void ppc32_reg_set(cpu_gen_t *cpu,u_int reg,m_uint64_t val)
 
 /* Dump registers of a PowerPC processor */
 void ppc32_dump_regs(cpu_gen_t *cpu)
-{ 
+{
    cpu_ppc_t *pcpu = CPU_PPC32(cpu);
    int i;
-   
+
    printf("PowerPC Registers:\n");
 
    for(i=0;i<PPC32_GPR_NR/4;i++) {
@@ -467,9 +467,9 @@ void ppc32_dump_regs(cpu_gen_t *cpu)
 
    printf("\n");
    printf("  ia = 0x%8.8x, lr = 0x%8.8x\n", pcpu->ia, pcpu->lr);
-   printf("  cr = 0x%8.8x, msr = 0x%8.8x, xer = 0x%8.8x, dec = 0x%8.8x\n", 
-          ppc32_get_cr(pcpu), pcpu->msr, 
-          pcpu->xer | (pcpu->xer_ca << PPC32_XER_CA_BIT), 
+   printf("  cr = 0x%8.8x, msr = 0x%8.8x, xer = 0x%8.8x, dec = 0x%8.8x\n",
+          ppc32_get_cr(pcpu), pcpu->msr,
+          pcpu->xer | (pcpu->xer_ca << PPC32_XER_CA_BIT),
           pcpu->dec);
 
    printf("  sprg[0] = 0x%8.8x, sprg[1] = 0x%8.8x\n",
@@ -524,7 +524,7 @@ void ppc32_dump_mmu(cpu_gen_t *cpu)
 
 /* Load a raw image into the simulated memory */
 int ppc32_load_raw_image(cpu_ppc_t *cpu,char *filename,m_uint32_t vaddr)
-{   
+{
    struct stat file_info;
    size_t len,clen;
    m_uint32_t remain;
@@ -549,7 +549,7 @@ int ppc32_load_raw_image(cpu_ppc_t *cpu,char *filename,m_uint32_t vaddr)
    while(len > 0)
    {
       haddr = cpu->mem_op_lookup(cpu,vaddr,PPC32_MTS_DCACHE);
-   
+
       if (!haddr) {
          fprintf(stderr,"load_raw_image: invalid load address 0x%8.8x\n",
                  vaddr);
@@ -563,16 +563,16 @@ int ppc32_load_raw_image(cpu_ppc_t *cpu,char *filename,m_uint32_t vaddr)
 
       remain = MIPS_MIN_PAGE_SIZE;
       remain -= (vaddr - (vaddr & MIPS_MIN_PAGE_MASK));
-      
+
       clen = m_min(clen,remain);
 
       if (fread((u_char *)haddr,clen,1,bfd) != 1)
          break;
-      
+
       vaddr += clen;
       len -= clen;
    }
-   
+
    fclose(bfd);
    return(0);
 }
@@ -648,7 +648,7 @@ int ppc32_load_elf_image(cpu_ppc_t *cpu,char *filename,int skip_load,
             printf("   * Adding section at virtual address 0x%8.8x "
                    "(len=0x%8.8lx)\n",vaddr,(u_long)len);
          }
-         
+
          while(len > 0)
          {
             haddr = cpu->mem_op_lookup(cpu,vaddr,PPC32_MTS_DCACHE);

@@ -66,8 +66,8 @@ void mips64_set_ra(mips64_jit_tcb_t *b,m_uint64_t ret_pc)
    ppc_stw(b->jit_ptr,ppc_r0,REG_OFFSET(MIPS_GPR_RA)+4,ppc_r3);
 }
 
-/* 
- * Try to branch directly to the specified JIT block without returning to 
+/*
+ * Try to branch directly to the specified JIT block without returning to
  * main loop.
  */
 static void mips64_try_direct_far_jump(cpu_mips_t *cpu,mips64_jit_tcb_t *b,
@@ -131,7 +131,7 @@ static void mips64_try_direct_far_jump(cpu_mips_t *cpu,mips64_jit_tcb_t *b,
 /* Set Jump */
 static void mips64_set_jump(cpu_mips_t *cpu,mips64_jit_tcb_t *b,
                             m_uint64_t new_pc,int local_jump)
-{      
+{
    int return_to_caller = FALSE;
    u_char *jump_ptr;
 
@@ -184,7 +184,7 @@ static forced_inline void mips64_emit_basic_c_call(mips64_jit_tcb_t *b,void *f)
 
 /* Emit a simple call to a C function without any parameter */
 static void mips64_emit_c_call(mips64_jit_tcb_t *b,void *f)
-{   
+{
    mips64_set_pc(b,b->start_pc+((b->mips_trans_pos-1)<<2));
    mips64_emit_basic_c_call(b,f);
 }
@@ -197,7 +197,7 @@ void mips64_emit_single_step(mips64_jit_tcb_t *b,mips_insn_t insn)
    /* Restore link register */
    ppc_lwz(b->jit_ptr,ppc_r0,PPC_STACK_DECREMENTER+PPC_RET_ADDR_OFFSET,ppc_r1);
    ppc_mtlr(b->jit_ptr,ppc_r0);
-   /* Trick: let callee return directly to the caller */   
+   /* Trick: let callee return directly to the caller */
    ppc_emit_jump_code(b->jit_ptr, (u_char *)mips64_exec_single_step, 0);
 }
 
@@ -325,7 +325,7 @@ static void mips64_emit_memop_fast64(mips64_jit_tcb_t *b,int write_op,
               MTS64_HASH_BITS+5,
               32-(MTS64_HASH_BITS+5),
               31-MTS64_HASH_BITS);
-                 
+
    /* r8 = mts64_cache */
    ppc_lwz(b->jit_ptr,ppc_r8,OFFSET(cpu_mips_t,mts_u.mts64_cache),ppc_r3);
    /* r6 = mts64_entry */
@@ -335,12 +335,12 @@ static void mips64_emit_memop_fast64(mips64_jit_tcb_t *b,int write_op,
    /* Compare virtual page address */
    ppc_lwz(b->jit_ptr,ppc_r7,OFFSET(mts64_entry_t,gvpa),ppc_r6);
    ppc_lwz(b->jit_ptr,ppc_r8,OFFSET(mts64_entry_t,gvpa)+4,ppc_r6);
- 
+
    /* Compare the high part of the vaddr */
    ppc_cmpw(b->jit_ptr,ppc_cr7,ppc_r4,ppc_r7);
    test1 = b->jit_ptr;
    ppc_bc(b->jit_ptr,PPC_BR_FALSE_UNLIKELY,ppc_crbf(ppc_cr7,PPC_BR_EQ),0);
- 
+
    /* Compare the low part of the vaddr & MIPS_MIN_PAGE_MASK (vpage) */
    ppc_rlwinm(b->jit_ptr,ppc_r0,ppc_r5,0,0,19);
    ppc_cmpw(b->jit_ptr,ppc_cr7,ppc_r0,ppc_r8);
@@ -363,7 +363,7 @@ static void mips64_emit_memop_fast64(mips64_jit_tcb_t *b,int write_op,
 
    /* Memory access */
    op_handler(b,target);
- 
+
    p_exit = b->jit_ptr;
    ppc_b(b->jit_ptr,0);
 
@@ -410,8 +410,8 @@ static void mips64_emit_memop_fast32(mips64_jit_tcb_t *b,int write_op,
    ppc_rlwinm(b->jit_ptr,ppc_r7,ppc_r8,
               MTS32_HASH_BITS+4,
               32-(MTS32_HASH_BITS+4),
-              31-MTS32_HASH_BITS);         
-              
+              31-MTS32_HASH_BITS);
+
    /* r8 = mts32_cache */
    ppc_lwz(b->jit_ptr,ppc_r8,OFFSET(cpu_mips_t,mts_u.mts32_cache),ppc_r3);
    /* r6 = mts32_entry */
@@ -442,7 +442,7 @@ static void mips64_emit_memop_fast32(mips64_jit_tcb_t *b,int write_op,
 
    /* Memory access */
    op_handler(b,target);
- 
+
    p_exit = b->jit_ptr;
    ppc_b(b->jit_ptr,0);
 
@@ -513,7 +513,7 @@ static void mips64_emit_memop(mips64_jit_tcb_t *b,int opcode,int base,int offset
       ppc_addme(b->jit_ptr,ppc_r4,ppc_r4);
    else
       ppc_addze(b->jit_ptr,ppc_r4,ppc_r4);
-      
+
    /* r6 = target register */
    ppc_li(b->jit_ptr,ppc_r6,target);
 
@@ -583,13 +583,13 @@ int mips64_emit_invalid_delay_slot(mips64_jit_tcb_t *b)
    ppc_lwz(b->jit_ptr,ppc_r0,PPC_STACK_DECREMENTER+PPC_RET_ADDR_OFFSET,ppc_r1);
    ppc_mtlr(b->jit_ptr,ppc_r0);
 
-   /* Trick: let callee return directly to the caller */   
+   /* Trick: let callee return directly to the caller */
    ppc_emit_jump_code(b->jit_ptr, (u_char *)mips64_invalid_delay_slot, 0);
    return(0);
 }
 
-/* 
- * Increment count register and trigger the timer IRQ if value in compare 
+/*
+ * Increment count register and trigger the timer IRQ if value in compare
  * register is the same.
  */
 void mips64_inc_cp0_count_reg(mips64_jit_tcb_t *b)
@@ -630,7 +630,7 @@ void mips64_inc_perf_counter(mips64_jit_tcb_t *b)
 
 /* ADD */
 DECLARE_INSN(ADD)
-{	
+{
    int rs = bits(insn,21,25);
    int rt = bits(insn,16,20);
    int rd = bits(insn,11,15);
@@ -681,7 +681,7 @@ DECLARE_INSN(ADDIU)
 
 /* ADDU */
 DECLARE_INSN(ADDU)
-{	
+{
    int rs = bits(insn,21,25);
    int rt = bits(insn,16,20);
    int rd = bits(insn,11,15);
@@ -785,9 +785,9 @@ DECLARE_INSN(BEQ)
    /* compute the new pc */
    new_pc = b->start_pc + (b->mips_trans_pos << 2);
    new_pc += sign_extend(offset << 2,18);
-   
-   /* 
-    * compare gpr[rs] and gpr[rt]. 
+
+   /*
+    * compare gpr[rs] and gpr[rt].
     * compare the low 32 bits first (higher probability).
     */
    ppc_lwz(b->jit_ptr,ppc_r6,REG_OFFSET(rs)+4,ppc_r3);
@@ -829,8 +829,8 @@ DECLARE_INSN(BEQL)
    new_pc = b->start_pc + (b->mips_trans_pos << 2);
    new_pc += sign_extend(offset << 2,18);
 
-   /* 
-    * compare gpr[rs] and gpr[rt]. 
+   /*
+    * compare gpr[rs] and gpr[rt].
     * compare the low 32 bits first (higher probability).
     */
    ppc_lwz(b->jit_ptr,ppc_r6,REG_OFFSET(rs)+4,ppc_r3);
@@ -867,9 +867,9 @@ DECLARE_INSN(BEQZ)
    /* compute the new pc */
    new_pc = b->start_pc + (b->mips_trans_pos << 2);
    new_pc += sign_extend(offset << 2,18);
-   
-   /* 
-    * compare gpr[rs] and gpr[rt]. 
+
+   /*
+    * compare gpr[rs] and gpr[rt].
     * compare the low 32 bits first (higher probability).
     */
    ppc_lwz(b->jit_ptr,ppc_r6,REG_OFFSET(rs)+4,ppc_r3);
@@ -907,9 +907,9 @@ DECLARE_INSN(BNEZ)
    /* compute the new pc */
    new_pc = b->start_pc + (b->mips_trans_pos << 2);
    new_pc += sign_extend(offset << 2,18);
-   
-   /* 
-    * compare gpr[rs] and gpr[rt]. 
+
+   /*
+    * compare gpr[rs] and gpr[rt].
     * compare the low 32 bits first (higher probability).
     */
    ppc_lwz(b->jit_ptr,ppc_r6,REG_OFFSET(rs)+4,ppc_r3);
@@ -1072,8 +1072,8 @@ DECLARE_INSN(BGTZ)
    /* compute the new pc */
    new_pc = b->start_pc + (b->mips_trans_pos << 2);
    new_pc += sign_extend(offset << 2,18);
-   
-   /* 
+
+   /*
     * test the hi word of gpr[rs]
     */
    ppc_lwz(b->jit_ptr,ppc_r5,REG_OFFSET(rs),ppc_r3);
@@ -1116,8 +1116,8 @@ DECLARE_INSN(BGTZL)
    /* compute the new pc */
    new_pc = b->start_pc + (b->mips_trans_pos << 2);
    new_pc += sign_extend(offset << 2,18);
-   
-   /* 
+
+   /*
     * test the hi word of gpr[rs]
     */
    ppc_lwz(b->jit_ptr,ppc_r5,REG_OFFSET(rs),ppc_r3);
@@ -1157,8 +1157,8 @@ DECLARE_INSN(BLEZ)
    /* compute the new pc */
    new_pc = b->start_pc + (b->mips_trans_pos << 2);
    new_pc += sign_extend(offset << 2,18);
-   
-   /* 
+
+   /*
     * test the hi word of gpr[rs]
     */
    ppc_lwz(b->jit_ptr,ppc_r5,REG_OFFSET(rs),ppc_r3);
@@ -1201,8 +1201,8 @@ DECLARE_INSN(BLEZL)
    /* compute the new pc */
    new_pc = b->start_pc + (b->mips_trans_pos << 2);
    new_pc += sign_extend(offset << 2,18);
-   
-   /* 
+
+   /*
     * test the hi word of gpr[rs]
     */
    ppc_lwz(b->jit_ptr,ppc_r5,REG_OFFSET(rs),ppc_r3);
@@ -1243,7 +1243,7 @@ DECLARE_INSN(BLTZ)
    new_pc = b->start_pc + (b->mips_trans_pos << 2);
    new_pc += sign_extend(offset << 2,18);
 
-   /* 
+   /*
     * test the sign bit of gpr[rs], if set, take the branch.
     */
    ppc_lwz(b->jit_ptr,ppc_r5,REG_OFFSET(rs),ppc_r3);
@@ -1279,7 +1279,7 @@ DECLARE_INSN(BLTZAL)
    /* set the return address (instruction after the delay slot) */
    mips64_set_ra(b,b->start_pc + ((b->mips_trans_pos + 1) << 2));
 
-   /* 
+   /*
     * test the sign bit of gpr[rs], if set, take the branch.
     */
    ppc_lwz(b->jit_ptr,ppc_r5,REG_OFFSET(rs),ppc_r3);
@@ -1315,7 +1315,7 @@ DECLARE_INSN(BLTZALL)
    /* set the return address (instruction after the delay slot) */
    mips64_set_ra(b,b->start_pc + ((b->mips_trans_pos + 1) << 2));
 
-   /* 
+   /*
     * test the sign bit of gpr[rs], if set, take the branch.
     */
    ppc_lwz(b->jit_ptr,ppc_r5,REG_OFFSET(rs),ppc_r3);
@@ -1345,7 +1345,7 @@ DECLARE_INSN(BLTZL)
    new_pc = b->start_pc + (b->mips_trans_pos << 2);
    new_pc += sign_extend(offset << 2,18);
 
-   /* 
+   /*
     * test the sign bit of gpr[rs], if set, take the branch.
     */
    ppc_lwz(b->jit_ptr,ppc_r5,REG_OFFSET(rs),ppc_r3);
@@ -1375,9 +1375,9 @@ DECLARE_INSN(BNE)
    /* compute the new pc */
    new_pc = b->start_pc + (b->mips_trans_pos << 2);
    new_pc += sign_extend(offset << 2,18);
-   
-   /* 
-    * compare gpr[rs] and gpr[rt]. 
+
+   /*
+    * compare gpr[rs] and gpr[rt].
     * compare the low 32 bits first (higher probability).
     */
    ppc_lwz(b->jit_ptr,ppc_r6,REG_OFFSET(rs)+4,ppc_r3);
@@ -1419,9 +1419,9 @@ DECLARE_INSN(BNEL)
    /* compute the new pc */
    new_pc = b->start_pc + (b->mips_trans_pos << 2);
    new_pc += sign_extend(offset << 2,18);
-   
-   /* 
-    * compare gpr[rs] and gpr[rt]. 
+
+   /*
+    * compare gpr[rs] and gpr[rt].
     * compare the low 32 bits first (higher probability).
     */
    ppc_lwz(b->jit_ptr,ppc_r6,REG_OFFSET(rs)+4,ppc_r3);
@@ -1450,7 +1450,7 @@ DECLARE_INSN(BNEL)
 
 /* BREAK */
 DECLARE_INSN(BREAK)
-{	
+{
    u_int code = bits(insn,6,25);
    /* r3 = CPU instance pointer */
    /* r4 = code */
@@ -1462,7 +1462,7 @@ DECLARE_INSN(BREAK)
 
 /* CACHE */
 DECLARE_INSN(CACHE)
-{        
+{
    int base   = bits(insn,21,25);
    int op     = bits(insn,16,20);
    int offset = bits(insn,0,15);
@@ -1473,7 +1473,7 @@ DECLARE_INSN(CACHE)
 
 /* CFC0 */
 DECLARE_INSN(CFC0)
-{	
+{
    int rt = bits(insn,16,20);
    int rd = bits(insn,11,15);
 
@@ -1483,7 +1483,7 @@ DECLARE_INSN(CFC0)
 
 /* CTC0 */
 DECLARE_INSN(CTC0)
-{	
+{
    int rt = bits(insn,16,20);
    int rd = bits(insn,11,15);
 
@@ -1513,7 +1513,7 @@ DECLARE_INSN(DADDIU)
 
 /* DADDU */
 DECLARE_INSN(DADDU)
-{	
+{
    int rs = bits(insn,21,25);
    int rt = bits(insn,16,20);
    int rd = bits(insn,11,15);
@@ -1581,7 +1581,7 @@ DECLARE_INSN(DIVU)
 
 /* DMFC0 */
 DECLARE_INSN(DMFC0)
-{	
+{
    int rt = bits(insn,16,20);
    int rd = bits(insn,11,15);
 
@@ -1591,7 +1591,7 @@ DECLARE_INSN(DMFC0)
 
 /* DMFC1 */
 DECLARE_INSN(DMFC1)
-{	
+{
    int rt = bits(insn,16,20);
    int rd = bits(insn,11,15);
 
@@ -1601,7 +1601,7 @@ DECLARE_INSN(DMFC1)
 
 /* DMTC0 */
 DECLARE_INSN(DMTC0)
-{	
+{
    int rt = bits(insn,16,20);
    int rd = bits(insn,11,15);
 
@@ -1611,7 +1611,7 @@ DECLARE_INSN(DMTC0)
 
 /* DMTC1 */
 DECLARE_INSN(DMTC1)
-{	
+{
    int rt = bits(insn,16,20);
    int rd = bits(insn,11,15);
 
@@ -1843,7 +1843,7 @@ DECLARE_INSN(ERET)
    ppc_lwz(b->jit_ptr,ppc_r0,PPC_STACK_DECREMENTER+PPC_RET_ADDR_OFFSET,ppc_r1);
    ppc_mtlr(b->jit_ptr,ppc_r0);
    mips64_set_pc(b,b->start_pc+((b->mips_trans_pos-1)<<2));
-   /* Trick: let callee return directly to the caller */   
+   /* Trick: let callee return directly to the caller */
    ppc_emit_jump_code(b->jit_ptr, (u_char *)mips64_exec_eret, 0);
    return(0);
 }
@@ -1926,7 +1926,7 @@ DECLARE_INSN(JALR)
 
 /* JR */
 DECLARE_INSN(JR)
-{	
+{
    int rs = bits(insn,21,25);
 
    /* get the new pc */
@@ -2155,7 +2155,7 @@ DECLARE_INSN(LWU)
 
 /* MFC0 */
 DECLARE_INSN(MFC0)
-{	
+{
    int rt = bits(insn,16,20);
    int rd = bits(insn,11,15);
 
@@ -2165,7 +2165,7 @@ DECLARE_INSN(MFC0)
 
 /* MFC1 */
 DECLARE_INSN(MFC1)
-{	
+{
    int rt = bits(insn,16,20);
    int rd = bits(insn,11,15);
 
@@ -2202,10 +2202,10 @@ DECLARE_INSN(MFLO)
 
 /* MOVE (virtual) */
 DECLARE_INSN(MOVE)
-{	
+{
    int rs = bits(insn,21,25);
    int rd = bits(insn,11,15);
-   
+
    if (rs != 0) {
       ppc_lwz(b->jit_ptr,ppc_r8,REG_OFFSET(rs)+4,ppc_r3);
       ppc_stw(b->jit_ptr,ppc_r8,REG_OFFSET(rd)+4,ppc_r3);
@@ -2221,7 +2221,7 @@ DECLARE_INSN(MOVE)
 
 /* MTC0 */
 DECLARE_INSN(MTC0)
-{	
+{
    int rt = bits(insn,16,20);
    int rd = bits(insn,11,15);
 
@@ -2231,7 +2231,7 @@ DECLARE_INSN(MTC0)
 
 /* MTC1 */
 DECLARE_INSN(MTC1)
-{	
+{
    int rt = bits(insn,16,20);
    int rd = bits(insn,11,15);
 
@@ -2504,7 +2504,7 @@ DECLARE_INSN(SH)
 
 /* SLL */
 DECLARE_INSN(SLL)
-{	
+{
    int rt = bits(insn,16,20);
    int rd = bits(insn,11,15);
    int sa = bits(insn,6,10);
@@ -2520,7 +2520,7 @@ DECLARE_INSN(SLL)
 
 /* SLLV */
 DECLARE_INSN(SLLV)
-{	
+{
    int rs = bits(insn,21,25);
    int rt = bits(insn,16,20);
    int rd = bits(insn,11,15);
@@ -2642,7 +2642,7 @@ DECLARE_INSN(SLTU)
 
 /* SRA */
 DECLARE_INSN(SRA)
-{	
+{
    int rt = bits(insn,16,20);
    int rd = bits(insn,11,15);
    int sa = bits(insn,6,10);
@@ -2659,7 +2659,7 @@ DECLARE_INSN(SRA)
 
 /* SRAV */
 DECLARE_INSN(SRAV)
-{	
+{
    int rs = bits(insn,21,25);
    int rt = bits(insn,16,20);
    int rd = bits(insn,11,15);
@@ -2679,7 +2679,7 @@ DECLARE_INSN(SRAV)
 
 /* SRL */
 DECLARE_INSN(SRL)
-{	
+{
    int rt = bits(insn,16,20);
    int rd = bits(insn,11,15);
    int sa = bits(insn,6,10);
@@ -2696,7 +2696,7 @@ DECLARE_INSN(SRL)
 
 /* SRLV */
 DECLARE_INSN(SRLV)
-{	
+{
    int rs = bits(insn,21,25);
    int rt = bits(insn,16,20);
    int rd = bits(insn,11,15);
@@ -2720,7 +2720,7 @@ DECLARE_INSN(SUB)
    int rs = bits(insn,21,25);
    int rt = bits(insn,16,20);
    int rd = bits(insn,11,15);
-   
+
    ppc_lwz(b->jit_ptr,ppc_r8,REG_OFFSET(rs)+4,ppc_r3);
    ppc_lwz(b->jit_ptr,ppc_r9,REG_OFFSET(rt)+4,ppc_r3);
    ppc_subfo(b->jit_ptr,ppc_r10,ppc_r9,ppc_r8);
@@ -2739,7 +2739,7 @@ DECLARE_INSN(SUBU)
    int rs = bits(insn,21,25);
    int rt = bits(insn,16,20);
    int rd = bits(insn,11,15);
-   
+
    ppc_lwz(b->jit_ptr,ppc_r8,REG_OFFSET(rs)+4,ppc_r3);
    ppc_lwz(b->jit_ptr,ppc_r9,REG_OFFSET(rt)+4,ppc_r3);
    ppc_sub(b->jit_ptr,ppc_r10,ppc_r8,ppc_r9);
@@ -2801,7 +2801,7 @@ DECLARE_INSN(SYSCALL)
    ppc_lwz(b->jit_ptr,ppc_r0,PPC_STACK_DECREMENTER+PPC_RET_ADDR_OFFSET,ppc_r1);
    ppc_mtlr(b->jit_ptr,ppc_r0);
    mips64_set_pc(b,b->start_pc+((b->mips_trans_pos-1)<<2));
-   /* Trick: let callee return directly to the caller */   
+   /* Trick: let callee return directly to the caller */
    ppc_emit_jump_code(b->jit_ptr, (u_char *)mips64_exec_syscall, 0);
    return(0);
 }
@@ -2876,7 +2876,7 @@ DECLARE_INSN(TLBP)
 
 /* TLBR */
 DECLARE_INSN(TLBR)
-{  
+{
    mips64_set_pc(b,b->start_pc+((b->mips_trans_pos-1)<<2));
    mips64_emit_basic_c_call(b,mips64_cp0_exec_tlbr);
    return(0);
@@ -2884,7 +2884,7 @@ DECLARE_INSN(TLBR)
 
 /* TLBWI */
 DECLARE_INSN(TLBWI)
-{   
+{
    mips64_set_pc(b,b->start_pc+((b->mips_trans_pos-1)<<2));
    mips64_emit_basic_c_call(b,mips64_cp0_exec_tlbwi);
    return(0);
@@ -2892,7 +2892,7 @@ DECLARE_INSN(TLBWI)
 
 /* TLBWR */
 DECLARE_INSN(TLBWR)
-{   
+{
    mips64_set_pc(b,b->start_pc+((b->mips_trans_pos-1)<<2));
    mips64_emit_basic_c_call(b,mips64_cp0_exec_tlbwr);
    return(0);

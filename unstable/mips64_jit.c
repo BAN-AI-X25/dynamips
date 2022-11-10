@@ -106,7 +106,7 @@ int mips64_jit_init(cpu_mips_t *cpu)
 {
    if (tsg_bind_cpu(cpu->gen) == -1)
       return(-1);
-   
+
    return(cpu_jit_init(cpu->gen,
                        MIPS_JIT_VIRT_HASH_SIZE,
                        MIPS_JIT_PHYS_HASH_SIZE));
@@ -176,7 +176,7 @@ static void insn_emit_breakpoint(cpu_mips_t *cpu,cpu_tc_t *tc)
 
 /* Check if an instruction is in a delay slot or not */
 int mips64_jit_is_delay_slot(cpu_tc_t *tc,m_uint64_t pc)
-{   
+{
    struct mips64_insn_tag *tag;
    m_uint32_t offset,insn;
 
@@ -209,7 +209,7 @@ struct mips64_insn_tag *mips64_jit_fetch_and_emit(cpu_mips_t *cpu,
       tc->jit_insn_ptr[tc->trans_pos] = tc->jit_ptr;
 
       mips64_set_pc(tc,tc->vaddr + (tc->trans_pos << 2));
-      mips64_emit_single_step(tc,code); 
+      mips64_emit_single_step(tc,code);
       mips64_jit_tcb_push_epilog(tc);
       tc->trans_pos++;
       return tag;
@@ -259,7 +259,7 @@ int mips64_jit_tcb_record_patch(cpu_mips_t *cpu,cpu_tc_t *tc,
                                 u_char *jit_ptr,m_uint64_t vaddr)
 {
    struct insn_patch *patch;
-   
+
    patch = tc_record_patch(cpu->gen,tc,jit_ptr,vaddr);
    return((patch != NULL) ? 0 : -1);
 }
@@ -282,16 +282,16 @@ static cpu_tc_t *mips64_jit_tcb_translate(cpu_mips_t *cpu,cpu_tb_t *tb)
 {
    struct mips64_insn_tag *tag;
    cpu_tc_t *tc;
-   
+
    /* The page is not shared, we have to compile it */
    tc = tc_alloc(cpu->gen,tb->vaddr,tb->exec_state);
-   
+
    if (tc == NULL)
       return NULL;
-   
+
    tc->target_code = tb->target_code;
    tc->trans_pos   = 0;
-   
+
    /* Emit native code for each instruction */
    while(tc->trans_pos < MIPS_INSN_PER_PAGE)
    {
@@ -330,7 +330,7 @@ mips64_jit_tcb_compile(cpu_mips_t *cpu,m_uint64_t vaddr,m_uint32_t exec_state)
 
    page_addr = vaddr & MIPS_MIN_PAGE_MASK;
 
-   /* 
+   /*
     * Get the mips code address from the host point of view.
     * If there is an error (TLB,...), we return directly to the main loop.
     */
@@ -342,11 +342,11 @@ mips64_jit_tcb_compile(cpu_mips_t *cpu,m_uint64_t vaddr,m_uint32_t exec_state)
    /* Create a new translation block */
    if (!(tb = tb_alloc(cpu->gen,page_addr,exec_state)))
       return NULL;
-      
+
    tb->vaddr       = page_addr;
    tb->exec_state  = exec_state;
    tb->phys_page   = phys_page;
-   tb->phys_hash   = mips64_jit_get_phys_hash(phys_page);   
+   tb->phys_hash   = mips64_jit_get_phys_hash(phys_page);
    tb->virt_hash   = mips64_jit_get_virt_hash(page_addr);
    tb->target_code = mips_code;
    tb->checksum    = tsg_checksum_page(tb->target_code,VM_PAGE_SIZE);
@@ -362,23 +362,23 @@ mips64_jit_tcb_compile(cpu_mips_t *cpu,m_uint64_t vaddr,m_uint32_t exec_state)
 
    /* The page is not shared, we have to compile it */
    tc = mips64_jit_tcb_translate(cpu,tb);
-   
+
    if (tc != NULL) {
       tc->target_code = tb->target_code;
       tc->trans_pos   = 0;
- 
+
       tb_enable(cpu->gen,tb);
       tc_register(cpu->gen,tb,tc);
    } else {
       tb->flags |= TB_FLAG_NOJIT;
       tb_enable(cpu->gen,tb);
    }
-   
+
    return tb;
 }
 
 /* Run a compiled MIPS instruction block */
-static forced_inline 
+static forced_inline
 void mips64_jit_tcb_run(cpu_mips_t *cpu,cpu_tb_t *tb)
 {
 #if DEBUG_SYM_TREE
@@ -422,7 +422,7 @@ void mips64_jit_tcb_run(cpu_mips_t *cpu,cpu_tb_t *tb)
 
 /* Execute compiled MIPS code */
 void *mips64_jit_run_cpu(cpu_gen_t *gen)
-{    
+{
    cpu_mips_t *cpu = CPU_MIPS64(gen);
    pthread_t timer_irq_thread;
    cpu_tb_t *tb;
@@ -431,7 +431,7 @@ void *mips64_jit_run_cpu(cpu_gen_t *gen)
    int timer_irq_check = 0;
 
    if (pthread_create(&timer_irq_thread,NULL,
-                      (void *)mips64_timer_irq_run,cpu)) 
+                      (void *)mips64_timer_irq_run,cpu))
    {
       fprintf(stderr,
               "VM '%s': unable to create Timer IRQ thread for CPU%u.\n",
@@ -442,20 +442,20 @@ void *mips64_jit_run_cpu(cpu_gen_t *gen)
 
    gen->cpu_thread_running = TRUE;
    cpu_exec_loop_set(gen);
-   
- start_cpu:   
+
+ start_cpu:
    gen->idle_count = 0;
 
    for(;;) {
       if (unlikely(gen->state != CPU_STATE_RUNNING)) {
-         /* 
+         /*
           * We are paused/halted, so free the TCB/TCD in order to allow
           * reallocation of exec pages for other vCPUs.
           */
          cpu_jit_tcb_flush_all(cpu->gen);
          break;
       }
-      
+
 #if DEBUG_BLOCK_PERF_CNT
       cpu->perf_counter++;
 #endif
@@ -482,7 +482,7 @@ void *mips64_jit_run_cpu(cpu_gen_t *gen)
       hv = mips64_jit_get_virt_hash(cpu->pc);
       tb = gen->tb_virt_hash[hv];
 
-      if (unlikely(!tb) || unlikely(!mips64_jit_tcb_match(cpu,tb))) 
+      if (unlikely(!tb) || unlikely(!mips64_jit_tcb_match(cpu,tb)))
       {
          /* slow lookup: try to find the page by physical address */
          cpu->translate(cpu,cpu->pc,&phys_page);
@@ -512,7 +512,7 @@ void *mips64_jit_run_cpu(cpu_gen_t *gen)
       tb->tm_last_use = jit_jiffies++;
 #endif
       tb->acc_count++;
- 
+
       cpu->current_tb = tb;
 
       if (unlikely(tb->flags & TB_FLAG_NOTRANS))
@@ -535,7 +535,7 @@ void *mips64_jit_run_cpu(cpu_gen_t *gen)
             pthread_join(timer_irq_thread,NULL);
             return NULL;
       }
-      
+
       /* CPU is paused */
       usleep(200000);
    }

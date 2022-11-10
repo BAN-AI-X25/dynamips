@@ -6,41 +6,41 @@
 #ifndef __CP0_H__
 #define __CP0_H__
 
-#include "utils.h" 
+#include "utils.h"
 
 #define TLB_ZONE_ADD 0
 #define TLB_ZONE_DELETE 1
 
 /* Update the Context register with a faulty address */
-static inline 
+static inline
 void mips64_cp0_update_context_reg(cpu_mips_t *cpu,m_uint64_t addr)
 {
    m_uint64_t badvpn2;
-   
+
    badvpn2 = addr & MIPS_CP0_CONTEXT_VPN2_MASK;
    badvpn2 <<= MIPS_CP0_CONTEXT_BADVPN2_SHIFT;
-   
+
    cpu->cp0.reg[MIPS_CP0_CONTEXT] &= ~MIPS_CP0_CONTEXT_BADVPN2_MASK;
    cpu->cp0.reg[MIPS_CP0_CONTEXT] |= badvpn2;
 }
 
 /* Update the XContext register with a faulty address */
-static inline 
+static inline
 void mips64_cp0_update_xcontext_reg(cpu_mips_t *cpu,m_uint64_t addr)
 {
    m_uint64_t rbadvpn2;
-   
+
    rbadvpn2 = addr & MIPS_CP0_XCONTEXT_VPN2_MASK;
    rbadvpn2 <<= MIPS_CP0_XCONTEXT_BADVPN2_SHIFT;
    rbadvpn2 |= ((addr >> 62) & 0x03) << MIPS_CP0_XCONTEXT_R_SHIFT;
-   
+
    cpu->cp0.reg[MIPS_CP0_XCONTEXT] &= ~MIPS_CP0_XCONTEXT_RBADVPN2_MASK;
    cpu->cp0.reg[MIPS_CP0_XCONTEXT] |= rbadvpn2;
 }
 
 /* Get the CPU operating mode (User,Supervisor or Kernel) */
 static forced_inline u_int mips64_cp0_get_mode(cpu_mips_t *cpu)
-{  
+{
    mips_cp0_t *cp0 = &cpu->cp0;
    u_int cpu_mode;
 

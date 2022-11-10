@@ -51,7 +51,7 @@ static int ppc32_vmtest_delete_instance(vm_instance_t *vm)
    /* Stop all CPUs */
    if (vm->cpu_group != NULL) {
       vm_stop(vm);
-      
+
       if (cpu_group_sync_state(vm->cpu_group) == -1) {
          vm_error(vm,"unable to sync with system CPUs.\n");
          return(FALSE);
@@ -82,7 +82,7 @@ static void ppc32_vmtest_clear_irq(vm_instance_t *vm,u_int irq)
 /* Initialize the PPC32 VM test Platform */
 static int ppc32_vmtest_init_platform(vm_instance_t *vm)
 {
-   _maybe_used cpu_ppc_t *cpu0; 
+   _maybe_used cpu_ppc_t *cpu0;
    cpu_gen_t *gen0;
 
    /* Create Console and AUX ports */
@@ -152,7 +152,7 @@ static int ppc32_vmtest_init_platform(vm_instance_t *vm)
 
 /* Boot the RAW image */
 _Unused static int ppc32_vmtest_boot_raw(vm_instance_t *vm)
-{   
+{
    cpu_ppc_t *cpu;
 
    if (!vm->boot_cpu)
@@ -188,7 +188,7 @@ _Unused static int ppc32_vmtest_boot_raw(vm_instance_t *vm)
    vm_log(vm,"PPC32_VMTEST_BOOT",
           "starting instance (CPU0 IA=0x%8.8x,JIT %s)\n",
           cpu->ia,vm->jit_use ? "on":"off");
-   
+
    /* Start main CPU */
    if (vm->ghost_status != VM_GHOST_RAM_GENERATE) {
       vm->status = VM_STATUS_RUNNING;
@@ -201,7 +201,7 @@ _Unused static int ppc32_vmtest_boot_raw(vm_instance_t *vm)
 
 /* Boot the ELF image */
 static int ppc32_vmtest_boot_elf(vm_instance_t *vm)
-{     
+{
    m_uint32_t rom_entry_point;
    cpu_ppc_t *cpu;
 
@@ -250,7 +250,7 @@ static int ppc32_vmtest_boot_elf(vm_instance_t *vm)
    vm_log(vm,"PPC32_VMTEST_BOOT",
           "starting instance (CPU0 IA=0x%8.8x,JIT %s)\n",
           cpu->ia,vm->jit_use ? "on":"off");
-   
+
    /* Start main CPU */
    if (vm->ghost_status != VM_GHOST_RAM_GENERATE) {
       vm->status = VM_STATUS_RUNNING;
@@ -285,7 +285,7 @@ static int ppc32_vmtest_stop_instance(vm_instance_t *vm)
    /* Stop all CPUs */
    if (vm->cpu_group != NULL) {
       vm_stop(vm);
-      
+
       if (cpu_group_sync_state(vm->cpu_group) == -1) {
          vm_error(vm,"unable to sync with system CPUs.\n");
          return(-1);

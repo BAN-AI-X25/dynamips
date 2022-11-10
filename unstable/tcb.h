@@ -24,7 +24,7 @@ struct insn_patch {
 /* Instruction patch table */
 #define INSN_PATCH_TABLE_SIZE  32
 
-struct insn_patch_table {   
+struct insn_patch_table {
    struct insn_patch_table *next;
    struct insn_patch patches[INSN_PATCH_TABLE_SIZE];
    u_int cur_patch;
@@ -46,18 +46,18 @@ struct cpu_tb {
    m_uint32_t exec_state;
    tsg_checksum_t checksum;
 
-   m_uint64_t acc_count;   
+   m_uint64_t acc_count;
    void *target_code;
 
    cpu_tb_t **tb_pprev,*tb_next;
-   
+
    /* Translated Code (can be shared among multiple CPUs) */
    cpu_tc_t *tc;
    cpu_tb_t **tb_dl_pprev,*tb_dl_next;
-   
+
    /* Virtual page hash */
    m_uint32_t virt_hash;
-   
+
    /* Physical page information */
    m_uint32_t phys_page;
    m_uint32_t phys_hash;
@@ -68,7 +68,7 @@ struct cpu_tb {
 #endif
 };
 
-/* Maximum exec pages per TC descriptor */ 
+/* Maximum exec pages per TC descriptor */
 #define TC_MAX_CHUNKS  32
 
 /* TC descriptor flags */
@@ -82,36 +82,36 @@ struct cpu_tc {
    m_uint32_t exec_state;
    u_int flags;
 
-   /* Temporarily used during the translation */   
+   /* Temporarily used during the translation */
    void *target_code;
 
    u_char **jit_insn_ptr;
    u_int jit_chunk_pos;
    insn_exec_page_t *jit_chunks[TC_MAX_CHUNKS];
-   
+
    /* Current JIT buffer */
    insn_exec_page_t *jit_buffer;
    u_char *jit_ptr;
-   
+
    /* Patch table */
    struct insn_patch_table *patch_table;
 
    /* Translation position in target code */
    u_int trans_pos;
-   
+
    /* 1024 instructions per page, one bit per instruction */
    m_uint32_t target_bitmap[32];
    m_uint32_t target_undef_cnt;
 
    /* Reference count */
    int ref_count;
-   
+
    /* TB list referring to this translated code / exec pages */
    cpu_tb_t *tb_list;
-   
+
    /* Linked list for hash table referencing */
    cpu_tc_t **hash_pprev,*hash_next;
-   
+
    /* Linked list for single-CPU referencement (ref_count=1) */
    cpu_tc_t **sc_pprev,*sc_next;
 };

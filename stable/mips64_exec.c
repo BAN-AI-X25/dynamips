@@ -105,7 +105,7 @@ int mips64_dump_insn(char *buffer,size_t buf_size,size_t insn_name_size,
       snprintf(buffer,buf_size,"%8.8x  (unknown)",instruction);
       return(-1);
    }
-   
+
    if (!(name = tag->name))
       name = "[unknown]";
 
@@ -235,7 +235,7 @@ int mips64_dump_insn(char *buffer,size_t buf_size,size_t insn_name_size,
 
       case 17:   /* op GPR[rs], GPR[rt] */
          rs = bits(instruction,21,25);
-         rt = bits(instruction,16,20);         
+         rt = bits(instruction,16,20);
          snprintf(buffer,buf_size,"%8.8x  %s %s,%s",
                   instruction,insn_name,mips64_gpr_reg_names[rs],
                   mips64_gpr_reg_names[rt]);
@@ -268,7 +268,7 @@ int mips64_dump_insn(char *buffer,size_t buf_size,size_t insn_name_size,
                   instruction,insn_name,tag->instr_type);
          return(-1);
    }
-   
+
    return(0);
 }
 
@@ -294,7 +294,7 @@ void mips64_dump_insn_block(cpu_mips_t *cpu,m_uint64_t pc,u_int count,
 _Unused static forced_inline void mips64_exec_memop(cpu_mips_t *cpu,int memop,
                                             m_uint64_t vaddr,u_int dst_reg,
                                             int keep_ll_bit)
-{     
+{
    fastcall mips_memop_fn fn;
 
    if (!keep_ll_bit) cpu->ll_bit = 0;
@@ -309,7 +309,7 @@ static forced_inline void mips64_exec_memop2(cpu_mips_t *cpu,int memop,
 {
    m_uint64_t vaddr = cpu->gpr[base] + sign_extend(offset,16);
    fastcall mips_memop_fn fn;
-      
+
    if (!keep_ll_bit) cpu->ll_bit = 0;
    fn = cpu->mem_op_fn[memop];
    fn(cpu,vaddr,dst_reg);
@@ -318,7 +318,7 @@ static forced_inline void mips64_exec_memop2(cpu_mips_t *cpu,int memop,
 /* Fetch an instruction */
 /*static forced_inline*/ int mips64_exec_fetch(cpu_mips_t *cpu,m_uint64_t pc,
                                            mips_insn_t *insn)
-{   
+{
    m_uint64_t exec_page;
    m_uint32_t offset;
 
@@ -353,7 +353,7 @@ mips64_exec_single_instruction(cpu_mips_t *cpu,mips_insn_t instruction)
 #if DEBUG_INSN_PERF_CNT
    cpu->perf_counter++;
 #endif
-   
+
    /* Increment CP0 count register */
    mips64_exec_inc_cp0_cnt(cpu);
 
@@ -369,7 +369,7 @@ mips64_exec_single_instruction(cpu_mips_t *cpu,mips_insn_t instruction)
 #if 0
    {
       char buffer[80];
-      
+
       if (mips64_dump_insn(buffer,sizeof(buffer),0,cpu->pc,instruction)!=-1)
          cpu_log(cpu->gen,"EXEC","0x%llx: %s\n",cpu->pc,buffer);
    }
@@ -390,7 +390,7 @@ fastcall void mips64_exec_single_step(cpu_mips_t *cpu,mips_insn_t instruction)
 
 /* Run MIPS code in step-by-step mode */
 void *mips64_exec_run_cpu(cpu_gen_t *gen)
-{   
+{
    cpu_mips_t *cpu = CPU_MIPS64(gen);
    pthread_t timer_irq_thread;
    int timer_irq_check = 0;
@@ -452,7 +452,7 @@ void *mips64_exec_run_cpu(cpu_gen_t *gen)
           continue;
       }
 
-      /* Fetch and execute the instruction */      
+      /* Fetch and execute the instruction */
       mips64_exec_fetch(cpu,cpu->pc,&insn);
       res = mips64_exec_single_instruction(cpu,insn);
 
@@ -474,12 +474,12 @@ void *mips64_exec_run_cpu(cpu_gen_t *gen)
             gen->state = CPU_STATE_RUNNING;
             goto start_cpu;
 
-         case CPU_STATE_HALTED:     
+         case CPU_STATE_HALTED:
             gen->cpu_thread_running = FALSE;
             pthread_join(timer_irq_thread,NULL);
             break;
       }
-      
+
       /* CPU is paused */
       usleep(200000);
    }
@@ -631,7 +631,7 @@ static fastcall int mips64_exec_BEQ(cpu_mips_t *cpu,mips_insn_t insn)
    mips64_exec_bdslot(cpu);
 
    /* take the branch if the test result is true */
-   if (res) 
+   if (res)
       cpu->pc = new_pc;
    else
       cpu->pc += 8;
@@ -682,7 +682,7 @@ static fastcall int mips64_exec_BEQZ(cpu_mips_t *cpu,mips_insn_t insn)
    mips64_exec_bdslot(cpu);
 
    /* take the branch if the test result is true */
-   if (res) 
+   if (res)
       cpu->pc = new_pc;
    else
       cpu->pc += 8;
@@ -708,7 +708,7 @@ static fastcall int mips64_exec_BNEZ(cpu_mips_t *cpu,mips_insn_t insn)
    mips64_exec_bdslot(cpu);
 
    /* take the branch if the test result is true */
-   if (res) 
+   if (res)
       cpu->pc = new_pc;
    else
       cpu->pc += 8;
@@ -734,7 +734,7 @@ static fastcall int mips64_exec_BGEZ(cpu_mips_t *cpu,mips_insn_t insn)
    mips64_exec_bdslot(cpu);
 
    /* take the branch if the test result is true */
-   if (res) 
+   if (res)
       cpu->pc = new_pc;
    else
       cpu->pc += 8;
@@ -763,7 +763,7 @@ static fastcall int mips64_exec_BGEZAL(cpu_mips_t *cpu,mips_insn_t insn)
    mips64_exec_bdslot(cpu);
 
    /* take the branch if the test result is true */
-   if (res) 
+   if (res)
       cpu->pc = new_pc;
    else
       cpu->pc += 8;
@@ -840,7 +840,7 @@ static fastcall int mips64_exec_BGTZ(cpu_mips_t *cpu,mips_insn_t insn)
    mips64_exec_bdslot(cpu);
 
    /* take the branch if the test result is true */
-   if (res) 
+   if (res)
       cpu->pc = new_pc;
    else
       cpu->pc += 8;
@@ -890,7 +890,7 @@ static fastcall int mips64_exec_BLEZ(cpu_mips_t *cpu,mips_insn_t insn)
    mips64_exec_bdslot(cpu);
 
    /* take the branch if the test result is true */
-   if (res) 
+   if (res)
       cpu->pc = new_pc;
    else
       cpu->pc += 8;
@@ -1047,7 +1047,7 @@ static fastcall int mips64_exec_BNE(cpu_mips_t *cpu,mips_insn_t insn)
    mips64_exec_bdslot(cpu);
 
    /* take the branch if the test result is true */
-   if (res) 
+   if (res)
       cpu->pc = new_pc;
    else
       cpu->pc += 8;
@@ -1102,7 +1102,7 @@ static fastcall int mips64_exec_CACHE(cpu_mips_t *cpu,mips_insn_t insn)
 
 /* CFC0 */
 static fastcall int mips64_exec_CFC0(cpu_mips_t *cpu,mips_insn_t insn)
-{	
+{
    int rt = bits(insn,16,20);
    int rd = bits(insn,11,15);
 
@@ -1112,7 +1112,7 @@ static fastcall int mips64_exec_CFC0(cpu_mips_t *cpu,mips_insn_t insn)
 
 /* CTC0 */
 static fastcall int mips64_exec_CTC0(cpu_mips_t *cpu,mips_insn_t insn)
-{	
+{
    int rt = bits(insn,16,20);
    int rd = bits(insn,11,15);
 
@@ -1122,7 +1122,7 @@ static fastcall int mips64_exec_CTC0(cpu_mips_t *cpu,mips_insn_t insn)
 
 /* DADDIU */
 static fastcall int mips64_exec_DADDIU(cpu_mips_t *cpu,mips_insn_t insn)
-{	
+{
    int rs  = bits(insn,21,25);
    int rt  = bits(insn,16,20);
    int imm = bits(insn,0,15);
@@ -1134,7 +1134,7 @@ static fastcall int mips64_exec_DADDIU(cpu_mips_t *cpu,mips_insn_t insn)
 
 /* DADDU: rd = rs + rt */
 static fastcall int mips64_exec_DADDU(cpu_mips_t *cpu,mips_insn_t insn)
-{	
+{
    int rs = bits(insn,21,25);
    int rt = bits(insn,16,20);
    int rd = bits(insn,11,15);
@@ -1145,7 +1145,7 @@ static fastcall int mips64_exec_DADDU(cpu_mips_t *cpu,mips_insn_t insn)
 
 /* DIV */
 static fastcall int mips64_exec_DIV(cpu_mips_t *cpu,mips_insn_t insn)
-{	
+{
    int rs = bits(insn,21,25);
    int rt = bits(insn,16,20);
 
@@ -1159,7 +1159,7 @@ static fastcall int mips64_exec_DIV(cpu_mips_t *cpu,mips_insn_t insn)
 
 /* DIVU */
 static fastcall int mips64_exec_DIVU(cpu_mips_t *cpu,mips_insn_t insn)
-{	
+{
    int rs = bits(insn,21,25);
    int rt = bits(insn,16,20);
 
@@ -1176,7 +1176,7 @@ static fastcall int mips64_exec_DIVU(cpu_mips_t *cpu,mips_insn_t insn)
 
 /* DMFC0 */
 static fastcall int mips64_exec_DMFC0(cpu_mips_t *cpu,mips_insn_t insn)
-{	
+{
    int rt = bits(insn,16,20);
    int rd = bits(insn,11,15);
 
@@ -1186,7 +1186,7 @@ static fastcall int mips64_exec_DMFC0(cpu_mips_t *cpu,mips_insn_t insn)
 
 /* DMFC1 */
 static fastcall int mips64_exec_DMFC1(cpu_mips_t *cpu,mips_insn_t insn)
-{	
+{
    int rt = bits(insn,16,20);
    int rd = bits(insn,11,15);
 
@@ -1196,7 +1196,7 @@ static fastcall int mips64_exec_DMFC1(cpu_mips_t *cpu,mips_insn_t insn)
 
 /* DMTC0 */
 static fastcall int mips64_exec_DMTC0(cpu_mips_t *cpu,mips_insn_t insn)
-{	
+{
    int rt = bits(insn,16,20);
    int rd = bits(insn,11,15);
 
@@ -1206,7 +1206,7 @@ static fastcall int mips64_exec_DMTC0(cpu_mips_t *cpu,mips_insn_t insn)
 
 /* DMTC1 */
 static fastcall int mips64_exec_DMTC1(cpu_mips_t *cpu,mips_insn_t insn)
-{	
+{
    int rt = bits(insn,16,20);
    int rd = bits(insn,11,15);
 
@@ -1343,7 +1343,7 @@ static fastcall int mips64_exec_J(cpu_mips_t *cpu,mips_insn_t insn)
 
    /* exec the instruction in the delay slot */
    mips64_exec_bdslot(cpu);
-   
+
    /* set the new pc */
    cpu->pc = new_pc;
    return(1);
@@ -1364,7 +1364,7 @@ static fastcall int mips64_exec_JAL(cpu_mips_t *cpu,mips_insn_t insn)
 
    /* exec the instruction in the delay slot */
    mips64_exec_bdslot(cpu);
-   
+
    /* set the new pc */
    cpu->pc = new_pc;
    return(1);
@@ -1573,7 +1573,7 @@ static fastcall int mips64_exec_LWU(cpu_mips_t *cpu,mips_insn_t insn)
 
 /* MFC0 */
 static fastcall int mips64_exec_MFC0(cpu_mips_t *cpu,mips_insn_t insn)
-{	
+{
    int rt = bits(insn,16,20);
    int rd = bits(insn,11,15);
 
@@ -1583,7 +1583,7 @@ static fastcall int mips64_exec_MFC0(cpu_mips_t *cpu,mips_insn_t insn)
 
 /* MFC1 */
 static fastcall int mips64_exec_MFC1(cpu_mips_t *cpu,mips_insn_t insn)
-{	
+{
    int rt = bits(insn,16,20);
    int rd = bits(insn,11,15);
 
@@ -1621,7 +1621,7 @@ static fastcall int mips64_exec_MOVE(cpu_mips_t *cpu,mips_insn_t insn)
 
 /* MTC0 */
 static fastcall int mips64_exec_MTC0(cpu_mips_t *cpu,mips_insn_t insn)
-{	
+{
    int rt = bits(insn,16,20);
    int rd = bits(insn,11,15);
 
@@ -1631,7 +1631,7 @@ static fastcall int mips64_exec_MTC0(cpu_mips_t *cpu,mips_insn_t insn)
 
 /* MTC1 */
 static fastcall int mips64_exec_MTC1(cpu_mips_t *cpu,mips_insn_t insn)
-{	
+{
    int rt = bits(insn,16,20);
    int rd = bits(insn,11,15);
 
@@ -1790,7 +1790,7 @@ static fastcall int mips64_exec_SDL(cpu_mips_t *cpu,mips_insn_t insn)
    int base   = bits(insn,21,25);
    int rt     = bits(insn,16,20);
    int offset = bits(insn,0,15);
-   
+
    mips64_exec_memop2(cpu,MIPS_MEMOP_SDL,base,offset,rt,FALSE);
    return(0);
 }
@@ -1835,7 +1835,7 @@ static fastcall int mips64_exec_SLL(cpu_mips_t *cpu,mips_insn_t insn)
    int rd = bits(insn,11,15);
    int sa = bits(insn,6,10);
    m_uint32_t res;
-   
+
    res = (m_uint32_t)cpu->gpr[rt] << sa;
    cpu->gpr[rd] = sign_extend(res,32);
    return(0);
@@ -1848,7 +1848,7 @@ static fastcall int mips64_exec_SLLV(cpu_mips_t *cpu,mips_insn_t insn)
    int rt = bits(insn,16,20);
    int rd = bits(insn,11,15);
    m_uint32_t res;
-   
+
    res = (m_uint32_t)cpu->gpr[rt] << (cpu->gpr[rs] & 0x1f);
    cpu->gpr[rd] = sign_extend(res,32);
    return(0);
@@ -1923,7 +1923,7 @@ static fastcall int mips64_exec_SRA(cpu_mips_t *cpu,mips_insn_t insn)
    int rd = bits(insn,11,15);
    int sa = bits(insn,6,10);
    m_int32_t res;
-   
+
    res = (m_int32_t)cpu->gpr[rt] >> sa;
    cpu->gpr[rd] = sign_extend(res,32);
    return(0);
@@ -1936,7 +1936,7 @@ static fastcall int mips64_exec_SRAV(cpu_mips_t *cpu,mips_insn_t insn)
    int rt = bits(insn,16,20);
    int rd = bits(insn,11,15);
    m_int32_t res;
-   
+
    res = (m_int32_t)cpu->gpr[rt] >> (cpu->gpr[rs] & 0x1f);
    cpu->gpr[rd] = sign_extend(res,32);
    return(0);
@@ -1949,7 +1949,7 @@ static fastcall int mips64_exec_SRL(cpu_mips_t *cpu,mips_insn_t insn)
    int rd = bits(insn,11,15);
    int sa = bits(insn,6,10);
    m_uint32_t res;
-   
+
    res = (m_uint32_t)cpu->gpr[rt] >> sa;
    cpu->gpr[rd] = sign_extend(res,32);
    return(0);
@@ -1962,7 +1962,7 @@ static fastcall int mips64_exec_SRLV(cpu_mips_t *cpu,mips_insn_t insn)
    int rt = bits(insn,16,20);
    int rd = bits(insn,11,15);
    m_uint32_t res;
-   
+
    res = (m_uint32_t)cpu->gpr[rt] >> (cpu->gpr[rs] & 0x1f);
    cpu->gpr[rd] = sign_extend(res,32);
    return(0);
@@ -2012,7 +2012,7 @@ static fastcall int mips64_exec_SWL(cpu_mips_t *cpu,mips_insn_t insn)
    int base   = bits(insn,21,25);
    int rt     = bits(insn,16,20);
    int offset = bits(insn,0,15);
-   
+
    mips64_exec_memop2(cpu,MIPS_MEMOP_SWL,base,offset,rt,FALSE);
    return(0);
 }

@@ -7,7 +7,7 @@
  *   Sergey Chaban (serge@wildwestsoftware.com)
  *   Dietmar Maurer (dietmar@ximian.com)
  *   Patrik Torstensson
- * 
+ *
  * Copyright (C)  2000 Intel Corporation.  All rights reserved.
  * Copyright (C)  2001, 2002 Ximian, Inc.
  */
@@ -129,7 +129,7 @@ enum {
 typedef enum {
 	X86_LOCK_PREFIX = 0xF0,
 	X86_REPNZ_PREFIX = 0xF2,
-	X86_REPZ_PREFIX = 0xF3, 
+	X86_REPZ_PREFIX = 0xF3,
 	X86_REP_PREFIX = 0xF3,
 	X86_CS_PREFIX = 0x2E,
 	X86_SS_PREFIX = 0x36,
@@ -143,7 +143,7 @@ typedef enum {
 	X86_ADDRESS_PREFIX = 0x67
 } X86_Prefix;
 
-static const unsigned char 
+static const unsigned char
 x86_cc_unsigned_map [X86_NCC] = {
 	0x74, /* eq  */
 	0x75, /* ne  */
@@ -159,7 +159,7 @@ x86_cc_unsigned_map [X86_NCC] = {
 	0x71, /* no  */
 };
 
-static const unsigned char 
+static const unsigned char
 x86_cc_signed_map [X86_NCC] = {
 	0x74, /* eq  */
 	0x75, /* ne  */
@@ -217,10 +217,10 @@ typedef union {
 //      |	    var[n_arg]	             |
 //      |	    var[n_arg+1]             |  local variables area
 //      |          . . .                 |
-//      |	    var[n_var-1]             | 
+//      |	    var[n_var-1]             |
 //      +--------------------------------+
 //      |			                     |
-//      |			                     |  
+//      |			                     |
 //      |		spill area               | area for spilling mimic stack
 //      |			                     |
 //      +--------------------------------|
@@ -388,14 +388,14 @@ typedef union {
 		*(inst)++ = (unsigned char)0xb1;	\
 		x86_reg_emit ((inst), (reg), (dreg));	\
 	} while (0)
-	
+
 #define x86_cmpxchg_mem_reg(inst,mem,reg)	\
 	do {	\
 		*(inst)++ = (unsigned char)0x0f;	\
 		*(inst)++ = (unsigned char)0xb1;	\
 		x86_mem_emit ((inst), (reg), (mem));	\
 	} while (0)
-	
+
 #define x86_cmpxchg_membase_reg(inst,basereg,disp,reg)	\
 	do {	\
 		*(inst)++ = (unsigned char)0x0f;	\
@@ -569,7 +569,7 @@ typedef union {
 			x86_imm_emit32 ((inst), (imm));	\
 		}	\
 	} while (0)
-	
+
 #define x86_alu_membase8_imm(inst,opc,basereg,disp,imm) 	\
 	do {	\
 		*(inst)++ = (unsigned char)0x80;	\
@@ -1388,7 +1388,7 @@ typedef union {
 	} while (0)
 
 #define x86_push_imm_template(inst) x86_push_imm (inst, 0xf0f0f0f0)
-	
+
 #define x86_push_imm(inst,imm)	\
 	do {	\
 		int _imm = (int) (imm);	\
@@ -1647,7 +1647,7 @@ typedef union {
 		x86_imm_emit16 ((inst), (framesize));	\
 		*(inst)++ = 0;	\
 	} while (0)
-	
+
 #define x86_leave(inst) do { *(inst)++ = (unsigned char)0xc9; } while (0)
 #define x86_sahf(inst)  do { *(inst)++ = (unsigned char)0x9e; } while (0)
 

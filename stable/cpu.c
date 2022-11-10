@@ -73,7 +73,7 @@ int cpu_group_add(cpu_group_t *group,cpu_gen_t *cpu)
               cpu->id);
       return(-1);
    }
-   
+
    cpu->next = group->cpu_list;
    group->cpu_list = cpu;
    return(0);
@@ -94,7 +94,7 @@ cpu_group_t *cpu_group_create(char *name)
 
 /* Delete a CPU group */
 void cpu_group_delete(cpu_group_t *group)
-{  
+{
    cpu_gen_t *cpu,*next;
 
    if (group != NULL) {
@@ -288,7 +288,7 @@ void cpu_stop(cpu_gen_t *cpu)
 void cpu_group_start_all_cpu(cpu_group_t *group)
 {
    cpu_gen_t *cpu;
-   
+
    for(cpu=group->cpu_list;cpu;cpu=cpu->next)
       cpu_start(cpu);
 }
@@ -297,7 +297,7 @@ void cpu_group_start_all_cpu(cpu_group_t *group)
 void cpu_group_stop_all_cpu(cpu_group_t *group)
 {
    cpu_gen_t *cpu;
-   
+
    for(cpu=group->cpu_list;cpu;cpu=cpu->next)
       cpu_stop(cpu);
 }
@@ -306,7 +306,7 @@ void cpu_group_stop_all_cpu(cpu_group_t *group)
 void cpu_group_set_state(cpu_group_t *group,u_int state)
 {
    cpu_gen_t *cpu;
-   
+
    for(cpu=group->cpu_list;cpu;cpu=cpu->next)
       cpu->state = state;
 }
@@ -329,7 +329,7 @@ static int cpu_group_check_activity(cpu_group_t *group)
 
 /* Synchronize on CPUs (all CPUs must be inactive) */
 int cpu_group_sync_state(cpu_group_t *group)
-{   
+{
    cpu_gen_t *cpu;
    m_tmcnt_t t1,t2;
 
@@ -355,10 +355,10 @@ int cpu_group_sync_state(cpu_group_t *group)
 int cpu_group_save_state(cpu_group_t *group)
 {
    cpu_gen_t *cpu;
-   
+
    for(cpu=group->cpu_list;cpu;cpu=cpu->next)
       cpu->prev_state = cpu->state;
-   
+
    return(TRUE);
 }
 
@@ -366,7 +366,7 @@ int cpu_group_save_state(cpu_group_t *group)
 int cpu_group_restore_state(cpu_group_t *group)
 {
    cpu_gen_t *cpu;
-   
+
    for(cpu=group->cpu_list;cpu;cpu=cpu->next)
       cpu->state = cpu->prev_state;
 

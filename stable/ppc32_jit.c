@@ -107,7 +107,7 @@ int ppc32_jit_init(cpu_ppc_t *cpu)
 
    cpu->exec_page_array = calloc(cpu->exec_page_count,
                                  sizeof(insn_exec_page_t));
-   
+
    if (!cpu->exec_page_array) {
       fprintf(stderr,"ppc32_jit_init: unable to create exec page array\n");
       return(-1);
@@ -163,7 +163,7 @@ u_int ppc32_jit_flush(cpu_ppc_t *cpu,u_int threshold)
 
 /* Shutdown the JIT */
 void ppc32_jit_shutdown(cpu_ppc_t *cpu)
-{   
+{
    ppc32_jit_tcb_t *p,*next;
 
    /* Flush the JIT */
@@ -183,7 +183,7 @@ void ppc32_jit_shutdown(cpu_ppc_t *cpu)
    free(cpu->exec_page_array);
 
    /* Free JIT block mapping */
-   free(cpu->exec_blk_map);   
+   free(cpu->exec_blk_map);
 
    /* Free physical mapping for executable pages */
    free(cpu->exec_phys_map);
@@ -196,7 +196,7 @@ static inline insn_exec_page_t *exec_page_alloc(cpu_ppc_t *cpu)
    u_int count;
 
    /* If the free list is empty, flush JIT */
-   if (unlikely(!cpu->exec_page_free_list)) 
+   if (unlikely(!cpu->exec_page_free_list))
    {
       if (cpu->jit_flush_method) {
          cpu_log(cpu->gen,
@@ -210,14 +210,14 @@ static inline insn_exec_page_t *exec_page_alloc(cpu_ppc_t *cpu)
          if (!cpu->exec_page_free_list)
             ppc32_jit_flush(cpu,0);
       }
-      
+
       /* Use both methods alternatively */
       cpu->jit_flush_method = 1 - cpu->jit_flush_method;
    }
 
    if (unlikely(!(p = cpu->exec_page_free_list)))
       return NULL;
-   
+
    cpu->exec_page_free_list = p->next;
    cpu->exec_page_alloc++;
    return p;
@@ -239,7 +239,7 @@ static struct ppc32_insn_tag *insn_tag_find(ppc_insn_t ins)
    struct ppc32_insn_tag *tag = NULL;
    int index;
 
-   index = ilt_lookup(ilt,ins);   
+   index = ilt_lookup(ilt,ins);
    tag = ppc32_jit_get_insn(index);
    return tag;
 }
@@ -254,7 +254,7 @@ static forced_inline ppc_insn_t insn_fetch(ppc32_jit_tcb_t *b)
 
 /* Show register allocation status */
 _Unused static void ppc32_jit_show_hreg_status(cpu_ppc_t *cpu)
-{    
+{
    struct hreg_map *map;
 
    printf("PPC32-JIT: reg status for insn '%s'\n",cpu->jit_hreg_seq_name);
@@ -358,7 +358,7 @@ int ppc32_jit_alloc_hreg(cpu_ppc_t *cpu,int ppc_reg)
    struct hreg_map *map;
    int hreg;
 
-   /* 
+   /*
     * If PPC reg is invalid, the caller requested for a temporary register.
     */
    if (ppc_reg == -1) {
@@ -378,14 +378,14 @@ int ppc32_jit_alloc_hreg(cpu_ppc_t *cpu,int ppc_reg)
 
    hreg = cpu->ppc_reg_map[ppc_reg];
 
-   /* 
+   /*
     * If the PPC register is already mapped to an host register, re-use this
     * mapping and put this as MRU mapping.
     */
    if (hreg != -1) {
       map = &cpu->hreg_map[hreg];
    } else {
-      /* 
+      /*
        * This PPC register has no mapping to host register. Find a free
        * register.
        */
@@ -395,7 +395,7 @@ int ppc32_jit_alloc_hreg(cpu_ppc_t *cpu,int ppc_reg)
       /* Remove the old PPC mapping if present */
       if (map->vreg != -1)
          cpu->ppc_reg_map[map->vreg] = -1;
-      
+
       /* Establish the new mapping */
       cpu->ppc_reg_map[ppc_reg] = map->hreg;
       map->vreg = ppc_reg;
@@ -509,7 +509,7 @@ int ppc32_jit_tcb_record_patch(ppc32_jit_tcb_t *block,jit_op_t *iop,
    patch = &ipt->patches[ipt->cur_patch];
    patch->jit_insn = jit_ptr;
    patch->ppc_ia = vaddr;
-   ipt->cur_patch++; 
+   ipt->cur_patch++;
 
    patch->next = iop->arg_ptr;
    iop->arg_ptr = patch;
@@ -532,7 +532,7 @@ static int ppc32_jit_tcb_apply_patches(cpu_ppc_t *cpu,
       jit_dst = block->jit_insn_ptr[pos];
 
       if (jit_dst) {
-#if DEBUG_BLOCK_PATCH       
+#if DEBUG_BLOCK_PATCH
          printf("Block 0x%8.8x: applying patch "
                 "[JIT:%p->ppc:0x%8.8x=JIT:%p, ]\n",
                 block->start_ia,patch->jit_insn,patch->ppc_ia,jit_dst);
@@ -542,7 +542,7 @@ static int ppc32_jit_tcb_apply_patches(cpu_ppc_t *cpu,
          printf("Block 0x%8.8x: null dst for patch!\n",block->start_ia);
       }
    }
-   
+
    return(0);
 }
 
@@ -567,7 +567,7 @@ static int ppc32_jit_tcb_adjust_buffer(cpu_ppc_t *cpu,ppc32_jit_tcb_t *block)
    if ((block->jit_ptr - block->jit_buffer->ptr) <= (PPC_JIT_BUFSIZE - 512))
       return(0);
 
-#if DEBUG_BLOCK_CHUNK  
+#if DEBUG_BLOCK_CHUNK
    printf("Block 0x%8.8x: adjusting JIT buffer...\n",block->start_ia);
 #endif
 
@@ -607,7 +607,7 @@ static inline ppc32_jit_tcb_t *ppc32_jit_tcb_alloc(cpu_ppc_t *cpu)
 }
 
 /* Free the code chunks */
-static void 
+static void
 ppc32_jit_tcb_free_code_chunks(cpu_ppc_t *cpu,ppc32_jit_tcb_t *block)
 {
    int i;
@@ -644,9 +644,9 @@ void ppc32_jit_tcb_free(cpu_ppc_t *cpu,ppc32_jit_tcb_t *block,
          if (block->phys_pprev) {
             if (block->phys_next)
                block->phys_next->phys_pprev = block->phys_pprev;
-            
+
             *(block->phys_pprev) = block->phys_next;
-            
+
             block->phys_pprev = NULL;
             block->phys_next = NULL;
          }
@@ -660,7 +660,7 @@ void ppc32_jit_tcb_free(cpu_ppc_t *cpu,ppc32_jit_tcb_t *block,
 
       /* Free the PowerPC-to-native code mapping */
       free(block->jit_insn_ptr);
-      
+
       block->next = cpu->tcb_free_list;
       cpu->tcb_free_list = block;
    }
@@ -680,7 +680,7 @@ static ppc32_jit_tcb_t *ppc32_jit_tcb_create(cpu_ppc_t *cpu,m_uint32_t vaddr)
 
    block->start_ia = vaddr;
    block->phys_page = phys_page;
-   block->phys_hash = ppc32_jit_get_phys_hash(phys_page);   
+   block->phys_hash = ppc32_jit_get_phys_hash(phys_page);
 
    /* Allocate the first JIT buffer */
    if (!(block->jit_buffer = exec_page_alloc(cpu)))
@@ -704,7 +704,7 @@ static ppc32_jit_tcb_t *ppc32_jit_tcb_create(cpu_ppc_t *cpu,m_uint32_t vaddr)
  err_jit_alloc:
    ppc32_jit_tcb_free(cpu,block,FALSE);
  err_block_alloc:
-   fprintf(stderr,"%% Unable to create instruction block for vaddr=0x%8.8x\n", 
+   fprintf(stderr,"%% Unable to create instruction block for vaddr=0x%8.8x\n",
            vaddr);
    return NULL;
 }
@@ -805,7 +805,7 @@ static void ppc32_clear_ppc_reg_map(ppc_reg_map_t *ppc_map,int *host_map,
 
       if (hreg != JIT_OP_INV_REG)
          host_map[hreg] = JIT_OP_INV_REG;
-      
+
       ppc_map[reg].host_reg = JIT_OP_INV_REG;
       ppc_map[reg].last_store = NULL;
    }
@@ -853,12 +853,12 @@ _maybe_used static int ppc32_check_reg_map(ppc_reg_map_t *map_array,int *host_ma
    for(i=0;i<PPC32_GPR_NR;i++) {
       map = &map_array[i];
 
-      if ((map->host_reg != JIT_OP_INV_REG) && (host_map[map->host_reg] != i)) 
+      if ((map->host_reg != JIT_OP_INV_REG) && (host_map[map->host_reg] != i))
          goto error;
    }
 
    for(i=0;i<JIT_HOST_NREG;i++) {
-      if ((host_map[i] != JIT_OP_INV_REG) && 
+      if ((host_map[i] != JIT_OP_INV_REG) &&
           (map_array[host_map[i]].host_reg != i))
          goto error;
    }
@@ -886,7 +886,7 @@ static void ppc32_op_optimize(cpu_gen_t *cpu,ppc32_jit_tcb_t *b)
       last_cr_update[i] = NULL;
 
    for(i=0;i<PPC32_INSN_PER_PAGE;i++) {
-      for(op=cpu->jit_op_array[i];op;op=op->next) 
+      for(op=cpu->jit_op_array[i];op;op=op->next)
       {
          //ppc32_check_reg_map(ppc_map,host_map);
          cur_ia = b->start_ia + (i << 2);
@@ -932,7 +932,7 @@ static void ppc32_op_optimize(cpu_gen_t *cpu,ppc32_jit_tcb_t *b)
                   ppc32_clear_host_reg_map(ppc_map,host_map,reg);
                   ppc32_clear_ppc_reg_map(ppc_map,host_map,op->param[1]);
                }
-               
+
                /* cancel previous store op for this PPC register */
                if (map->last_store) {
                   map->last_store->param[0] = JIT_OP_INV_REG;
@@ -1044,7 +1044,7 @@ static inline void ppc32_op_emit_start(cpu_ppc_t *cpu,ppc32_jit_tcb_t *b)
 
 /* Generate the JIT code for the current page, given an op list */
 static int ppc32_op_gen_page(cpu_ppc_t *cpu,ppc32_jit_tcb_t *b)
-{   
+{
    struct ppc32_insn_tag *tag;
    cpu_gen_t *gcpu = cpu->gen;
    jit_op_t *iop;
@@ -1055,7 +1055,7 @@ static int ppc32_op_gen_page(cpu_ppc_t *cpu,ppc32_jit_tcb_t *b)
    /* Generate JIT opcodes */
    for(b->ppc_trans_pos=0;
        b->ppc_trans_pos<PPC32_INSN_PER_PAGE;
-       b->ppc_trans_pos++) 
+       b->ppc_trans_pos++)
    {
       ppc32_op_emit_start(cpu,b);
 
@@ -1078,8 +1078,8 @@ static int ppc32_op_gen_page(cpu_ppc_t *cpu,ppc32_jit_tcb_t *b)
       }
    }
 
-   /* 
-    * Mark the first instruction as a potential target, as well as the 
+   /*
+    * Mark the first instruction as a potential target, as well as the
     * current IA value.
     */
    ppc32_op_emit_branch_target(cpu,b,b->start_ia);
@@ -1089,7 +1089,7 @@ static int ppc32_op_gen_page(cpu_ppc_t *cpu,ppc32_jit_tcb_t *b)
    ppc32_op_optimize(gcpu,b);
 
    /* Generate JIT code for each instruction in page */
-   for(i=0;i<PPC32_INSN_PER_PAGE;i++) 
+   for(i=0;i<PPC32_INSN_PER_PAGE;i++)
    {
       jit_ptr = b->jit_ptr;
 
@@ -1121,9 +1121,9 @@ static int ppc32_op_gen_page(cpu_ppc_t *cpu,ppc32_jit_tcb_t *b)
 /* ======================================================================== */
 
 /* Compile a PowerPC instruction page */
-static inline 
+static inline
 ppc32_jit_tcb_t *ppc32_jit_tcb_compile(cpu_ppc_t *cpu,m_uint32_t vaddr)
-{  
+{
    ppc32_jit_tcb_t *block;
    m_uint32_t page_addr;
 
@@ -1145,7 +1145,7 @@ ppc32_jit_tcb_t *ppc32_jit_tcb_compile(cpu_ppc_t *cpu,m_uint32_t vaddr)
       fprintf(stderr,"insn_page_compile: unable to compile page.\n");
       goto error;
    }
-   
+
    /* Add the block to the linked list */
    block->next = cpu->tcb_list;
    block->prev = NULL;
@@ -1156,7 +1156,7 @@ ppc32_jit_tcb_t *ppc32_jit_tcb_compile(cpu_ppc_t *cpu,m_uint32_t vaddr)
       cpu->tcb_last = block;
 
    cpu->tcb_list = block;
-   
+
    /* Add the block to the physical mapping hash table */
    block->phys_next = cpu->exec_phys_map[block->phys_hash];
    block->phys_pprev = &cpu->exec_phys_map[block->phys_hash];
@@ -1223,7 +1223,7 @@ void ppc32_jit_tcb_run(cpu_ppc_t *cpu,ppc32_jit_tcb_t *block)
 
 /* Execute compiled PowerPC code */
 void *ppc32_jit_run_cpu(cpu_gen_t *gen)
-{    
+{
    cpu_ppc_t *cpu = CPU_PPC32(gen);
    pthread_t timer_irq_thread;
    ppc32_jit_tcb_t *block;
@@ -1232,7 +1232,7 @@ void *ppc32_jit_run_cpu(cpu_gen_t *gen)
 
    ppc32_jit_init_hreg_mapping(cpu);
 
-   if (pthread_create(&timer_irq_thread,NULL,(void *)ppc32_timer_irq_run,cpu)) 
+   if (pthread_create(&timer_irq_thread,NULL,(void *)ppc32_timer_irq_run,cpu))
    {
       fprintf(stderr,
               "VM '%s': unable to create Timer IRQ thread for CPU%u.\n",
@@ -1244,7 +1244,7 @@ void *ppc32_jit_run_cpu(cpu_gen_t *gen)
    gen->cpu_thread_running = TRUE;
    cpu_exec_loop_set(gen);
 
- start_cpu:   
+ start_cpu:
    gen->idle_count = 0;
 
    for(;;) {
@@ -1283,9 +1283,9 @@ void *ppc32_jit_run_cpu(cpu_gen_t *gen)
       /* Get the JIT block corresponding to IA register */
       ia_hash = ppc32_jit_get_ia_hash(cpu->ia);
       block = cpu->exec_blk_map[ia_hash];
-      
+
       /* No block found, compile the page */
-      if (unlikely(!block) || unlikely(!ppc32_jit_tcb_match(cpu,block))) 
+      if (unlikely(!block) || unlikely(!ppc32_jit_tcb_match(cpu,block)))
       {
          if (block != NULL) {
             ppc32_jit_tcb_free(cpu,block,TRUE);
@@ -1311,7 +1311,7 @@ void *ppc32_jit_run_cpu(cpu_gen_t *gen)
       block->acc_count++;
       ppc32_jit_tcb_run(cpu,block);
    }
-      
+
    if (!cpu->ia) {
       cpu_stop(gen);
       cpu_log(gen,"JIT","IA=0, halting CPU.\n");
@@ -1331,7 +1331,7 @@ void *ppc32_jit_run_cpu(cpu_gen_t *gen)
             pthread_join(timer_irq_thread,NULL);
             break;
       }
-      
+
       /* CPU is paused */
       usleep(200000);
    }

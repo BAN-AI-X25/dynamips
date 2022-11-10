@@ -52,20 +52,20 @@ typedef struct tsg tsg_t;
 struct tsg {
    /* Lock to synchronize multiple CPU accesses */
    pthread_mutex_t lock;
-   pthread_mutexattr_t lock_attr;   
+   pthread_mutexattr_t lock_attr;
 
    /* Hash table to retrieve Translated Code */
    cpu_tc_t **tc_hash;
-   
+
    /* Free list of TC descriptors */
    cpu_tc_t *tc_free_list;
-   
+
    /* List of CPUs attached to this group */
    cpu_gen_t *cpu_list;
 
    /* Exec page allocator */
    void *exec_area;
-   
+
    insn_exec_page_t *exec_page_array;
    insn_exec_page_t *exec_page_free_list;
 
@@ -91,27 +91,27 @@ static int exec_page_create_area(tsg_t *tsg)
    insn_exec_page_t *cp;
    u_char *cp_addr;
    int i;
-   
+
    /* Area already created */
    if (tsg->exec_area != NULL)
       return(0);
-      
+
    /* Allocate an executable area through MMAP */
    area_size = tsg->exec_area_alloc_size * 1048756;
    tsg->exec_area = memzone_map_exec_area(area_size);
-  
+
    if (!tsg->exec_area) {
       perror("exec_page_create_area: mmap");
       goto err_mmap;
    }
 
-   /* Create the page array */  
+   /* Create the page array */
    page_count = area_size / TC_JIT_PAGE_SIZE;
    tsg->exec_page_array = calloc(page_count,sizeof(insn_exec_page_t));
-      
+
    if (!tsg->exec_page_array)
       goto err_array;
-   
+
    for(i=0,cp_addr=tsg->exec_area;i<page_count;i++) {
       cp = &tsg->exec_page_array[i];
 
@@ -125,7 +125,7 @@ static int exec_page_create_area(tsg_t *tsg)
    }
 
    return(0);
-   
+
  err_array:
    memzone_unmap(tsg->exec_area,area_size);
  err_mmap:
@@ -143,7 +143,7 @@ static insn_exec_page_t *exec_page_alloc(cpu_gen_t *cpu)
 
    //tcb_desc_check_consistency(tcbg);
 
-   /* 
+   /*
     * If the free list is empty, try to increase exec area capacity, then
     * flush JIT for the requesting CPU.
     */
@@ -160,7 +160,7 @@ static insn_exec_page_t *exec_page_alloc(cpu_gen_t *cpu)
    /* If the area is full, stop allocating pages and free TCB */
    if (tsg->exec_area_full) {
       cpu_jit_tcb_flush_all(cpu);
-      
+
       /* if we get >= 25% of free pages, we can reallocate */
       if (tsg->exec_page_total >= (tsg->exec_page_alloc * 4)) {
          tsg->exec_area_full = FALSE;
@@ -176,7 +176,7 @@ static insn_exec_page_t *exec_page_alloc(cpu_gen_t *cpu)
    return p;
 }
 
-/* 
+/*
  * Free an exec page and returns it to the pool.
  * Note: the lock is already taken when exec_page_free() is called.
  */
@@ -193,11 +193,11 @@ static inline void exec_page_free(tsg_t *tcbg,insn_exec_page_t *p)
 int tsg_alloc(void)
 {
    int i;
-   
+
    for(i=0;i<TSG_MAX_GROUPS;i++)
       if (tsg_array[i] == NULL)
          return(i);
-        
+
    return(-1);
 }
 
@@ -205,19 +205,19 @@ int tsg_alloc(void)
 int tsg_create(int id,size_t alloc_size)
 {
    tsg_t *tsg;
-   
+
    /* If the group is already initialized, skip it */
    if (tsg_array[id] != NULL)
       return(0);
-   
+
    /* Allocate the holding structure */
    if (!(tsg = malloc(sizeof(*tsg))))
       return(-1);
-      
+
    memset(tsg,0,sizeof(*tsg));
    tsg->exec_area_full = FALSE;
    tsg->exec_area_alloc_size = alloc_size;
-   
+
    /* Create the TC hash table */
    if (!(tsg->tc_hash = calloc(sizeof(cpu_tc_t *),TC_HASH_SIZE)))
       goto err_hash;
@@ -232,7 +232,7 @@ int tsg_create(int id,size_t alloc_size)
    pthread_mutexattr_settype(&tsg->lock_attr,PTHREAD_MUTEX_RECURSIVE);
    pthread_mutex_init(&tsg->lock,&tsg->lock_attr);
    return(0);
-   
+
  err_area:
    free(tsg->tc_hash);
  err_hash:
@@ -248,18 +248,18 @@ int tsg_bind_cpu(cpu_gen_t *cpu)
 
    if (cpu->tsg == -1) {
       cpu->tsg = tsg_alloc();
-      
+
       if (cpu->tsg == -1)
          return(-1);
-         
+
       alloc_size = TSG_EXEC_AREA_SINGLE_CPU;
    } else {
       alloc_size = TSG_EXEC_AREA_SHARED;
    }
-      
+
    if (tsg_create(cpu->tsg,alloc_size) == -1)
       return(-1);
-      
+
    tsg = tsg_array[cpu->tsg];
    M_LIST_ADD(cpu,tsg->cpu_list,tsg);
    return(0);
@@ -270,26 +270,26 @@ int tsg_unbind_cpu(cpu_gen_t *cpu)
 {
    tsg_t *tsg = tsg_array[cpu->tsg];
    cpu_tb_t *tb,*next;
-   
+
    if (cpu->tsg == -1)
       return(-1);
-   
+
    /* Free all descriptors in free list */
    for(tb=cpu->tb_free_list;tb;tb=next) {
       next = tb->tb_next;
       free(tb);
    }
-   
+
    /* Free all descriptors currently in use */
    for(tb=cpu->tb_list;tb;tb=next) {
       next = tb->tb_next;
       tb_free(cpu,tb);
       free(tb);
    }
-   
+
    cpu->tb_list = NULL;
    cpu->tb_free_list = NULL;
-   
+
    TSG_LOCK(tsg);
    M_LIST_REMOVE(cpu,tsg);
    TSG_UNLOCK(tsg);
@@ -300,15 +300,15 @@ int tsg_unbind_cpu(cpu_gen_t *cpu)
 int tc_alloc_jit_chunk(cpu_gen_t *cpu,cpu_tc_t *tc)
 {
    insn_exec_page_t *chunk;
-   
+
    if (tc->jit_chunk_pos >= TC_MAX_CHUNKS) {
       cpu_log(cpu,"JIT","TC 0x%8.8llx: too many chunks.\n",tc->vaddr);
       return(-1);
    }
-   
+
    if (!(chunk = exec_page_alloc(cpu)))
       return(-1);
-   
+
    tc->jit_chunks[tc->jit_chunk_pos++] = chunk;
    tc->jit_buffer = chunk;
    return(0);
@@ -331,13 +331,13 @@ static inline void tc_remove_from_hash(cpu_tc_t *tc)
    M_LIST_REMOVE(tc,hash);
 }
 
-/* 
+/*
  * Add a TC descriptor as local to the specified CPU.
  * This occurs when the descriptor has just been created and is not shared.
- * It allows to free pages easily in case of contention. 
+ * It allows to free pages easily in case of contention.
  */
 static inline void tc_add_cpu_local(cpu_gen_t *cpu,cpu_tc_t *tc)
-{   
+{
    M_LIST_ADD(tc,cpu->tc_local_list,sc);
 }
 
@@ -354,26 +354,26 @@ static inline void tc_remove_cpu_local(cpu_tc_t *tc)
 static int tc_free(tsg_t *tsg,cpu_tc_t *tc)
 {
    TSG_LOCK(tsg);
-      
-   tc->ref_count--;   
+
+   tc->ref_count--;
    assert(tc->ref_count >= 0);
-      
+
    if (tc->ref_count == 0) {
       tc->flags &= ~TC_FLAG_VALID;
-      
+
       tc_free_patches(tc);
-      
+
       tc_remove_from_hash(tc);
       tc_remove_cpu_local(tc);
       tc_free_jit_chunks(tsg,tc);
       free(tc->jit_insn_ptr);
-      
+
       tc->sc_next = tsg->tc_free_list;
       tsg->tc_free_list = tc;
       TSG_UNLOCK(tsg);
       return(TRUE);
    }
-   
+
    /* not yet deleted */
    TSG_UNLOCK(tsg);
    return(FALSE);
@@ -395,13 +395,13 @@ cpu_tc_t *tc_alloc(cpu_gen_t *cpu,m_uint64_t vaddr,m_uint32_t exec_state)
          return NULL;
    }
    TSG_UNLOCK(tsg);
-   
+
    memset(tc,0,sizeof(*tc));
    tc->vaddr = vaddr;
    tc->exec_state = exec_state;
    tc->ref_count = 1;
-   
-   /* 
+
+   /*
     * Allocate the array used to convert target code ptr to native code ptr,
     * and create the first JIT buffer.
     */
@@ -423,7 +423,7 @@ tsg_checksum_t tsg_checksum_page(void *page,ssize_t size)
 {
    tsg_checksum_t cksum = 0;
    m_uint64_t *ptr = page;
-   
+
    while(size > 0) {
       cksum ^= *ptr;
       ptr++;
@@ -436,7 +436,7 @@ tsg_checksum_t tsg_checksum_page(void *page,ssize_t size)
 static inline u_int tsg_cksum_hash(tsg_checksum_t cksum)
 {
    tsg_checksum_t tmp;
-   
+
    tmp = cksum ^ (cksum >> 17) ^ (cksum >> 23);
    return((u_int)(tmp & TC_HASH_MASK));
 }
@@ -446,7 +446,7 @@ static inline int tb_compare_page(cpu_tb_t *tb1,cpu_tb_t *tb2)
 {
    if (tb1->target_code == tb2->target_code)
       return(0);
-   
+
    return(memcmp(tb1->target_code,tb2->target_code,VM_PAGE_SIZE));
 }
 
@@ -464,43 +464,43 @@ int tc_find_shared(cpu_gen_t *cpu,cpu_tb_t *tb)
    cpu_tb_t *p;
    cpu_tc_t *tc;
    u_int hash_bucket;
-      
-   TSG_LOCK(tsg);   
+
+   TSG_LOCK(tsg);
 
    assert(tb->target_code != NULL);
 
    hash_bucket = tsg_cksum_hash(tb->checksum);
-   for(tc=tsg->tc_hash[hash_bucket];tc;tc=tc->hash_next) 
+   for(tc=tsg->tc_hash[hash_bucket];tc;tc=tc->hash_next)
    {
       assert(tc->flags & TC_FLAG_VALID);
-      
+
       if (tc->checksum == tb->checksum) {
          for(p=tc->tb_list;p;p=p->tb_dl_next) {
             //assert(p->flags & TCB_FLAG_VALID);
-            
+
             if (!(p->flags & TB_FLAG_VALID)) {
                tb_dump(tb);
                abort();
             }
-            
+
             if (tb_compare(tb,p) && !tb_compare_page(tb,p))
             {
                /* matching page, we can share the code */
                tc->ref_count++;
                tb->tc = tc;
                tc_remove_cpu_local(tc);
-               M_LIST_ADD(tb,tc->tb_list,tb_dl);               
+               M_LIST_ADD(tb,tc->tb_list,tb_dl);
                tb_enable(cpu,tb);
-               
+
                TSG_UNLOCK(tsg);
                return(TSG_LOOKUP_SHARED);
             }
          }
       }
    }
-   
+
    /* A new TCB descriptor must be created */
-   TSG_UNLOCK(tsg);   
+   TSG_UNLOCK(tsg);
    return(TSG_LOOKUP_NEW);
 }
 
@@ -509,11 +509,11 @@ void tc_register(cpu_gen_t *cpu,cpu_tb_t *tb,cpu_tc_t *tc)
 {
    tsg_t *tsg = tsg_array[cpu->tsg];
    u_int hash_bucket = tsg_cksum_hash(tb->checksum);
-   
+
    tb->tc = tc;
    tc->checksum = tb->checksum;
 
-   TSG_LOCK(tsg);   
+   TSG_LOCK(tsg);
    tc_add_cpu_local(cpu,tc);
    M_LIST_ADD(tb,tc->tb_list,tb_dl);
    M_LIST_ADD(tc,tsg->tc_hash[hash_bucket],hash);
@@ -526,17 +526,17 @@ int tsg_remove_single_desc(cpu_gen_t *cpu)
 {
    cpu_tc_t *tc,*next;
    int count = 0;
-   
-   for(tc=cpu->tc_local_list;tc;tc=next) {      
+
+   for(tc=cpu->tc_local_list;tc;tc=next) {
       next = tc->sc_next;
 
       assert(tc->ref_count == 1);
       assert(tc->tb_list->tb_dl_next == NULL);
 
-      tb_free(cpu,tc->tb_list);      
+      tb_free(cpu,tc->tb_list);
       count++;
    }
-   
+
    cpu->tc_local_list = NULL;
    return(count);
 }
@@ -566,7 +566,7 @@ void tc_dump(cpu_tc_t *tc)
    printf("  - ref_count  : %u\n",tc->ref_count);
    printf("  - tb_list    : %p\n",tc->tb_list);
    printf("  - hash_LIST  : (%p,%p)\n",tc->hash_pprev,tc->hash_next);
-   printf("  - sc_LIST    : (%p,%p)\n",tc->sc_pprev,tc->sc_next);    
+   printf("  - sc_LIST    : (%p,%p)\n",tc->sc_pprev,tc->sc_next);
 }
 
 /* Consistency check */
@@ -576,7 +576,7 @@ int tc_check_consistency(cpu_gen_t *cpu)
    cpu_tb_t *tb;
    cpu_tc_t *tc;
    int i,err=0;
-   
+
    TSG_LOCK(tsg);
 
    for(i=0;i<TC_HASH_SIZE;i++) {
@@ -588,14 +588,14 @@ int tc_check_consistency(cpu_gen_t *cpu)
             tc_dump(tc);
             err++;
          }
-            
+
          for(tb=tc->tb_list;tb;tb=tb->tb_dl_next) {
             if (!(tb->flags & TB_FLAG_VALID)) {
                cpu_log(cpu,"JIT",
                        "consistency error: TB 0x%8.8llx (flags=0x%x)\n",
                        tb->vaddr,tb->flags);
                err++;
-               
+
                tb_dump(tb);
             }
          }
@@ -603,12 +603,12 @@ int tc_check_consistency(cpu_gen_t *cpu)
    }
 
    TSG_UNLOCK(tsg);
-   
+
    if (err > 0) {
       printf("TSG %d: internal consistency error (%d pb detected)\n",
              cpu->tsg,err);
    }
-      
+
    return(err);
 }
 
@@ -618,10 +618,10 @@ static int tsg_get_stats(tsg_t *tsg,struct tsg_stats *s)
 {
    cpu_tc_t *tc;
    int i;
-   
+
    s->shared_tc = s->total_tc = 0;
-   s->shared_pages = 0; 
-   
+   s->shared_pages = 0;
+
    if (!tsg)
       return(-1);
 
@@ -635,7 +635,7 @@ static int tsg_get_stats(tsg_t *tsg,struct tsg_stats *s)
          s->total_tc++;
       }
    }
-   
+
    return(0);
 }
 
@@ -667,19 +667,19 @@ int tc_adjust_jit_buffer(cpu_gen_t *cpu,cpu_tc_t *tc,
                          void (*set_jump)(u_char **insn,u_char *dst))
 {
    assert((tc->jit_ptr - tc->jit_buffer->ptr) < TC_JIT_PAGE_SIZE);
-   
+
    if ((tc->jit_ptr - tc->jit_buffer->ptr) <= (TC_JIT_PAGE_SIZE - 512))
       return(0);
 
-#if DEBUG_JIT_BUFFER_ADJUST  
+#if DEBUG_JIT_BUFFER_ADJUST
    cpu_log(cpu,"JIT",
            "TC 0x%8.8llx: adjusting JIT buffer (cur=%p,start=%p,delta=%u)\n",
            tc->vaddr,tc->jit_ptr,tc->jit_buffer->ptr,
            TC_JIT_PAGE_SIZE - (tc->jit_ptr-tc->jit_buffer->ptr));
 #endif
 
-   /* 
-    * If we cannot allocate a new chunk, free the complete descriptor and 
+   /*
+    * If we cannot allocate a new chunk, free the complete descriptor and
     * return an error so that the caller uses non-JIT mode for this TCB.
     */
    if (tc_alloc_jit_chunk(cpu,tc) == -1) {
@@ -732,7 +732,7 @@ struct insn_patch *tc_record_patch(cpu_gen_t *cpu,cpu_tc_t *tc,
    patch->jit_insn = jit_ptr;
    patch->vaddr    = vaddr;
    ipt->cur_patch++;
-   
+
    return patch;
 }
 
@@ -745,7 +745,7 @@ int tc_apply_patches(cpu_tc_t *tc,void (*set_patch)(u_char *insn,u_char *dst))
    int i;
 
    for(ipt=tc->patch_table;ipt;ipt=ipt->next)
-      for(i=0;i<ipt->cur_patch;i++) 
+      for(i=0;i<ipt->cur_patch;i++)
       {
          patch = &ipt->patches[i];
          jit_dst = tc_get_host_ptr(tc,patch->vaddr);
@@ -790,7 +790,7 @@ int cpu_jit_init(cpu_gen_t *cpu,size_t virt_hash_size,size_t phys_hash_size)
    len = phys_hash_size * sizeof(void *);
    cpu->tb_phys_hash = m_memalign(4096,len);
    memset(cpu->tb_phys_hash,0,len);
-   
+
    return(0);
 }
 
@@ -798,11 +798,11 @@ int cpu_jit_init(cpu_gen_t *cpu,size_t virt_hash_size,size_t phys_hash_size)
 void cpu_jit_shutdown(cpu_gen_t *cpu)
 {
    tsg_unbind_cpu(cpu);
-   
+
    /* Free virtual and physical hash tables */
    free(cpu->tb_virt_hash);
    free(cpu->tb_phys_hash);
-   
+
    cpu->tb_virt_hash = NULL;
    cpu->tb_phys_hash = NULL;
 }
@@ -828,10 +828,10 @@ cpu_tb_t *tb_alloc(cpu_gen_t *cpu,m_uint64_t vaddr,u_int exec_state)
 
 /* Free a Translation Block */
 void tb_free(cpu_gen_t *cpu,cpu_tb_t *tb)
-{   
+{
    tsg_t *tsg = tsg_array[cpu->tsg];
 
-   /* Remove this TB from the TB list bound to a TC descriptor */   
+   /* Remove this TB from the TB list bound to a TC descriptor */
    TSG_LOCK(tsg);
    M_LIST_REMOVE(tb,tb_dl);
    TSG_UNLOCK(tsg);
@@ -868,7 +868,7 @@ void tb_enable(cpu_gen_t *cpu,cpu_tb_t *tb)
 void cpu_jit_tcb_flush_all(cpu_gen_t *cpu)
 {
    cpu_tb_t *tb,*next;
-   
+
    for(tb=cpu->tb_list;tb;tb=next) {
       next = tb->tb_next;
       tb_free(cpu,tb);
@@ -898,7 +898,7 @@ void cpu_jit_write_on_exec_page(cpu_gen_t *cpu,
                                 m_uint32_t ip_phys_page)
 {
    cpu_tb_t *tb,**tbp,*tb_next;
-     
+
    if (wr_phys_page != ip_phys_page) {
       /* Clear all TCB matching the physical page being modified */
       for(tbp=&cpu->tb_phys_hash[wr_hp];*tbp;)

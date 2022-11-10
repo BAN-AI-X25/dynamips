@@ -74,8 +74,8 @@ void mips64_set_ra(cpu_tc_t *b,m_uint64_t ret_pc)
                          AMD64_RAX,8);
 }
 
-/* 
- * Try to branch directly to the specified JIT block without returning to 
+/*
+ * Try to branch directly to the specified JIT block without returning to
  * the main loop.
  */
 static void mips64_try_direct_far_jump(cpu_mips_t *cpu,cpu_tc_t *b,
@@ -143,7 +143,7 @@ static void mips64_try_direct_far_jump(cpu_mips_t *cpu,cpu_tc_t *b,
 /* Set Jump */
 static void mips64_set_jump(cpu_mips_t *cpu,cpu_tc_t *b,
                             m_uint64_t new_pc,int local_jump)
-{      
+{
    int return_to_caller = FALSE;
    u_char *jump_ptr;
 
@@ -184,7 +184,7 @@ static forced_inline void mips64_emit_basic_c_call(cpu_tc_t *b,void *f)
 
 /* Emit a simple call to a C function without any parameter */
 static void mips64_emit_c_call(cpu_tc_t *b,void *f)
-{   
+{
    mips64_set_pc(b,b->vaddr+((b->trans_pos-1)<<2));
    amd64_mov_reg_imm(b->jit_ptr,AMD64_RCX,f);
    amd64_call_reg(b->jit_ptr,AMD64_RCX);
@@ -207,7 +207,7 @@ static void mips64_memop_fast_lw(cpu_tc_t *b,int target)
    amd64_mov_reg_memindex(b->jit_ptr,AMD64_RAX,AMD64_RBX,0,AMD64_RSI,0,4);
    amd64_bswap32(b->jit_ptr,X86_EAX);
    amd64_movsxd_reg_reg(b->jit_ptr,AMD64_RDX,X86_EAX);
-   
+
    /* Save value in register */
    amd64_mov_membase_reg(b->jit_ptr,AMD64_R15,REG_OFFSET(target),AMD64_RDX,8);
 }
@@ -226,7 +226,7 @@ static void mips64_emit_memop_fast64(cpu_tc_t *b,int write_op,
                                      int opcode,int base,int offset,
                                      int target,int keep_ll_bit,
                                      memop_fast_access op_handler)
-{   
+{
    m_uint64_t val = sign_extend(offset,16);
    u_char *test1,*test2,*p_exit;
 
@@ -316,7 +316,7 @@ static void mips64_emit_memop_fast32(cpu_tc_t *b,int write_op,
                                      int opcode,int base,int offset,
                                      int target,int keep_ll_bit,
                                      memop_fast_access op_handler)
-{   
+{
    m_uint32_t val = sign_extend(offset,16);
    u_char *test1,*test2,*p_exit;
 
@@ -495,7 +495,7 @@ static fastcall void mips64_unknown_opcode(cpu_mips_t *cpu,m_uint32_t opcode)
 /* Emit unhandled instruction code */
 static int mips64_emit_unknown(cpu_mips_t *cpu,cpu_tc_t *b,
                                mips_insn_t opcode)
-{  
+{
    amd64_mov_reg_imm(b->jit_ptr,AMD64_RSI,opcode);
    amd64_mov_reg_reg(b->jit_ptr,AMD64_RDI,AMD64_R15,8);
 
@@ -519,7 +519,7 @@ static fastcall void mips64_invalid_delay_slot(cpu_mips_t *cpu)
 
 /* Emit unhandled instruction code */
 int mips64_emit_invalid_delay_slot(cpu_tc_t *b)
-{  
+{
    amd64_mov_reg_reg(b->jit_ptr,AMD64_RDI,AMD64_R15,8);
    amd64_alu_reg_imm(b->jit_ptr,X86_SUB,AMD64_RSP,8);
    mips64_emit_c_call(b,mips64_invalid_delay_slot);
@@ -527,12 +527,12 @@ int mips64_emit_invalid_delay_slot(cpu_tc_t *b)
    return(0);
 }
 
-/* 
- * Increment count register and trigger the timer IRQ if value in compare 
+/*
+ * Increment count register and trigger the timer IRQ if value in compare
  * register is the same.
  */
 void mips64_inc_cp0_count_reg(cpu_tc_t *b)
-{   
+{
    amd64_inc_membase_size(b->jit_ptr,
                           AMD64_R15,OFFSET(cpu_mips_t,cp0_virt_cnt_reg),4);
 
@@ -547,7 +547,7 @@ void mips64_inc_cp0_count_reg(cpu_tc_t *b)
                          OFFSET(cpu_mips_t,cp0_virt_cnt_reg),
                          AMD64_RAX,4);
 
-   /* check with the virtual compare register */ 
+   /* check with the virtual compare register */
    amd64_alu_reg_membase_size(b->jit_ptr,X86_CMP,AMD64_RAX,
                               AMD64_R15,OFFSET(cpu_mips_t,cp0_virt_cmp_reg),4);
    test1 = b->jit_ptr;
@@ -589,18 +589,18 @@ void mips64_check_pending_irq(cpu_tc_t *b)
 
 /* Increment the number of executed instructions (performance debugging) */
 void mips64_inc_perf_counter(cpu_tc_t *b)
-{ 
+{
    amd64_inc_membase_size(b->jit_ptr,
                           AMD64_R15,OFFSET(cpu_mips_t,perf_counter),4);
 }
 
 /* ADD */
 DECLARE_INSN(ADD)
-{	
+{
    int rs = bits(insn,21,25);
    int rt = bits(insn,16,20);
    int rd = bits(insn,11,15);
-   
+
    amd64_mov_reg_membase(b->jit_ptr,AMD64_RAX,AMD64_R15,REG_OFFSET(rs),8);
    amd64_alu_reg_membase(b->jit_ptr,X86_ADD,AMD64_RAX,AMD64_R15,
                          REG_OFFSET(rt));
@@ -651,11 +651,11 @@ DECLARE_INSN(ADDIU)
 
 /* ADDU */
 DECLARE_INSN(ADDU)
-{	
+{
    int rs = bits(insn,21,25);
    int rt = bits(insn,16,20);
    int rd = bits(insn,11,15);
-   
+
    amd64_mov_reg_membase(b->jit_ptr,AMD64_RAX,AMD64_R15,REG_OFFSET(rs),8);
    amd64_alu_reg_membase(b->jit_ptr,X86_ADD,AMD64_RAX,AMD64_R15,
                          REG_OFFSET(rt));
@@ -747,8 +747,8 @@ DECLARE_INSN(BEQ)
    new_pc = b->vaddr + (b->trans_pos << 2);
    new_pc += sign_extend(offset << 2,18);
 
-   /* 
-    * compare gpr[rs] and gpr[rt]. 
+   /*
+    * compare gpr[rs] and gpr[rt].
     */
    amd64_mov_reg_membase(b->jit_ptr,AMD64_RAX,AMD64_R15,REG_OFFSET(rs),8);
    amd64_alu_reg_membase(b->jit_ptr,X86_CMP,AMD64_RAX,
@@ -781,9 +781,9 @@ DECLARE_INSN(BEQL)
    /* compute the new pc */
    new_pc = b->vaddr + (b->trans_pos << 2);
    new_pc += sign_extend(offset << 2,18);
-   
-   /* 
-    * compare gpr[rs] and gpr[rt]. 
+
+   /*
+    * compare gpr[rs] and gpr[rt].
     */
    amd64_mov_reg_membase(b->jit_ptr,AMD64_RAX,AMD64_R15,REG_OFFSET(rs),8);
    amd64_alu_reg_membase(b->jit_ptr,X86_CMP,AMD64_RAX,
@@ -813,8 +813,8 @@ DECLARE_INSN(BEQZ)
    new_pc = b->vaddr + (b->trans_pos << 2);
    new_pc += sign_extend(offset << 2,18);
 
-   /* 
-    * compare gpr[rs] with 0. 
+   /*
+    * compare gpr[rs] with 0.
     */
    amd64_mov_reg_membase(b->jit_ptr,AMD64_RAX,AMD64_R15,REG_OFFSET(rs),8);
    amd64_test_reg_reg(b->jit_ptr,AMD64_RAX,AMD64_RAX);
@@ -846,8 +846,8 @@ DECLARE_INSN(BNEZ)
    new_pc = b->vaddr + (b->trans_pos << 2);
    new_pc += sign_extend(offset << 2,18);
 
-   /* 
-    * compare gpr[rs] with 0. 
+   /*
+    * compare gpr[rs] with 0.
     */
    amd64_mov_reg_membase(b->jit_ptr,AMD64_RAX,AMD64_R15,REG_OFFSET(rs),8);
    amd64_test_reg_reg(b->jit_ptr,AMD64_RAX,AMD64_RAX);
@@ -1253,9 +1253,9 @@ DECLARE_INSN(BNE)
    /* compute the new pc */
    new_pc = b->vaddr + (b->trans_pos << 2);
    new_pc += sign_extend(offset << 2,18);
-   
-   /* 
-    * compare gpr[rs] and gpr[rt]. 
+
+   /*
+    * compare gpr[rs] and gpr[rt].
     */
    amd64_mov_reg_membase(b->jit_ptr,AMD64_RAX,AMD64_R15,REG_OFFSET(rs),8);
    amd64_alu_reg_membase(b->jit_ptr,X86_CMP,AMD64_RAX,
@@ -1288,9 +1288,9 @@ DECLARE_INSN(BNEL)
    /* compute the new pc */
    new_pc = b->vaddr + (b->trans_pos << 2);
    new_pc += sign_extend(offset << 2,18);
-   
-   /* 
-    * compare gpr[rs] and gpr[rt]. 
+
+   /*
+    * compare gpr[rs] and gpr[rt].
     */
    amd64_mov_reg_membase(b->jit_ptr,AMD64_RAX,AMD64_R15,REG_OFFSET(rs),8);
    amd64_alu_reg_membase(b->jit_ptr,X86_CMP,AMD64_RAX,
@@ -1310,7 +1310,7 @@ DECLARE_INSN(BNEL)
 
 /* BREAK */
 DECLARE_INSN(BREAK)
-{	
+{
    u_int code = bits(insn,6,25);
 
    amd64_mov_reg_imm(b->jit_ptr,AMD64_RSI,code);
@@ -1326,7 +1326,7 @@ DECLARE_INSN(BREAK)
 
 /* CACHE */
 DECLARE_INSN(CACHE)
-{        
+{
    int base   = bits(insn,21,25);
    int op     = bits(insn,16,20);
    int offset = bits(insn,0,15);
@@ -1337,7 +1337,7 @@ DECLARE_INSN(CACHE)
 
 /* CFC0 */
 DECLARE_INSN(CFC0)
-{	
+{
    int rt = bits(insn,16,20);
    int rd = bits(insn,11,15);
 
@@ -1347,7 +1347,7 @@ DECLARE_INSN(CFC0)
 
 /* CTC0 */
 DECLARE_INSN(CTC0)
-{	
+{
    int rt = bits(insn,16,20);
    int rd = bits(insn,11,15);
 
@@ -1362,7 +1362,7 @@ DECLARE_INSN(DADDIU)
    int rt  = bits(insn,16,20);
    int imm = bits(insn,0,15);
    m_uint64_t val = sign_extend(imm,16);
-   
+
    mips64_load_imm(b,AMD64_RCX,val);
    amd64_alu_reg_membase(b->jit_ptr,X86_ADD,AMD64_RCX,
                          AMD64_R15,REG_OFFSET(rs));
@@ -1372,7 +1372,7 @@ DECLARE_INSN(DADDIU)
 
 /* DADDU: rd = rs + rt */
 DECLARE_INSN(DADDU)
-{	
+{
    int rs = bits(insn,21,25);
    int rt = bits(insn,16,20);
    int rd = bits(insn,11,15);
@@ -1442,7 +1442,7 @@ DECLARE_INSN(DIVU)
 
 /* DMFC0 */
 DECLARE_INSN(DMFC0)
-{	
+{
    int rt = bits(insn,16,20);
    int rd = bits(insn,11,15);
 
@@ -1452,7 +1452,7 @@ DECLARE_INSN(DMFC0)
 
 /* DMFC1 */
 DECLARE_INSN(DMFC1)
-{	
+{
    int rt = bits(insn,16,20);
    int rd = bits(insn,11,15);
 
@@ -1462,7 +1462,7 @@ DECLARE_INSN(DMFC1)
 
 /* DMTC0 */
 DECLARE_INSN(DMTC0)
-{	
+{
    int rt = bits(insn,16,20);
    int rd = bits(insn,11,15);
 
@@ -1472,7 +1472,7 @@ DECLARE_INSN(DMTC0)
 
 /* DMTC1 */
 DECLARE_INSN(DMTC1)
-{	
+{
    int rt = bits(insn,16,20);
    int rd = bits(insn,11,15);
 
@@ -1486,7 +1486,7 @@ DECLARE_INSN(DSLL)
    int rt = bits(insn,16,20);
    int rd = bits(insn,11,15);
    int sa = bits(insn,6,10);
-   
+
    amd64_mov_reg_membase(b->jit_ptr,AMD64_RAX,AMD64_R15,REG_OFFSET(rt),8);
    amd64_shift_reg_imm(b->jit_ptr,X86_SHL,AMD64_RAX,sa);
    amd64_mov_membase_reg(b->jit_ptr,AMD64_R15,REG_OFFSET(rd),AMD64_RAX,8);
@@ -1499,7 +1499,7 @@ DECLARE_INSN(DSLL32)
    int rt = bits(insn,16,20);
    int rd = bits(insn,11,15);
    int sa = bits(insn,6,10);
-   
+
    amd64_mov_reg_membase(b->jit_ptr,AMD64_RAX,AMD64_R15,REG_OFFSET(rt),8);
    amd64_shift_reg_imm(b->jit_ptr,X86_SHL,AMD64_RAX,sa+32);
    amd64_mov_membase_reg(b->jit_ptr,AMD64_R15,REG_OFFSET(rd),AMD64_RAX,8);
@@ -1698,7 +1698,7 @@ DECLARE_INSN(JALR)
       test1 = b->jit_ptr;
       amd64_branch8(b->jit_ptr, X86_CC_NZ, 0, 1);
       amd64_mov_reg_reg(b->jit_ptr,AMD64_RDI,AMD64_R15,8);
-      
+
       amd64_alu_reg_imm(b->jit_ptr,X86_SUB,AMD64_RSP,8);
       mips64_emit_c_call(b,mips64_debug_jr0);
       amd64_alu_reg_imm(b->jit_ptr,X86_ADD,AMD64_RSP,8);
@@ -1726,7 +1726,7 @@ DECLARE_INSN(JR)
 
    /* get the new pc */
    amd64_mov_reg_membase(b->jit_ptr,AMD64_R14,AMD64_R15,REG_OFFSET(rs),8);
-      
+
 #if DEBUG_JR0
    {
       u_char *test1;
@@ -1938,7 +1938,7 @@ DECLARE_INSN(LWU)
 
 /* MFC0 */
 DECLARE_INSN(MFC0)
-{	
+{
    int rt = bits(insn,16,20);
    int rd = bits(insn,11,15);
 
@@ -1948,7 +1948,7 @@ DECLARE_INSN(MFC0)
 
 /* MFC1 */
 DECLARE_INSN(MFC1)
-{	
+{
    int rt = bits(insn,16,20);
    int rd = bits(insn,11,15);
 
@@ -1982,7 +1982,7 @@ DECLARE_INSN(MFLO)
 
 /* MOVE (virtual instruction, real: ADDU) */
 DECLARE_INSN(MOVE)
-{	
+{
    int rs = bits(insn,21,25);
    int rd = bits(insn,11,15);
 
@@ -2014,7 +2014,7 @@ DECLARE_INSN(MOVZ)
 
 /* MTC0 */
 DECLARE_INSN(MTC0)
-{	
+{
    int rt = bits(insn,16,20);
    int rd = bits(insn,11,15);
 
@@ -2024,7 +2024,7 @@ DECLARE_INSN(MTC0)
 
 /* MTC1 */
 DECLARE_INSN(MTC1)
-{	
+{
    int rt = bits(insn,16,20);
    int rd = bits(insn,11,15);
 
@@ -2053,7 +2053,7 @@ DECLARE_INSN(MTLO)
 
    amd64_mov_membase_reg(b->jit_ptr,
                          AMD64_R15,OFFSET(cpu_mips_t,lo),AMD64_RDX,8);
-   return(0); 
+   return(0);
 }
 
 /* MUL */
@@ -2273,7 +2273,7 @@ DECLARE_INSN(SH)
 
 /* SLL */
 DECLARE_INSN(SLL)
-{	
+{
    int rt = bits(insn,16,20);
    int rd = bits(insn,11,15);
    int sa = bits(insn,6,10);
@@ -2314,7 +2314,7 @@ DECLARE_INSN(SLT)
 
    /* RDX = gpr[rs] */
    amd64_mov_reg_membase(b->jit_ptr,AMD64_RDX,AMD64_R15,REG_OFFSET(rs),8);
-   
+
    /* RAX = gpr[rt] */
    amd64_mov_reg_membase(b->jit_ptr,AMD64_RAX,AMD64_R15,REG_OFFSET(rt),8);
 
@@ -2325,7 +2325,7 @@ DECLARE_INSN(SLT)
    amd64_alu_reg_reg(b->jit_ptr,X86_CMP,AMD64_RDX,AMD64_RAX);
    test1 = b->jit_ptr;
    amd64_branch8(b->jit_ptr, X86_CC_GE, 0, 1);
-   
+
    amd64_inc_membase(b->jit_ptr,AMD64_R15,REG_OFFSET(rd));
 
    /* end */
@@ -2344,7 +2344,7 @@ DECLARE_INSN(SLTI)
 
    /* RDX = val */
    mips64_load_imm(b,AMD64_RDX,val);
-   
+
    /* RAX = gpr[rs] */
    amd64_mov_reg_membase(b->jit_ptr,AMD64_RAX,AMD64_R15,REG_OFFSET(rs),8);
 
@@ -2355,7 +2355,7 @@ DECLARE_INSN(SLTI)
    amd64_alu_reg_reg(b->jit_ptr,X86_CMP,AMD64_RAX,AMD64_RDX);
    test1 = b->jit_ptr;
    amd64_branch8(b->jit_ptr, X86_CC_GE, 0, 1);
-   
+
    amd64_inc_membase(b->jit_ptr,AMD64_R15,REG_OFFSET(rt));
 
    /* end */
@@ -2373,7 +2373,7 @@ DECLARE_INSN(SLTU)
 
    /* RDX = gpr[rs] */
    amd64_mov_reg_membase(b->jit_ptr,AMD64_RDX,AMD64_R15,REG_OFFSET(rs),8);
-   
+
    /* RAX = gpr[rt] */
    amd64_mov_reg_membase(b->jit_ptr,AMD64_RAX,AMD64_R15,REG_OFFSET(rt),8);
 
@@ -2384,7 +2384,7 @@ DECLARE_INSN(SLTU)
    amd64_alu_reg_reg(b->jit_ptr,X86_CMP,AMD64_RDX,AMD64_RAX);
    test1 = b->jit_ptr;
    amd64_branch8(b->jit_ptr, X86_CC_AE, 0, 0);
-   
+
    amd64_inc_membase(b->jit_ptr,AMD64_R15,REG_OFFSET(rd));
 
    /* end */
@@ -2403,7 +2403,7 @@ DECLARE_INSN(SLTIU)
 
    /* RDX = val */
    mips64_load_imm(b,AMD64_RDX,val);
-   
+
    /* RAX = gpr[rs] */
    amd64_mov_reg_membase(b->jit_ptr,AMD64_RAX,AMD64_R15,REG_OFFSET(rs),8);
 
@@ -2414,7 +2414,7 @@ DECLARE_INSN(SLTIU)
    amd64_alu_reg_reg(b->jit_ptr,X86_CMP,AMD64_RAX,AMD64_RDX);
    test1 = b->jit_ptr;
    amd64_branch8(b->jit_ptr, X86_CC_AE, 0, 0);
-   
+
    amd64_inc_membase(b->jit_ptr,AMD64_R15,REG_OFFSET(rt));
 
    /* end */
@@ -2490,11 +2490,11 @@ DECLARE_INSN(SRLV)
 
 /* SUB */
 DECLARE_INSN(SUB)
-{	
+{
    int rs = bits(insn,21,25);
    int rt = bits(insn,16,20);
    int rd = bits(insn,11,15);
-   
+
    /* TODO: Exception handling */
    amd64_mov_reg_membase(b->jit_ptr,AMD64_RAX,AMD64_R15,REG_OFFSET(rs),8);
    amd64_alu_reg_membase(b->jit_ptr,X86_SUB,AMD64_RAX,AMD64_R15,
@@ -2507,11 +2507,11 @@ DECLARE_INSN(SUB)
 
 /* SUBU */
 DECLARE_INSN(SUBU)
-{	
+{
    int rs = bits(insn,21,25);
    int rt = bits(insn,16,20);
    int rd = bits(insn,11,15);
-   
+
    amd64_mov_reg_membase(b->jit_ptr,AMD64_RAX,AMD64_R15,REG_OFFSET(rs),8);
    amd64_alu_reg_membase(b->jit_ptr,X86_SUB,AMD64_RAX,AMD64_R15,
                          REG_OFFSET(rt));
@@ -2586,8 +2586,8 @@ DECLARE_INSN(TEQ)
    int rt = bits(insn,16,20);
    u_char *test1;
 
-   /* 
-    * compare gpr[rs] and gpr[rt]. 
+   /*
+    * compare gpr[rs] and gpr[rt].
     */
    amd64_mov_reg_membase(b->jit_ptr,AMD64_RAX,AMD64_R15,REG_OFFSET(rs),8);
    amd64_alu_reg_membase(b->jit_ptr,X86_CMP,AMD64_RAX,
@@ -2619,7 +2619,7 @@ DECLARE_INSN(TEQI)
 
    /* RDX = val */
    mips64_load_imm(b,AMD64_RDX,val);
-   
+
    /* RAX = gpr[rs] */
    amd64_mov_reg_membase(b->jit_ptr,AMD64_RAX,AMD64_R15,REG_OFFSET(rs),8);
 
@@ -2656,7 +2656,7 @@ DECLARE_INSN(TLBP)
 
 /* TLBR */
 DECLARE_INSN(TLBR)
-{  
+{
    mips64_set_pc(b,b->vaddr+((b->trans_pos-1)<<2));
    amd64_mov_reg_reg(b->jit_ptr,AMD64_RDI,AMD64_R15,8);
 
@@ -2669,7 +2669,7 @@ DECLARE_INSN(TLBR)
 
 /* TLBWI */
 DECLARE_INSN(TLBWI)
-{   
+{
    mips64_set_pc(b,b->vaddr+((b->trans_pos-1)<<2));
    amd64_mov_reg_reg(b->jit_ptr,AMD64_RDI,AMD64_R15,8);
 
@@ -2682,7 +2682,7 @@ DECLARE_INSN(TLBWI)
 
 /* TLBWR */
 DECLARE_INSN(TLBWR)
-{   
+{
    mips64_set_pc(b,b->vaddr+((b->trans_pos-1)<<2));
    amd64_mov_reg_reg(b->jit_ptr,AMD64_RDI,AMD64_R15,8);
 

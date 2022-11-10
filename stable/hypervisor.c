@@ -214,9 +214,9 @@ hypervisor_module_t *hypervisor_find_module(char *name)
 
 /* Find a command in a module */
 hypervisor_cmd_t *hypervisor_find_cmd(hypervisor_module_t *module,char *name)
-{                                      
+{
    hypervisor_cmd_t *cmd;
-   
+
    for(cmd=module->cmd_list;cmd;cmd=cmd->next)
       if (!strcmp(cmd->name,name))
          return cmd;
@@ -282,7 +282,7 @@ hypervisor_module_t *hypervisor_register_module(char *name,void *opt)
       fprintf(stderr,"Hypervisor: module '%s' already exists.\n",name);
       return NULL;
    }
-   
+
    if (!(m = malloc(sizeof(*m)))) {
       fprintf(stderr,"Hypervisor: unable to register new module.\n");
       return NULL;
@@ -362,26 +362,26 @@ static int hypervisor_exec_cmd(hypervisor_conn_t *conn,
 
 /* Thread for servicing connections */
 static void *hypervisor_thread(void *arg)
-{   
+{
    hypervisor_conn_t *conn = arg;
    char buffer[512],**tokens;
    parser_context_t ctx;
    int res;
-   
+
    tokens = NULL;
    parser_context_init(&ctx);
 
    while(conn->active) {
       if (!fgets(buffer,sizeof(buffer),conn->in))
          break;
-   
+
       if (!*buffer)
          continue;
 
       /* Tokenize command line */
       res = parser_scan_buffer(&ctx,buffer,strlen(buffer));
 
-      if (res != 0) {   
+      if (res != 0) {
          tokens = NULL;
 
          if (ctx.error != 0) {
@@ -399,7 +399,7 @@ static void *hypervisor_thread(void *arg)
 
          /* Map token list to an array */
          tokens = parser_map_array(&ctx);
-      
+
          if (!tokens) {
             hypervisor_send_reply(conn,HSC_ERR_PARSING,1,"No memory");
             goto free_tokens;
@@ -411,7 +411,7 @@ static void *hypervisor_thread(void *arg)
 
          hypervisor_exec_cmd(conn,tokens[0],tokens[1],ctx.
                              tok_count-2,&tokens[2]);
-      
+
       free_tokens:
          free(tokens);
          tokens = NULL;
@@ -456,7 +456,7 @@ static void hypervisor_remove_conn(hypervisor_conn_t *conn)
 static void hypervisor_close_conn(hypervisor_conn_t *conn)
 {
    if (conn != NULL) {
-      conn->active = FALSE;      
+      conn->active = FALSE;
       shutdown(conn->client_fd,2);
       pthread_join(conn->tid,NULL);
 
@@ -475,7 +475,7 @@ static void hypervisor_close_conn(hypervisor_conn_t *conn)
 static void hypervisor_close_conn_list(int dead_status)
 {
    hypervisor_conn_t *conn,*next;
-   
+
    for(conn=hypervisor_conn_list;conn;conn=next) {
       next = conn->next;
 
@@ -525,7 +525,7 @@ static hypervisor_conn_t *hypervisor_create_conn(int client_fd)
    /* Set line buffering */
    setlinebuf(conn->in);
    setlinebuf(conn->out);
-  
+
    /* Create the managing thread */
    if (pthread_create(&conn->tid,NULL,hypervisor_thread,conn) != 0)
       goto err_thread;
@@ -590,7 +590,7 @@ int hypervisor_tcp_server(char *ip_addr,int tcp_port)
    /* Start accepting connections */
    m_log("HYPERVISOR","Release %s/%s (tag %s)\n",
          sw_version,os_name,sw_version_tag);
-         
+
     if (ip_addr != NULL) {
         binding_addr = ip_addr;
         m_log("HYPERVISOR","Started on IP = %s, TCP port = %d.\n", ip_addr, tcp_port);
@@ -629,7 +629,7 @@ int hypervisor_tcp_server(char *ip_addr,int tcp_port)
       for(i=0;i<fd_count;i++) {
          if (fd_array[i] == -1)
             continue;
-         
+
          if (!FD_ISSET(fd_array[i],&fds))
             continue;
 
@@ -641,7 +641,7 @@ int hypervisor_tcp_server(char *ip_addr,int tcp_port)
             perror("hypervisor_tcp_server: accept");
             continue;
          }
-            
+
          /* create a new connection and start a thread to handle it */
          if (!hypervisor_create_conn(clnt)) {
             fprintf(stderr,"hypervisor_tcp_server: unable to create new "
@@ -652,7 +652,7 @@ int hypervisor_tcp_server(char *ip_addr,int tcp_port)
 
       /* Walk through the connection list to eliminate dead connections */
       hypervisor_close_conn_list(TRUE);
-   }   
+   }
 
    /* Close all control sockets */
    printf("Hypervisor: closing control sockets.\n");

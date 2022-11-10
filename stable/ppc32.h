@@ -8,7 +8,7 @@
 
 #include <pthread.h>
 
-#include "utils.h" 
+#include "utils.h"
 #include "rbtree.h"
 
 /* CPU identifiers */
@@ -165,7 +165,7 @@
 /* PTE entry (Up and Lo) */
 #define PPC32_PTEU_V           0x80000000    /* Valid entry */
 #define PPC32_PTEU_VSID_MASK   0x7FFFFF80    /* Virtual Segment ID */
-#define PPC32_PTEU_VSID_SHIFT  7 
+#define PPC32_PTEU_VSID_SHIFT  7
 #define PPC32_PTEU_H           0x00000040    /* Hash function */
 #define PPC32_PTEU_API_MASK    0x0000003F    /* Abbreviated Page index */
 #define PPC32_PTEL_RPN_MASK    0xFFFFF000    /* Physical Page Number */
@@ -292,7 +292,7 @@ struct ppc32_vtlb_entry {
 struct cpu_ppc {
    /* Instruction address */
    m_uint32_t ia;
-   
+
    /* Last successfull instruction address */
    m_uint32_t ia_prev;
 
@@ -361,7 +361,7 @@ struct cpu_ppc {
 
    /* IBAT (Instruction) and DBAT (Data) registers */
    struct ppc32_bat_reg bat[2][PPC32_BAT_NR];
-   
+
    /* Segment registers */
    m_uint32_t sr[PPC32_SR_NR];
 
@@ -408,7 +408,7 @@ struct cpu_ppc {
 
    /* VM instance */
    vm_instance_t *vm;
-   
+
    /* MTS cache statistics */
    m_uint64_t mts_misses,mts_lookups;
 

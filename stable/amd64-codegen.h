@@ -8,7 +8,7 @@
  *   Dietmar Maurer (dietmar@ximian.com)
  *   Patrik Torstensson
  *   Zalman Stern
- * 
+ *
  * Copyright (C)  2000 Intel Corporation.  All rights reserved.
  * Copyright (C)  2001, 2002 Ximian, Inc.
  */
@@ -437,7 +437,7 @@ typedef union {
 } while (0)
 
 #define amd64_call_membase_size(inst,basereg,disp,size) do { amd64_emit_rex ((inst),0,0,0,(basereg)); *(inst)++ = (unsigned char)0xff; amd64_membase_emit ((inst),2, (basereg),(disp)); } while (0)
-    
+
 /*
  * SSE
  */
@@ -817,7 +817,7 @@ typedef union {
 #define amd64_fucomi(inst,index) amd64_fucomi_size(inst,index,8)
 #define amd64_fucomip(inst,index) amd64_fucomip_size(inst,index,8)
 #define amd64_fld(inst,mem,is_double) amd64_fld_size(inst,mem,is_double,8)
-#define amd64_fld_membase(inst,basereg,disp,is_double)  amd64_fld_membase_size(inst,basereg,disp,is_double,8) 
+#define amd64_fld_membase(inst,basereg,disp,is_double)  amd64_fld_membase_size(inst,basereg,disp,is_double,8)
 #define amd64_fld80_mem(inst,mem) amd64_fld80_mem_size(inst,mem,8)
 #define amd64_fld80_membase(inst,basereg,disp) amd64_fld80_membase_size(inst,basereg,disp,8)
 #define amd64_fild(inst,mem,is_long) amd64_fild_size(inst,mem,is_long,8)

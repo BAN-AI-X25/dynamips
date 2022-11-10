@@ -47,21 +47,21 @@
 
 #ifndef COMMON_TYPES
 #define COMMON_TYPES
-typedef unsigned char m_uint8_t;                                                                                                
-typedef signed char m_int8_t;                                                                                                   
+typedef unsigned char m_uint8_t;
+typedef signed char m_int8_t;
 
-typedef unsigned short m_uint16_t;                                                                                              
-typedef signed short m_int16_t;                                                                                                 
+typedef unsigned short m_uint16_t;
+typedef signed short m_int16_t;
 
-typedef unsigned int m_uint32_t;                                                                                                
-typedef signed int m_int32_t;                                                                                                   
+typedef unsigned int m_uint32_t;
+typedef signed int m_int32_t;
 
-typedef unsigned long long m_uint64_t;                                                                                          
-typedef signed long long m_int64_t;                                                                                             
+typedef unsigned long long m_uint64_t;
+typedef signed long long m_int64_t;
 
-typedef unsigned long m_iptr_t;                                                                                                 
-typedef m_uint64_t m_tmcnt_t;                                                                                                   
-#endif                                                                                                                          
+typedef unsigned long m_iptr_t;
+typedef m_uint64_t m_tmcnt_t;
+#endif
 
 /* FD pool */
 #define FD_POOL_MAX  16
@@ -199,7 +199,7 @@ static inline int check_bit(u_int old,u_int new,u_int bit)
 
    if ((old & mask) && !(new & mask))
       return(1);   /* bit unset */
-   
+
    if (!(old & mask) && (new & mask))
       return(2);   /* bit set */
 
@@ -228,7 +228,7 @@ static inline int bits(m_uint32_t val,int start,int end)
 }
 
 /* Normalize a size */
-static inline u_int normalize_size(u_int val,u_int nb,int shift) 
+static inline u_int normalize_size(u_int val,u_int nb,int shift)
 {
    return(((val+nb-1) & ~(nb-1)) >> shift);
 }

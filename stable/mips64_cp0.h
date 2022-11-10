@@ -6,7 +6,7 @@
 #ifndef __CP0_H__
 #define __CP0_H__
 
-#include "utils.h" 
+#include "utils.h"
 
 /* CP0 register names */
 extern char *mips64_cp0_reg_names[];

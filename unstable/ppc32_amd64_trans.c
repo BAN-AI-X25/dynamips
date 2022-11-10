@@ -27,50 +27,50 @@
 
 /* EFLAGS to Condition Register (CR) field - signed */
 static m_uint32_t eflags_to_cr_signed[64] = {
-   0x04, 0x02, 0x08, 0x02, 0x04, 0x02, 0x08, 0x02, 
-   0x04, 0x02, 0x08, 0x02, 0x04, 0x02, 0x08, 0x02, 
-   0x04, 0x02, 0x08, 0x02, 0x04, 0x02, 0x08, 0x02, 
-   0x04, 0x02, 0x08, 0x02, 0x04, 0x02, 0x08, 0x02, 
-   0x08, 0x02, 0x04, 0x02, 0x08, 0x02, 0x04, 0x02, 
-   0x08, 0x02, 0x04, 0x02, 0x08, 0x02, 0x04, 0x02, 
-   0x08, 0x02, 0x04, 0x02, 0x08, 0x02, 0x04, 0x02, 
-   0x08, 0x02, 0x04, 0x02, 0x08, 0x02, 0x04, 0x02, 
+   0x04, 0x02, 0x08, 0x02, 0x04, 0x02, 0x08, 0x02,
+   0x04, 0x02, 0x08, 0x02, 0x04, 0x02, 0x08, 0x02,
+   0x04, 0x02, 0x08, 0x02, 0x04, 0x02, 0x08, 0x02,
+   0x04, 0x02, 0x08, 0x02, 0x04, 0x02, 0x08, 0x02,
+   0x08, 0x02, 0x04, 0x02, 0x08, 0x02, 0x04, 0x02,
+   0x08, 0x02, 0x04, 0x02, 0x08, 0x02, 0x04, 0x02,
+   0x08, 0x02, 0x04, 0x02, 0x08, 0x02, 0x04, 0x02,
+   0x08, 0x02, 0x04, 0x02, 0x08, 0x02, 0x04, 0x02,
 };
 
 /* EFLAGS to Condition Register (CR) field - unsigned */
 static m_uint32_t eflags_to_cr_unsigned[256] = {
-   0x04, 0x08, 0x04, 0x08, 0x04, 0x08, 0x04, 0x08, 
-   0x04, 0x08, 0x04, 0x08, 0x04, 0x08, 0x04, 0x08, 
-   0x04, 0x08, 0x04, 0x08, 0x04, 0x08, 0x04, 0x08, 
-   0x04, 0x08, 0x04, 0x08, 0x04, 0x08, 0x04, 0x08, 
-   0x04, 0x08, 0x04, 0x08, 0x04, 0x08, 0x04, 0x08, 
-   0x04, 0x08, 0x04, 0x08, 0x04, 0x08, 0x04, 0x08, 
-   0x04, 0x08, 0x04, 0x08, 0x04, 0x08, 0x04, 0x08, 
-   0x04, 0x08, 0x04, 0x08, 0x04, 0x08, 0x04, 0x08, 
-   0x02, 0x08, 0x02, 0x08, 0x02, 0x08, 0x02, 0x08, 
-   0x02, 0x08, 0x02, 0x08, 0x02, 0x08, 0x02, 0x08, 
-   0x02, 0x08, 0x02, 0x08, 0x02, 0x08, 0x02, 0x08, 
-   0x02, 0x08, 0x02, 0x08, 0x02, 0x08, 0x02, 0x08, 
-   0x02, 0x08, 0x02, 0x08, 0x02, 0x08, 0x02, 0x08, 
-   0x02, 0x08, 0x02, 0x08, 0x02, 0x08, 0x02, 0x08, 
-   0x02, 0x08, 0x02, 0x08, 0x02, 0x08, 0x02, 0x08, 
-   0x02, 0x08, 0x02, 0x08, 0x02, 0x08, 0x02, 0x08, 
-   0x04, 0x08, 0x04, 0x08, 0x04, 0x08, 0x04, 0x08, 
-   0x04, 0x08, 0x04, 0x08, 0x04, 0x08, 0x04, 0x08, 
-   0x04, 0x08, 0x04, 0x08, 0x04, 0x08, 0x04, 0x08, 
-   0x04, 0x08, 0x04, 0x08, 0x04, 0x08, 0x04, 0x08, 
-   0x04, 0x08, 0x04, 0x08, 0x04, 0x08, 0x04, 0x08, 
-   0x04, 0x08, 0x04, 0x08, 0x04, 0x08, 0x04, 0x08, 
-   0x04, 0x08, 0x04, 0x08, 0x04, 0x08, 0x04, 0x08, 
-   0x04, 0x08, 0x04, 0x08, 0x04, 0x08, 0x04, 0x08, 
-   0x02, 0x08, 0x02, 0x08, 0x02, 0x08, 0x02, 0x08, 
-   0x02, 0x08, 0x02, 0x08, 0x02, 0x08, 0x02, 0x08, 
-   0x02, 0x08, 0x02, 0x08, 0x02, 0x08, 0x02, 0x08, 
-   0x02, 0x08, 0x02, 0x08, 0x02, 0x08, 0x02, 0x08, 
-   0x02, 0x08, 0x02, 0x08, 0x02, 0x08, 0x02, 0x08, 
-   0x02, 0x08, 0x02, 0x08, 0x02, 0x08, 0x02, 0x08, 
-   0x02, 0x08, 0x02, 0x08, 0x02, 0x08, 0x02, 0x08, 
-   0x02, 0x08, 0x02, 0x08, 0x02, 0x08, 0x02, 0x08, 
+   0x04, 0x08, 0x04, 0x08, 0x04, 0x08, 0x04, 0x08,
+   0x04, 0x08, 0x04, 0x08, 0x04, 0x08, 0x04, 0x08,
+   0x04, 0x08, 0x04, 0x08, 0x04, 0x08, 0x04, 0x08,
+   0x04, 0x08, 0x04, 0x08, 0x04, 0x08, 0x04, 0x08,
+   0x04, 0x08, 0x04, 0x08, 0x04, 0x08, 0x04, 0x08,
+   0x04, 0x08, 0x04, 0x08, 0x04, 0x08, 0x04, 0x08,
+   0x04, 0x08, 0x04, 0x08, 0x04, 0x08, 0x04, 0x08,
+   0x04, 0x08, 0x04, 0x08, 0x04, 0x08, 0x04, 0x08,
+   0x02, 0x08, 0x02, 0x08, 0x02, 0x08, 0x02, 0x08,
+   0x02, 0x08, 0x02, 0x08, 0x02, 0x08, 0x02, 0x08,
+   0x02, 0x08, 0x02, 0x08, 0x02, 0x08, 0x02, 0x08,
+   0x02, 0x08, 0x02, 0x08, 0x02, 0x08, 0x02, 0x08,
+   0x02, 0x08, 0x02, 0x08, 0x02, 0x08, 0x02, 0x08,
+   0x02, 0x08, 0x02, 0x08, 0x02, 0x08, 0x02, 0x08,
+   0x02, 0x08, 0x02, 0x08, 0x02, 0x08, 0x02, 0x08,
+   0x02, 0x08, 0x02, 0x08, 0x02, 0x08, 0x02, 0x08,
+   0x04, 0x08, 0x04, 0x08, 0x04, 0x08, 0x04, 0x08,
+   0x04, 0x08, 0x04, 0x08, 0x04, 0x08, 0x04, 0x08,
+   0x04, 0x08, 0x04, 0x08, 0x04, 0x08, 0x04, 0x08,
+   0x04, 0x08, 0x04, 0x08, 0x04, 0x08, 0x04, 0x08,
+   0x04, 0x08, 0x04, 0x08, 0x04, 0x08, 0x04, 0x08,
+   0x04, 0x08, 0x04, 0x08, 0x04, 0x08, 0x04, 0x08,
+   0x04, 0x08, 0x04, 0x08, 0x04, 0x08, 0x04, 0x08,
+   0x04, 0x08, 0x04, 0x08, 0x04, 0x08, 0x04, 0x08,
+   0x02, 0x08, 0x02, 0x08, 0x02, 0x08, 0x02, 0x08,
+   0x02, 0x08, 0x02, 0x08, 0x02, 0x08, 0x02, 0x08,
+   0x02, 0x08, 0x02, 0x08, 0x02, 0x08, 0x02, 0x08,
+   0x02, 0x08, 0x02, 0x08, 0x02, 0x08, 0x02, 0x08,
+   0x02, 0x08, 0x02, 0x08, 0x02, 0x08, 0x02, 0x08,
+   0x02, 0x08, 0x02, 0x08, 0x02, 0x08, 0x02, 0x08,
+   0x02, 0x08, 0x02, 0x08, 0x02, 0x08, 0x02, 0x08,
+   0x02, 0x08, 0x02, 0x08, 0x02, 0x08, 0x02, 0x08,
 };
 
 /* Load a 32 bit immediate value */
@@ -90,12 +90,12 @@ void ppc32_set_ia(u_char **ptr,m_uint32_t new_ia)
 
 /* Set the Link Register (LR) */
 static void ppc32_set_lr(jit_op_t *iop,m_uint32_t new_lr)
-{  
+{
    amd64_mov_membase_imm(iop->ob_ptr,AMD64_R15,OFFSET(cpu_ppc_t,lr),new_lr,4);
 }
 
-/* 
- * Try to branch directly to the specified JIT block without returning to 
+/*
+ * Try to branch directly to the specified JIT block without returning to
  * main loop.
  */
 static void ppc32_try_direct_far_jump(cpu_ppc_t *cpu,jit_op_t *iop,
@@ -112,7 +112,7 @@ static void ppc32_try_direct_far_jump(cpu_ppc_t *cpu,jit_op_t *iop,
    new_page = new_ia & PPC32_MIN_PAGE_MASK;
    ia_offset = (new_ia & PPC32_MIN_PAGE_IMASK) >> 2;
    ia_hash = ppc32_jit_get_virt_hash(new_ia);
-   
+
    /* Get JIT block info in %rdx */
    amd64_mov_reg_membase(iop->ob_ptr,AMD64_RBX,
                          AMD64_R15,OFFSET(cpu_ppc_t,tcb_virt_hash),8);
@@ -141,7 +141,7 @@ static void ppc32_try_direct_far_jump(cpu_ppc_t *cpu,jit_op_t *iop,
 
    amd64_mov_reg_membase(iop->ob_ptr,AMD64_RBX,
                          AMD64_RSI,ia_offset * sizeof(void *),8);
-   
+
    amd64_test_reg_reg(iop->ob_ptr,AMD64_RBX,AMD64_RBX);
    test4 = iop->ob_ptr;
    amd64_branch8(iop->ob_ptr, X86_CC_Z, 0, 1);
@@ -160,7 +160,7 @@ static void ppc32_try_direct_far_jump(cpu_ppc_t *cpu,jit_op_t *iop,
 /* Set Jump */
 static void ppc32_set_jump(cpu_ppc_t *cpu,ppc32_jit_tcb_t *b,jit_op_t *iop,
                            m_uint32_t new_ia,int local_jump)
-{      
+{
    int return_to_caller = FALSE;
    u_char *jump_ptr;
 
@@ -172,7 +172,7 @@ static void ppc32_set_jump(cpu_ppc_t *cpu,ppc32_jit_tcb_t *b,jit_op_t *iop,
    if (!return_to_caller && ppc32_jit_tcb_local_addr(b,new_ia,&jump_ptr)) {
       ppc32_jit_tcb_record_patch(b,iop,iop->ob_ptr,new_ia);
       amd64_jump32(iop->ob_ptr,0);
-   } else {   
+   } else {
       if (cpu->exec_blk_direct_jump) {
          /* Block lookup optimization */
          ppc32_try_direct_far_jump(cpu,iop,new_ia);
@@ -220,7 +220,7 @@ static forced_inline void ppc32_alu_gpr(u_char **ptr,u_int op,
                               AMD64_R15,REG_OFFSET(ppc_reg),4);
 }
 
-/* 
+/*
  * Update CR from %eflags
  * %rax, %rdx, %rsi are modified.
  */
@@ -255,7 +255,7 @@ static void ppc32_update_cr(ppc32_jit_tcb_t *b,int field,int is_signed)
                          AMD64_RAX,4);
 }
 
-/* 
+/*
  * Update CR0 from %eflags
  * %eax, %ecx, %edx, %esi are modified.
  */
@@ -280,7 +280,7 @@ static forced_inline void ppc32_emit_basic_c_call(u_char **ptr,void *f)
 
 /* Emit a simple call to a C function without any parameter */
 static void ppc32_emit_c_call(ppc32_jit_tcb_t *b,jit_op_t *iop,void *f)
-{   
+{
    ppc32_set_ia(&iop->ob_ptr,b->start_ia+(b->ppc_trans_pos << 2));
    ppc32_emit_basic_c_call(&iop->ob_ptr,f);
 }
@@ -290,7 +290,7 @@ static void ppc32_emit_c_call(ppc32_jit_tcb_t *b,jit_op_t *iop,void *f)
 /* Initialize register mapping */
 void ppc32_jit_init_hreg_mapping(cpu_ppc_t *cpu)
 {
-   int avail_hregs[] = { AMD64_RSI, AMD64_RAX, AMD64_RCX, AMD64_RDX, 
+   int avail_hregs[] = { AMD64_RSI, AMD64_RAX, AMD64_RCX, AMD64_RDX,
                          AMD64_R13, AMD64_R14, AMD64_RDI, -1 };
    struct hreg_map *map;
    int i,hreg;
@@ -376,7 +376,7 @@ static void ppc32_emit_memop(cpu_ppc_t *cpu,ppc32_jit_tcb_t *b,
    m_uint32_t val = sign_extend(offset,16);
    jit_op_t *iop;
 
-   /* 
+   /*
     * Since an exception can be triggered, clear JIT state. This allows
     * to use branch target tag (we can directly branch on this instruction).
     */
@@ -400,7 +400,7 @@ static void ppc32_emit_memop(cpu_ppc_t *cpu,ppc32_jit_tcb_t *b,
 
    /* RDX = target register */
    amd64_mov_reg_imm(iop->ob_ptr,AMD64_RDX,target);
-   
+
    /* RDI = CPU instance pointer */
    amd64_mov_reg_reg(iop->ob_ptr,AMD64_RDI,AMD64_R15,8);
 
@@ -419,7 +419,7 @@ static void ppc32_emit_memop_idx(cpu_ppc_t *cpu,ppc32_jit_tcb_t *b,
 {
    jit_op_t *iop;
 
-   /* 
+   /*
     * Since an exception can be triggered, clear JIT state. This allows
     * to use branch target tag (we can directly branch on this instruction).
     */
@@ -443,7 +443,7 @@ static void ppc32_emit_memop_idx(cpu_ppc_t *cpu,ppc32_jit_tcb_t *b,
 
    /* RDX = target register */
    amd64_mov_reg_imm(iop->ob_ptr,AMD64_RDX,target);
-   
+
    /* RDI = CPU instance pointer */
    amd64_mov_reg_reg(iop->ob_ptr,AMD64_RDI,AMD64_R15,8);
 
@@ -494,12 +494,12 @@ static void ppc32_emit_memop_fast(cpu_ppc_t *cpu,ppc32_jit_tcb_t *b,
                                   int write_op,int opcode,
                                   int base,int offset,int target,
                                   memop_fast_access op_handler)
-{   
+{
    m_uint32_t val = sign_extend(offset,16);
    u_char *test1,*test2,*p_exit;
    jit_op_t *iop;
 
-   /* 
+   /*
     * Since an exception can be triggered, clear JIT state. This allows
     * to use branch target tag (we can directly branch on this instruction).
     */
@@ -637,9 +637,9 @@ void ppc32_emit_breakpoint(cpu_ppc_t *cpu,ppc32_jit_tcb_t *b)
 
 /* Increment the number of executed instructions (performance debugging) */
 void ppc32_inc_perf_counter(cpu_ppc_t *cpu)
-{    
+{
    jit_op_t *iop;
-   
+
    iop = ppc32_op_emit_insn_output(cpu,1,"perf_cnt");
    amd64_inc_membase_size(iop->ob_ptr,
                           AMD64_R15,OFFSET(cpu_ppc_t,perf_counter),4);
@@ -725,7 +725,7 @@ DECLARE_INSN(MTLR)
    int rs = bits(insn,21,25);
    int hreg_rs;
    jit_op_t *iop;
-   
+
    ppc32_jit_start_hreg_seq(cpu,"mtlr");
    hreg_rs = ppc32_jit_alloc_hreg(cpu,rs);
    ppc32_op_emit_load_gpr(cpu,hreg_rs,rs);
@@ -741,7 +741,7 @@ DECLARE_INSN(MFCTR)
    int rd = bits(insn,21,25);
    int hreg_rd;
    jit_op_t *iop;
-   
+
    ppc32_jit_start_hreg_seq(cpu,"mfctr");
    hreg_rd = ppc32_jit_alloc_hreg(cpu,rd);
 
@@ -854,7 +854,7 @@ DECLARE_INSN(ADD)
 
    if (insn & 1)
       ppc32_op_emit_update_flags(cpu,0,TRUE);
-   
+
    ppc32_jit_close_hreg_seq(cpu);
    return(0);
 }
@@ -904,13 +904,13 @@ DECLARE_INSN(ADDC)
       ppc32_op_emit_update_flags(cpu,0,TRUE);
    }
 
-   ppc32_jit_close_hreg_seq(cpu);      
+   ppc32_jit_close_hreg_seq(cpu);
    return(0);
 }
 
 /* ADDE - Add Extended */
 DECLARE_INSN(ADDE)
-{   
+{
    int rd = bits(insn,21,25);
    int ra = bits(insn,16,20);
    int rb = bits(insn,11,15);
@@ -1201,7 +1201,7 @@ DECLARE_INSN(ANDC)
    amd64_not_reg(iop->ob_ptr,hreg_t0);
 
    /* $ra = $rs & $t0 */
-   if (ra == rs) 
+   if (ra == rs)
       amd64_alu_reg_reg_size(iop->ob_ptr,X86_AND,hreg_ra,hreg_t0,4);
    else {
       amd64_alu_reg_reg_size(iop->ob_ptr,X86_AND,hreg_t0,hreg_rs,4);
@@ -1406,14 +1406,14 @@ DECLARE_INSN(BCC)
 
    local_jump = ppc32_jit_tcb_local_addr(b,new_ia,&jump_ptr);
 
-   /* 
-    * Optimize the jump, depending if the destination is in the same 
+   /*
+    * Optimize the jump, depending if the destination is in the same
     * page or not.
     */
    if (local_jump) {
       ppc32_jit_tcb_record_patch(b,iop,iop->ob_ptr,new_ia);
       amd64_branch32(iop->ob_ptr,(cond) ? X86_CC_NZ : X86_CC_Z,0,FALSE);
-   } else {   
+   } else {
       jump_ptr = iop->ob_ptr;
       amd64_branch32(iop->ob_ptr,(cond) ? X86_CC_Z : X86_CC_NZ,0,FALSE);
       ppc32_set_jump(cpu,b,iop,new_ia,TRUE);
@@ -1491,14 +1491,14 @@ DECLARE_INSN(BC)
 
    local_jump = ppc32_jit_tcb_local_addr(b,new_ia,&jump_ptr);
 
-   /* 
-    * Optimize the jump, depending if the destination is in the same 
+   /*
+    * Optimize the jump, depending if the destination is in the same
     * page or not.
     */
    if (local_jump) {
       ppc32_jit_tcb_record_patch(b,iop,iop->ob_ptr,new_ia);
       amd64_branch32(iop->ob_ptr,X86_CC_NZ,0,FALSE);
-   } else {   
+   } else {
       jump_ptr = iop->ob_ptr;
       amd64_branch32(iop->ob_ptr,X86_CC_Z,0,FALSE);
       ppc32_set_jump(cpu,b,iop,new_ia,TRUE);
@@ -1513,7 +1513,7 @@ DECLARE_INSN(BC)
 
 /* BCLR - Branch Conditional to Link register */
 DECLARE_INSN(BCLR)
-{   
+{
    int bo = bits(insn,21,25);
    int bi = bits(insn,16,20);
    int bd = bits(insn,2,15);
@@ -1599,7 +1599,7 @@ DECLARE_INSN(CMP)
    int rb = bits(insn,11,15);
    int hreg_ra,hreg_rb;
    jit_op_t *iop;
-   
+
    ppc32_jit_start_hreg_seq(cpu,"cmp");
    hreg_ra = ppc32_jit_alloc_hreg(cpu,ra);
    hreg_rb = ppc32_jit_alloc_hreg(cpu,rb);
@@ -1647,7 +1647,7 @@ DECLARE_INSN(CMPL)
    int rb = bits(insn,11,15);
    int hreg_ra,hreg_rb;
    jit_op_t *iop;
-   
+
    ppc32_jit_start_hreg_seq(cpu,"cmpl");
    hreg_ra = ppc32_jit_alloc_hreg(cpu,ra);
    hreg_rb = ppc32_jit_alloc_hreg(cpu,rb);
@@ -1720,11 +1720,11 @@ DECLARE_INSN(CRAND)
                           PPC32_CR_FIELD_OFFSET(ppc32_get_cr_field(bb)),
                           (1 << ppc32_get_cr_bit(bb)));
    amd64_set_reg(iop->ob_ptr,X86_CC_NZ,hreg_t0,FALSE);
-   
+
    /* result of AND between $ba and $bb */
    amd64_alu_reg_reg(iop->ob_ptr,X86_AND,hreg_t0,AMD64_RDX);
    amd64_alu_reg_imm(iop->ob_ptr,X86_AND,hreg_t0,0x01);
-   
+
    /* set/clear $bd bit depending on the result */
    amd64_alu_membase_imm_size(iop->ob_ptr,X86_AND,
                               AMD64_R15,
@@ -1775,11 +1775,11 @@ DECLARE_INSN(CRANDC)
                           PPC32_CR_FIELD_OFFSET(ppc32_get_cr_field(bb)),
                           (1 << ppc32_get_cr_bit(bb)));
    amd64_set_reg(iop->ob_ptr,X86_CC_Z,hreg_t0,FALSE);
-   
+
    /* result of AND between $ba and $bb */
    amd64_alu_reg_reg(iop->ob_ptr,X86_AND,hreg_t0,AMD64_RDX);
    amd64_alu_reg_imm(iop->ob_ptr,X86_AND,hreg_t0,0x01);
-   
+
    /* set/clear $bd bit depending on the result */
    amd64_alu_membase_imm_size(iop->ob_ptr,X86_AND,
                               AMD64_R15,
@@ -1830,12 +1830,12 @@ DECLARE_INSN(CREQV)
                           PPC32_CR_FIELD_OFFSET(ppc32_get_cr_field(bb)),
                           (1 << ppc32_get_cr_bit(bb)));
    amd64_set_reg(iop->ob_ptr,X86_CC_NZ,hreg_t0,FALSE);
-   
+
    /* result of XOR between $ba and $bb */
    amd64_alu_reg_reg(iop->ob_ptr,X86_XOR,hreg_t0,AMD64_RDX);
    amd64_not_reg(iop->ob_ptr,hreg_t0);
    amd64_alu_reg_imm(iop->ob_ptr,X86_AND,hreg_t0,0x01);
-   
+
    /* set/clear $bd bit depending on the result */
    amd64_alu_membase_imm_size(iop->ob_ptr,X86_AND,
                               AMD64_R15,
@@ -1886,12 +1886,12 @@ DECLARE_INSN(CRNAND)
                           PPC32_CR_FIELD_OFFSET(ppc32_get_cr_field(bb)),
                           (1 << ppc32_get_cr_bit(bb)));
    amd64_set_reg(iop->ob_ptr,X86_CC_NZ,hreg_t0,FALSE);
-   
+
    /* result of NAND between $ba and $bb */
    amd64_alu_reg_reg(iop->ob_ptr,X86_AND,hreg_t0,AMD64_RDX);
    amd64_not_reg(iop->ob_ptr,hreg_t0);
    amd64_alu_reg_imm(iop->ob_ptr,X86_AND,hreg_t0,0x01);
-   
+
    /* set/clear $bd bit depending on the result */
    amd64_alu_membase_imm_size(iop->ob_ptr,X86_AND,
                               AMD64_R15,
@@ -1942,12 +1942,12 @@ DECLARE_INSN(CRNOR)
                           PPC32_CR_FIELD_OFFSET(ppc32_get_cr_field(bb)),
                           (1 << ppc32_get_cr_bit(bb)));
    amd64_set_reg(iop->ob_ptr,X86_CC_NZ,hreg_t0,FALSE);
-   
+
    /* result of NOR between $ba and $bb */
    amd64_alu_reg_reg(iop->ob_ptr,X86_OR,hreg_t0,AMD64_RDX);
    amd64_not_reg(iop->ob_ptr,hreg_t0);
    amd64_alu_reg_imm(iop->ob_ptr,X86_AND,hreg_t0,0x01);
-   
+
    /* set/clear $bd bit depending on the result */
    amd64_alu_membase_imm_size(iop->ob_ptr,X86_AND,
                               AMD64_R15,
@@ -1998,11 +1998,11 @@ DECLARE_INSN(CROR)
                           PPC32_CR_FIELD_OFFSET(ppc32_get_cr_field(bb)),
                           (1 << ppc32_get_cr_bit(bb)));
    amd64_set_reg(iop->ob_ptr,X86_CC_NZ,hreg_t0,FALSE);
-   
+
    /* result of NOR between $ba and $bb */
    amd64_alu_reg_reg(iop->ob_ptr,X86_OR,hreg_t0,AMD64_RDX);
    amd64_alu_reg_imm(iop->ob_ptr,X86_AND,hreg_t0,0x01);
-   
+
    /* set/clear $bd bit depending on the result */
    amd64_alu_membase_imm_size(iop->ob_ptr,X86_AND,
                               AMD64_R15,
@@ -2053,11 +2053,11 @@ DECLARE_INSN(CRORC)
                           PPC32_CR_FIELD_OFFSET(ppc32_get_cr_field(bb)),
                           (1 << ppc32_get_cr_bit(bb)));
    amd64_set_reg(iop->ob_ptr,X86_CC_Z,hreg_t0,FALSE);
-   
+
    /* result of ORC between $ba and $bb */
    amd64_alu_reg_reg(iop->ob_ptr,X86_OR,hreg_t0,AMD64_RDX);
    amd64_alu_reg_imm(iop->ob_ptr,X86_AND,hreg_t0,0x01);
-   
+
    /* set/clear $bd bit depending on the result */
    amd64_alu_membase_imm_size(iop->ob_ptr,X86_AND,
                               AMD64_R15,
@@ -2108,11 +2108,11 @@ DECLARE_INSN(CRXOR)
                           PPC32_CR_FIELD_OFFSET(ppc32_get_cr_field(bb)),
                           (1 << ppc32_get_cr_bit(bb)));
    amd64_set_reg(iop->ob_ptr,X86_CC_NZ,hreg_t0,FALSE);
-   
+
    /* result of XOR between $ba and $bb */
    amd64_alu_reg_reg(iop->ob_ptr,X86_XOR,hreg_t0,AMD64_RDX);
    amd64_alu_reg_imm(iop->ob_ptr,X86_AND,hreg_t0,0x01);
-   
+
    /* set/clear $bd bit depending on the result */
    amd64_alu_membase_imm_size(iop->ob_ptr,X86_AND,
                               AMD64_R15,
@@ -2213,7 +2213,7 @@ DECLARE_INSN(EQV)
 
 /* EXTSB - Extend Sign Byte */
 DECLARE_INSN(EXTSB)
-{   
+{
    int rs = bits(insn,21,25);
    int ra = bits(insn,16,20);
    int hreg_rs,hreg_ra;
@@ -2248,7 +2248,7 @@ DECLARE_INSN(EXTSB)
 
 /* EXTSH - Extend Sign Word */
 DECLARE_INSN(EXTSH)
-{   
+{
    int rs = bits(insn,21,25);
    int ra = bits(insn,16,20);
    int hreg_rs,hreg_ra;
@@ -2470,7 +2470,7 @@ DECLARE_INSN(MCRF)
    jit_op_t *iop;
 
    ppc32_jit_start_hreg_seq(cpu,"mcrf");
-   hreg_t0 = ppc32_jit_get_tmp_hreg(cpu);   
+   hreg_t0 = ppc32_jit_get_tmp_hreg(cpu);
    ppc32_op_emit_require_flags(cpu,rs);
 
    iop = ppc32_op_emit_insn_output(cpu,1,"mcrf");
@@ -2939,7 +2939,7 @@ DECLARE_INSN(ORC)
    amd64_not_reg(iop->ob_ptr,hreg_t0);
 
    /* $ra = $rs | $t0 */
-   if (ra == rs) 
+   if (ra == rs)
       amd64_alu_reg_reg_size(iop->ob_ptr,X86_OR,hreg_ra,hreg_t0,4);
    else {
       amd64_alu_reg_reg_size(iop->ob_ptr,X86_OR,hreg_t0,hreg_rs,4);
@@ -2981,7 +2981,7 @@ DECLARE_INSN(ORI)
    ppc32_op_emit_store_gpr(cpu,ra,hreg_ra);
 
    ppc32_jit_close_hreg_seq(cpu);
-   return(0); 
+   return(0);
 }
 
 /* OR Immediate Shifted */
@@ -3187,13 +3187,13 @@ DECLARE_INSN(SLW)
       amd64_mov_reg_reg(iop->ob_ptr,hreg_ra,hreg_rs,4);
 
    amd64_shift_reg(iop->ob_ptr,X86_SHL,hreg_ra);
-   
+
    /* store the result */
    if (insn & 1)
       amd64_test_reg_reg_size(iop->ob_ptr,hreg_ra,hreg_ra,4);
 
    ppc32_op_emit_store_gpr(cpu,ra,hreg_ra);
-   
+
    if (insn & 1)
       ppc32_op_emit_update_flags(cpu,0,TRUE);
 
@@ -3203,7 +3203,7 @@ DECLARE_INSN(SLW)
 
 /* SRAWI - Shift Right Algebraic Word Immediate */
 DECLARE_INSN(SRAWI)
-{   
+{
    int rs = bits(insn,21,25);
    int ra = bits(insn,16,20);
    int sh = bits(insn,11,15);
@@ -3221,7 +3221,7 @@ DECLARE_INSN(SRAWI)
 
    iop = ppc32_op_emit_insn_output(cpu,3,"srawi");
    amd64_mov_reg_reg(iop->ob_ptr,hreg_t0,hreg_rs,4);
-   
+
    if (ra != rs)
       amd64_mov_reg_reg(iop->ob_ptr,hreg_ra,hreg_rs,4);
    amd64_shift_reg_imm_size(iop->ob_ptr,X86_SAR,hreg_ra,sh,4);
@@ -3240,7 +3240,7 @@ DECLARE_INSN(SRAWI)
       amd64_test_reg_reg_size(iop->ob_ptr,hreg_ra,hreg_ra,4);
 
    ppc32_op_emit_store_gpr(cpu,ra,hreg_ra);
-   
+
    if (insn & 1)
       ppc32_op_emit_update_flags(cpu,0,TRUE);
 
@@ -3277,13 +3277,13 @@ DECLARE_INSN(SRW)
       amd64_mov_reg_reg(iop->ob_ptr,hreg_ra,hreg_rs,4);
 
    amd64_shift_reg(iop->ob_ptr,X86_SHR,hreg_ra);
-   
+
    /* store the result */
    if (insn & 1)
       amd64_test_reg_reg_size(iop->ob_ptr,hreg_ra,hreg_ra,4);
 
    ppc32_op_emit_store_gpr(cpu,ra,hreg_ra);
-   
+
    if (insn & 1)
       ppc32_op_emit_update_flags(cpu,0,TRUE);
 
@@ -3579,7 +3579,7 @@ DECLARE_INSN(SUBFE)
    if (insn & 1)
       ppc32_update_cr0(b);
 
-   ppc32_jit_close_hreg_seq(cpu); 
+   ppc32_jit_close_hreg_seq(cpu);
    return(0);
 }
 
@@ -3626,7 +3626,7 @@ DECLARE_INSN(SUBFIC)
 
    amd64_mov_reg_reg(iop->ob_ptr,hreg_rd,hreg_t0,4);
    ppc32_op_emit_store_gpr(cpu,rd,hreg_rd);
-   
+
    ppc32_jit_close_hreg_seq(cpu);
    return(0);
 }

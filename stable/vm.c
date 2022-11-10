@@ -60,7 +60,7 @@ void vm_object_add(vm_instance_t *vm,vm_obj_t *obj)
 
    if (vm->vm_object_list)
       vm->vm_object_list->pprev = &obj->next;
-   
+
    vm->vm_object_list = obj;
 }
 
@@ -126,7 +126,7 @@ void vm_object_dump(vm_instance_t *vm)
    vm_obj_t *obj;
 
    printf("VM \"%s\" (%u) object list:\n",vm->name,vm->instance_id);
-   
+
    for(obj=vm->vm_object_list;obj;obj=obj->next) {
       printf("  - %-15s [data=%p]\n",obj->name,obj->data);
    }
@@ -155,7 +155,7 @@ u_int vm_get_mac_addr_msb(vm_instance_t *vm)
 {
    if (vm->platform->get_mac_addr_msb != NULL)
       return(vm->platform->get_mac_addr_msb());
-   
+
    /* default value */
    return(0xC6);
 }
@@ -204,7 +204,7 @@ void vm_release_lock(vm_instance_t *vm,int erase)
       fclose(vm->lock_fd);
       vm->lock_fd = NULL;
    }
-   
+
    if (vm->lock_file != NULL) {
       if (erase)
          unlink(vm->lock_file);
@@ -225,13 +225,13 @@ int vm_get_lock(vm_instance_t *vm)
       fprintf(stderr,"Unable to create lock file \"%s\".\n",vm->lock_file);
       return(-1);
    }
-   
+
    memset(&lock,0,sizeof(lock));
    lock.l_type   = F_WRLCK;
    lock.l_whence = SEEK_SET;
    lock.l_start  = 0;
    lock.l_len    = 0;
-   
+
    if (fcntl(fileno(vm->lock_fd),F_SETLK,&lock) == -1) {
       if (fcntl(fileno(vm->lock_fd),F_GETLK,&lock) == 0) {
          snprintf(pid_str,sizeof(pid_str),"%ld",(long)lock.l_pid);
@@ -262,7 +262,7 @@ void vm_flog(vm_instance_t *vm,char *module,char *format,va_list ap)
 
 /* Log a message */
 void vm_log(vm_instance_t *vm,char *module,char *format,...)
-{ 
+{
    va_list ap;
 
    if (vm->log_fd) {
@@ -329,7 +329,7 @@ int vm_reopen_log(vm_instance_t *vm)
 
 /* Error message */
 void vm_error(vm_instance_t *vm,char *format,...)
-{ 
+{
    char buffer[2048];
    va_list ap;
 
@@ -350,7 +350,7 @@ static vm_instance_t *vm_create(char *name,int instance_id,
       fprintf(stderr,"VM %s: unable to create new instance!\n",name);
       return NULL;
    }
-   
+
    memset(vm,0,sizeof(*vm));
 
    if (!(vm->name = strdup(name))) {
@@ -378,7 +378,7 @@ static vm_instance_t *vm_create(char *name,int instance_id,
    /* create lock file */
    if (vm_get_lock(vm) == -1)
       goto err_lock;
-   
+
    /* create log file */
    if (vm_create_log(vm) == -1)
       goto err_log;
@@ -405,12 +405,12 @@ static vm_instance_t *vm_create(char *name,int instance_id,
    return NULL;
 }
 
-/* 
+/*
  * Shutdown hardware resources used by a VM.
  * The CPU must have been stopped.
  */
 int vm_hardware_shutdown(vm_instance_t *vm)
-{  
+{
    int i;
 
    if ((vm->status == VM_STATUS_HALTED) || !vm->cpu_group) {
@@ -439,13 +439,13 @@ int vm_hardware_shutdown(vm_instance_t *vm)
          pci_bus_remove(vm->pci_bus_pool[i]);
          vm->pci_bus_pool[i] = NULL;
       }
-   }     
+   }
 
    /* Remove the IRQ routing vectors */
    vm->set_irq = NULL;
    vm->clear_irq = NULL;
 
-   /* Delete the VTTY for Console and AUX ports */   
+   /* Delete the VTTY for Console and AUX ports */
    vm_log(vm,"VM","deleting VTTY.\n");
    vm_delete_vtty(vm);
 
@@ -549,7 +549,7 @@ int vm_bind_device(vm_instance_t *vm,struct vdevice *dev)
    struct vdevice **cur;
    u_int i;
 
-   /* 
+   /*
     * Add this device to the device array. The index in the device array
     * is used by the MTS subsystem.
     */
@@ -610,7 +610,7 @@ int vm_unbind_device(vm_instance_t *vm,struct vdevice *dev)
 /* Map a device at the specified physical address */
 int vm_map_device(vm_instance_t *vm,struct vdevice *dev,m_uint64_t base_addr)
 {
-#if 0   
+#if 0
    /* Suspend VM activity */
    vm_suspend(vm);
 
@@ -667,9 +667,9 @@ int vm_stop(vm_instance_t *vm)
 /* Monitor an instance periodically */
 void vm_monitor(vm_instance_t *vm)
 {
-   while(vm->status != VM_STATUS_SHUTDOWN)         
+   while(vm->status != VM_STATUS_SHUTDOWN)
       usleep(200000);
-      
+
    return;
 }
 
@@ -678,7 +678,7 @@ static vm_chunk_t *vm_chunk_create(vm_instance_t *vm)
 {
    vm_chunk_t *chunk;
    size_t area_len;
-   
+
    if (!(chunk = malloc(sizeof(*chunk))))
       return NULL;
 
@@ -785,7 +785,7 @@ static vm_ghost_image_t *vm_ghost_image_load(char *filename)
 
    m_log("GHOST","loaded ghost image %s (fd=%d) at addr=%p (size=0x%llx)\n",
          img->filename,img->fd,img->area_ptr,(long long)img->file_size);
-         
+
    return img;
 }
 
@@ -811,13 +811,13 @@ int vm_ghost_image_get(char *filename,u_char **ptr,int *fd)
       fprintf(stderr,"Unable to load ghost image %s\n",filename);
       return(-1);
    }
-   
+
    img->ref_count = 1;
    *ptr = img->area_ptr;
    *fd  = img->fd;
 
    img->next = vm_ghost_pool;
-   vm_ghost_pool = img;   
+   vm_ghost_pool = img;
    VM_GUNLOCK();
 
    m_log("GHOST","loaded image %s successfully.\n",filename);
@@ -852,7 +852,7 @@ int vm_ghost_image_release(int fd)
          return(0);
       }
    }
-   
+
    VM_GUNLOCK();
    return(-1);
 }
@@ -903,10 +903,10 @@ int vm_mmap_close_file(int fd,u_char *ptr,size_t len)
 {
    if (ptr != NULL)
       memzone_unmap(ptr,len);
-   
+
    if (fd != -1)
       close(fd);
-   
+
    return(0);
 }
 
@@ -915,7 +915,7 @@ int vm_ios_save_config(vm_instance_t *vm)
 {
    char *output;
    int res;
-   
+
    if (!(output = vm_build_filename(vm,"ios_cfg.txt")))
       return(-1);
 
@@ -990,7 +990,7 @@ int vm_nvram_extract_config(vm_instance_t *vm,char *filename)
       return(-1);
 
    /* Extract the IOS configuration */
-   if ((vm->platform->nvram_extract_config(vm,&cfg_buffer,&cfg_len,NULL,NULL)) || 
+   if ((vm->platform->nvram_extract_config(vm,&cfg_buffer,&cfg_len,NULL,NULL)) ||
        (cfg_buffer == NULL))
       return(-1);
 
@@ -1285,7 +1285,7 @@ static void vm_reg_save_config(registry_entry_t *entry,void *opt,int *err)
 {
    vm_instance_t *vm = entry->data;
    FILE *fd = opt;
-   
+
    vm_save_config(vm,fd);
 
    /* Save specific platform options */
@@ -1295,7 +1295,7 @@ static void vm_reg_save_config(registry_entry_t *entry,void *opt,int *err)
 
 /* Save all VM configs */
 int vm_save_config_all(FILE *fd)
-{   
+{
    registry_foreach_type(OBJ_TYPE_VM,vm_reg_save_config,fd,NULL);
    return(0);
 }

@@ -58,7 +58,7 @@ static cpu_gen_t *find_cpu(hypervisor_conn_t *conn,vm_instance_t *vm,
       hypervisor_send_reply(conn,HSC_ERR_BAD_OBJ,1,"Bad CPU specified");
       return NULL;
    }
-   
+
    return cpu;
 }
 
@@ -76,7 +76,7 @@ static int cmd_create(hypervisor_conn_t *conn,int argc,char *argv[])
 
    vm->vtty_con_type = VTTY_TYPE_NONE;
    vm->vtty_aux_type = VTTY_TYPE_NONE;
-   
+
    vm_release(vm);
    hypervisor_send_reply(conn,HSC_INFO_OK,1,"VM '%s' created",argv[0]);
    return(0);
@@ -183,7 +183,7 @@ static int cmd_start(hypervisor_conn_t *conn,int argc,char *argv[])
                             argv[0]);
       return(-1);
    }
-   
+
    vm_release(vm);
    hypervisor_send_reply(conn,HSC_INFO_OK,1,"VM '%s' started",argv[0]);
    return(0);
@@ -204,7 +204,7 @@ static int cmd_stop(hypervisor_conn_t *conn,int argc,char *argv[])
                             argv[0]);
       return(-1);
    }
-   
+
    vm_release(vm);
    hypervisor_send_reply(conn,HSC_INFO_OK,1,"VM '%s' stopped",argv[0]);
    return(0);
@@ -446,7 +446,7 @@ static int cmd_set_idle_pc_online(hypervisor_conn_t *conn,
 
 /* Get the idle PC proposals */
 static int cmd_get_idle_pc_prop(hypervisor_conn_t *conn,int argc,char *argv[])
-{  
+{
    vm_instance_t *vm;
    cpu_gen_t *cpu;
    int i;
@@ -711,7 +711,7 @@ static int cmd_extract_config(hypervisor_conn_t *conn,int argc,char *argv[])
    if ((vm->platform->nvram_extract_config(vm,&startup_config,&startup_len,&private_config,&private_len)))
       goto err_nvram_extract;
 
-   /* 
+   /*
     * Convert config to base64. base64 generates 4 bytes for each group of 3 bytes.
     */
    if (!(startup_base64 = malloc(1 + (startup_len + 2) / 3 * 4)) ||
@@ -980,7 +980,7 @@ static int cmd_slot_bindings(hypervisor_conn_t *conn,int argc,char *argv[])
                                card->slot_id,card->subslot_id,card->dev_type);
       }
    }
-   
+
    vm_release(vm);
    hypervisor_send_reply(conn,HSC_INFO_OK,1,"OK");
    return(0);
@@ -988,7 +988,7 @@ static int cmd_slot_bindings(hypervisor_conn_t *conn,int argc,char *argv[])
 
 /* Show NIO bindings for the specified slot */
 static int cmd_slot_nio_bindings(hypervisor_conn_t *conn,int argc,char *argv[])
-{     
+{
    struct cisco_nio_binding *nb;
    struct cisco_card *card,*sc;
    vm_instance_t *vm;
@@ -1018,7 +1018,7 @@ static int cmd_slot_nio_bindings(hypervisor_conn_t *conn,int argc,char *argv[])
          }
       }
    }
-   
+
    vm_release(vm);
    hypervisor_send_reply(conn,HSC_INFO_OK,1,"OK");
    return(0);

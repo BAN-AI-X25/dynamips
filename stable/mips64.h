@@ -8,11 +8,11 @@
 
 #include <pthread.h>
 
-#include "utils.h" 
+#include "utils.h"
 #include "rbtree.h"
 
-/* 
- * MIPS General Purpose Registers 
+/*
+ * MIPS General Purpose Registers
  */
 #define MIPS_GPR_ZERO        0             /*  zero  */
 #define MIPS_GPR_AT          1             /*  at  */
@@ -279,7 +279,7 @@ enum {
    MIPS_MEMOP_SB,
    MIPS_MEMOP_SH,
    MIPS_MEMOP_SW,
-   MIPS_MEMOP_SD, 
+   MIPS_MEMOP_SD,
 
    MIPS_MEMOP_LWL,
    MIPS_MEMOP_LWR,
@@ -323,7 +323,7 @@ typedef struct {
 typedef struct {
    m_uint64_t reg[MIPS64_CP0_REG_NR];
    tlb_entry_t tlb[MIPS64_TLB_MAX_ENTRIES];
-   
+
    /* Number of TLB entries */
    u_int tlb_entries;
 
@@ -352,7 +352,7 @@ struct cpu_mips {
    m_uint32_t irq_pending,irq_cause,ll_bit;
    m_uint64_t pc,gpr[MIPS64_GPR_NR];
    m_uint64_t lo,hi,ret_pc;
-   
+
    /* Code page translation cache */
    mips64_jit_tcb_t **exec_blk_map;
 
@@ -368,7 +368,7 @@ struct cpu_mips {
 
    /* System coprocessor (CP0) */
    mips_cp0_t cp0;
-   
+
    /* FPU (CP1) */
    mips_cp1_t fpu;
 
@@ -500,7 +500,7 @@ void mips64_update_irq_flag(cpu_mips_t *cpu);
 void mips64_trigger_exception(cpu_mips_t *cpu,u_int exc_code,int bd_slot);
 
 /*
- * Increment count register and trigger the timer IRQ if value in compare 
+ * Increment count register and trigger the timer IRQ if value in compare
  * register is the same.
  */
 fastcall void mips64_exec_inc_cp0_cnt(cpu_mips_t *cpu);

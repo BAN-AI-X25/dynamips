@@ -34,7 +34,7 @@ static void mips64_undef_access(cpu_mips_t *cpu,m_uint64_t vaddr,
        if (cpu->gen->undef_mem_handler(cpu->gen,vaddr,op_size,op_type,data))
           return;
     }
-    
+
 #if DEBUG_MTS_ACC_U
     if (op_type == MTS_READ)
        cpu_log(cpu->gen,
@@ -70,7 +70,7 @@ static void mips64_tlb_error(cpu_mips_t *cpu,m_uint64_t vaddr,int error,
    mips64_prepare_tlb_exception(cpu,vaddr);
 
    switch(error) {
-   
+
       case MTS_ACC_T:
          /* Cannot be anying but _LOOKUP due to test above, but sensible */
          /* to leave the test in for future reference                    */
@@ -81,13 +81,13 @@ static void mips64_tlb_error(cpu_mips_t *cpu,m_uint64_t vaddr,int error,
               cpu_log(cpu->gen,
                     "MTS","TLB exception suggests RELOAD for address 0x%llx at pc=0x%llx "
                     "(%s access, size=%u)\n",
-                    vaddr,cpu->pc,(op_type == MTS_READ) ? 
+                    vaddr,cpu->pc,(op_type == MTS_READ) ?
                     "read":"write",op_size);
               vm_stop(cpu->vm);
             }
 	 }
          break;
-		 
+
       case MIPS_TLB_LOOKUP_MISS:
          if (op_type == MTS_READ)
             mips64_tlb_miss_exception(cpu,MIPS_CP0_CAUSE_TLB_LOAD,vaddr);
@@ -106,7 +106,7 @@ static void mips64_tlb_error(cpu_mips_t *cpu,m_uint64_t vaddr,int error,
          mips64_gen_exception_badva(cpu,MIPS_CP0_CAUSE_TLB_MOD,vaddr);
          break;
    }
-            
+
    cpu_exec_loop_enter(cpu->gen);
 }
 
@@ -116,7 +116,7 @@ static void mips64_ae_error(cpu_mips_t *cpu,m_uint64_t vaddr,
 {
    if (op_code == MIPS_MEMOP_LOOKUP)
       return;
-      
+
 #if DEBUG_MTS_ACC_AE
    cpu_log(cpu->gen,
            "MTS","AE exception for address 0x%llx at pc=0x%llx (%s access)\n",
@@ -177,7 +177,7 @@ mips64_mts64_slow_lookup(cpu_mips_t *cpu,m_uint64_t vaddr,
       case 0xc00000:   /* xkseg */
          /* trigger TLB exception if no matching entry found */
          tlb_res = mips64_cp0_tlb_lookup(cpu,vaddr,op_type,&map);
-         
+
          if (tlb_res != MIPS_TLB_LOOKUP_OK)
             goto err_tlb;
 
@@ -191,7 +191,7 @@ mips64_mts64_slow_lookup(cpu_mips_t *cpu,m_uint64_t vaddr,
 
          switch(sub_zone) {
             case 0x7fc:   /* ckseg0 */
-               map.vaddr  = vaddr & MIPS_MIN_PAGE_MASK;               
+               map.vaddr  = vaddr & MIPS_MIN_PAGE_MASK;
                map.paddr  = map.vaddr - 0xFFFFFFFF80000000ULL;
                map.offset = vaddr & MIPS_MIN_PAGE_IMASK;
                map.cached = TRUE;
@@ -213,14 +213,14 @@ mips64_mts64_slow_lookup(cpu_mips_t *cpu,m_uint64_t vaddr,
                if (!(entry = mips64_mts64_map(cpu,op_type,&map,
                                               entry,alt_entry)))
                   goto err_undef;
-               
+
                return(entry);
 
             case 0x7fe:   /* cksseg */
             case 0x7ff:   /* ckseg3 */
                /* trigger TLB exception if no matching entry found */
                tlb_res = mips64_cp0_tlb_lookup(cpu,vaddr,op_type,&map);
-   
+
                if (tlb_res != MIPS_TLB_LOOKUP_OK)
                   goto err_tlb;
 
@@ -235,7 +235,7 @@ mips64_mts64_slow_lookup(cpu_mips_t *cpu,m_uint64_t vaddr,
                goto err_address;
          }
          break;
-   
+
       /* xkphys */
       case 0x800000:
       case 0x880000:
@@ -279,7 +279,7 @@ static forced_inline
 void *mips64_mts64_access(cpu_mips_t *cpu,m_uint64_t vaddr,
                           u_int op_code,u_int op_size,
                           u_int op_type,m_uint64_t *data)
-{   
+{
    mts64_entry_t *entry,alt_entry;
    m_uint32_t hash_bucket;
    m_iptr_t haddr;
@@ -290,7 +290,7 @@ void *mips64_mts64_access(cpu_mips_t *cpu,m_uint64_t vaddr,
    /* Record the memory access */
    memlog_rec_access(cpu->gen,vaddr,*data,op_size,op_type);
 #endif
-   
+
    hash_bucket = MTS64_HASH(vaddr);
    entry = &cpu->mts_u.mts64_cache[hash_bucket];
 
@@ -305,7 +305,7 @@ void *mips64_mts64_access(cpu_mips_t *cpu,m_uint64_t vaddr,
    if (unlikely(((vaddr & MIPS_MIN_PAGE_MASK) != entry->gvpa) || wr_catch)) {
       entry = mips64_mts64_slow_lookup(cpu,vaddr,op_code,op_size,op_type,
                                        data,&alt_entry);
-      if (!entry) 
+      if (!entry)
          return NULL;
 
       if (entry->flags & MTS_FLAG_DEV) {
@@ -330,11 +330,11 @@ void *mips64_mts64_access(cpu_mips_t *cpu,m_uint64_t vaddr,
 /* MTS64 virtual address to physical page translation */
 static fastcall int mips64_mts64_translate(cpu_mips_t *cpu,m_uint64_t vaddr,
                                            m_uint32_t *phys_page)
-{   
+{
    mts64_entry_t *entry,alt_entry;
    m_uint32_t hash_bucket;
    m_uint64_t data = 0;
-   
+
    hash_bucket = MTS64_HASH(vaddr);
    entry = &cpu->mts_u.mts64_cache[hash_bucket];
 
@@ -376,7 +376,7 @@ mips64_mts32_slow_lookup(cpu_mips_t *cpu,m_uint64_t vaddr,
       case 0x00 ... 0x03:   /* kuseg */
          /* trigger TLB exception if no matching entry found */
          tlb_res = mips64_cp0_tlb_lookup(cpu,vaddr,op_type,&map);
-                  
+
          if (tlb_res != MIPS_TLB_LOOKUP_OK)
             goto err_tlb;
 
@@ -413,7 +413,7 @@ mips64_mts32_slow_lookup(cpu_mips_t *cpu,m_uint64_t vaddr,
       case 0x07:   /* kseg3 */
          /* trigger TLB exception if no matching entry found */
          tlb_res = mips64_cp0_tlb_lookup(cpu,vaddr,op_type,&map);
-         
+
          if (tlb_res != MIPS_TLB_LOOKUP_OK)
             goto err_tlb;
 
@@ -464,12 +464,12 @@ void *mips64_mts32_access(cpu_mips_t *cpu,m_uint64_t vaddr,
    wr_catch = (op_type == MTS_WRITE) && (entry->flags & MTS_FLAG_WRCATCH);
 
    /* Slow lookup if nothing found in cache */
-   if (unlikely((((m_uint32_t)vaddr & MIPS_MIN_PAGE_MASK) != entry->gvpa) || 
+   if (unlikely((((m_uint32_t)vaddr & MIPS_MIN_PAGE_MASK) != entry->gvpa) ||
                 wr_catch))
    {
       entry = mips64_mts32_slow_lookup(cpu,vaddr,op_code,op_size,op_type,
                                        data,&alt_entry);
-      if (!entry) 
+      if (!entry)
          return NULL;
 
       if (entry->flags & MTS_FLAG_DEV) {
@@ -494,11 +494,11 @@ void *mips64_mts32_access(cpu_mips_t *cpu,m_uint64_t vaddr,
 /* MTS32 virtual address to physical page translation */
 static fastcall int mips64_mts32_translate(cpu_mips_t *cpu,m_uint64_t vaddr,
                                            m_uint32_t *phys_page)
-{     
+{
    mts32_entry_t *entry,alt_entry;
    m_uint32_t hash_bucket;
    m_uint64_t data = 0;
-   
+
    hash_bucket = MTS32_HASH(vaddr);
    entry = &cpu->mts_u.mts32_cache[hash_bucket];
 
@@ -528,7 +528,7 @@ int mips64_set_addr_mode(cpu_mips_t *cpu,u_int addr_mode)
 {
    if (cpu->addr_mode != addr_mode) {
       mips64_mem_shutdown(cpu);
-      
+
       switch(addr_mode) {
          case 32:
             mips64_mts32_init(cpu);

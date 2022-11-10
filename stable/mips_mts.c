@@ -86,9 +86,9 @@ void MTS_PROTO(invalidate_cache)(cpu_mips_t *cpu)
 void MTS_PROTO(invalidate_tlb_entry)(cpu_mips_t *cpu,u_int tlb_index)
 {
    MTS_PROTO(invalidate_cache)(cpu);
-} 
+}
 
-/* 
+/*
  * MTS mapping.
  *
  * It is NOT inlined since it triggers a GCC bug on my config (x86, GCC 3.3.5)
@@ -375,7 +375,7 @@ fastcall void MTS_PROTO(ldr)(cpu_mips_t *cpu,m_uint64_t vaddr,u_int reg)
    m_shift = ((vaddr & 0x07) + 1) << 3;
    r_mask = (1ULL << m_shift) - 1;
    data >>= (64 - m_shift);
-   
+
    cpu->gpr[reg] &= ~r_mask;
    cpu->gpr[reg] |= data;
 }
@@ -554,7 +554,7 @@ fastcall void MTS_PROTO(cache)(cpu_mips_t *cpu,m_uint64_t vaddr,u_int op)
          cpu_log(cpu->gen,"MTS",
                  "CACHE: trying to remove page 0x%llx with pc=0x%llx\n",
                  vaddr, cpu->pc);
-#endif         
+#endif
       }
    }
 }

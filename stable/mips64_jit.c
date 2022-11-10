@@ -132,7 +132,7 @@ int mips64_jit_init(cpu_mips_t *cpu)
 
    cpu->exec_page_array = calloc(cpu->exec_page_count,
                                  sizeof(insn_exec_page_t));
-   
+
    if (!cpu->exec_page_array) {
       fprintf(stderr,"mips64_jit_init: unable to create exec page array\n");
       return(-1);
@@ -182,7 +182,7 @@ u_int mips64_jit_flush(cpu_mips_t *cpu,u_int threshold)
 
 /* Shutdown the JIT */
 void mips64_jit_shutdown(cpu_mips_t *cpu)
-{   
+{
    mips64_jit_tcb_t *p,*next;
 
    /* Flush the JIT */
@@ -202,7 +202,7 @@ void mips64_jit_shutdown(cpu_mips_t *cpu)
    free(cpu->exec_page_array);
 
    /* Free physical mapping for executable pages */
-   free(cpu->exec_blk_map);   
+   free(cpu->exec_blk_map);
 }
 
 /* Allocate an exec page */
@@ -212,7 +212,7 @@ static inline insn_exec_page_t *exec_page_alloc(cpu_mips_t *cpu)
    u_int count;
 
    /* If the free list is empty, flush JIT */
-   if (unlikely(!cpu->exec_page_free_list)) 
+   if (unlikely(!cpu->exec_page_free_list))
    {
       if (cpu->jit_flush_method) {
          cpu_log(cpu->gen,
@@ -226,14 +226,14 @@ static inline insn_exec_page_t *exec_page_alloc(cpu_mips_t *cpu)
          if (!cpu->exec_page_free_list)
             mips64_jit_flush(cpu,0);
       }
-      
+
       /* Use both methods alternatively */
       cpu->jit_flush_method = 1 - cpu->jit_flush_method;
    }
 
    if (unlikely(!(p = cpu->exec_page_free_list)))
       return NULL;
-   
+
    cpu->exec_page_free_list = p->next;
    cpu->exec_page_alloc++;
    return p;
@@ -300,7 +300,7 @@ static void insn_emit_breakpoint(cpu_mips_t *cpu,mips64_jit_tcb_t *b)
 
 /* Check if an instruction is in a delay slot or not */
 int mips64_jit_is_delay_slot(mips64_jit_tcb_t *b,m_uint64_t pc)
-{   
+{
    struct mips64_insn_tag *tag;
    m_uint32_t offset,insn;
 
@@ -333,7 +333,7 @@ struct mips64_insn_tag *mips64_jit_fetch_and_emit(cpu_mips_t *cpu,
       block->jit_insn_ptr[block->mips_trans_pos] = block->jit_ptr;
 
       mips64_set_pc(block,block->start_pc + (block->mips_trans_pos << 2));
-      mips64_emit_single_step(block,code); 
+      mips64_emit_single_step(block,code);
       mips64_jit_tcb_push_epilog(block);
       block->mips_trans_pos++;
       return tag;
@@ -416,7 +416,7 @@ int mips64_jit_tcb_record_patch(mips64_jit_tcb_t *block,u_char *jit_ptr,
    patch = &ipt->patches[ipt->cur_patch];
    patch->jit_insn = jit_ptr;
    patch->mips_pc = vaddr;
-   ipt->cur_patch++;   
+   ipt->cur_patch++;
    return(0);
 }
 
@@ -430,7 +430,7 @@ static int mips64_jit_tcb_apply_patches(cpu_mips_t *cpu,
    int i;
 
    for(ipt=block->patch_table;ipt;ipt=ipt->next)
-      for(i=0;i<ipt->cur_patch;i++) 
+      for(i=0;i<ipt->cur_patch;i++)
       {
          patch = &ipt->patches[i];
          jit_dst = mips64_jit_tcb_get_host_ptr(block,patch->mips_pc);
@@ -470,7 +470,7 @@ static int mips64_jit_tcb_adjust_buffer(cpu_mips_t *cpu,
    if ((block->jit_ptr - block->jit_buffer->ptr) <= (MIPS_JIT_BUFSIZE - 512))
       return(0);
 
-#if DEBUG_BLOCK_CHUNK  
+#if DEBUG_BLOCK_CHUNK
    printf("Block 0x%llx: adjusting JIT buffer...\n",block->start_pc);
 #endif
 
@@ -581,15 +581,15 @@ static mips64_jit_tcb_t *mips64_jit_tcb_create(cpu_mips_t *cpu,
  err_jit_alloc:
    mips64_jit_tcb_free(cpu,block,FALSE);
  err_block_alloc:
-   fprintf(stderr,"%% Unable to create instruction block for vaddr=0x%llx\n", 
+   fprintf(stderr,"%% Unable to create instruction block for vaddr=0x%llx\n",
            vaddr);
    return NULL;
 }
 
 /* Compile a MIPS instruction page */
-static inline 
+static inline
 mips64_jit_tcb_t *mips64_jit_tcb_compile(cpu_mips_t *cpu,m_uint64_t vaddr)
-{  
+{
    mips64_jit_tcb_t *block;
    struct mips64_insn_tag *tag;
    m_uint64_t page_addr;
@@ -642,7 +642,7 @@ mips64_jit_tcb_t *mips64_jit_tcb_compile(cpu_mips_t *cpu,m_uint64_t vaddr)
       cpu->tcb_last = block;
 
    cpu->tcb_list = block;
-   
+
    cpu->compiled_pages++;
    return block;
 
@@ -652,7 +652,7 @@ mips64_jit_tcb_t *mips64_jit_tcb_compile(cpu_mips_t *cpu,m_uint64_t vaddr)
 }
 
 /* Run a compiled MIPS instruction block */
-static forced_inline 
+static forced_inline
 void mips64_jit_tcb_run(cpu_mips_t *cpu,mips64_jit_tcb_t *block)
 {
 #if DEBUG_SYM_TREE
@@ -696,7 +696,7 @@ void mips64_jit_tcb_run(cpu_mips_t *cpu,mips64_jit_tcb_t *block)
 
 /* Execute compiled MIPS code */
 void *mips64_jit_run_cpu(cpu_gen_t *gen)
-{    
+{
    cpu_mips_t *cpu = CPU_MIPS64(gen);
    pthread_t timer_irq_thread;
    mips64_jit_tcb_t *block;
@@ -704,7 +704,7 @@ void *mips64_jit_run_cpu(cpu_gen_t *gen)
    m_uint32_t pc_hash;
 
    if (pthread_create(&timer_irq_thread,NULL,
-                      (void *)mips64_timer_irq_run,cpu)) 
+                      (void *)mips64_timer_irq_run,cpu))
    {
       fprintf(stderr,
               "VM '%s': unable to create Timer IRQ thread for CPU%u.\n",
@@ -715,8 +715,8 @@ void *mips64_jit_run_cpu(cpu_gen_t *gen)
 
    gen->cpu_thread_running = TRUE;
    cpu_exec_loop_set(gen);
-   
- start_cpu:   
+
+ start_cpu:
    gen->idle_count = 0;
 
    for(;;) {
@@ -749,8 +749,8 @@ void *mips64_jit_run_cpu(cpu_gen_t *gen)
       block = cpu->exec_blk_map[pc_hash];
 
       /* No block found, compile the page */
-      if (unlikely(!block) || unlikely(!mips64_jit_tcb_match(cpu,block))) 
-      {        
+      if (unlikely(!block) || unlikely(!mips64_jit_tcb_match(cpu,block)))
+      {
          if (block != NULL) {
             mips64_jit_tcb_free(cpu,block,TRUE);
             cpu->exec_blk_map[pc_hash] = NULL;
@@ -774,7 +774,7 @@ void *mips64_jit_run_cpu(cpu_gen_t *gen)
       block->acc_count++;
       mips64_jit_tcb_run(cpu,block);
    }
-      
+
    if (!cpu->pc) {
       cpu_stop(gen);
       cpu_log(gen,"JIT","PC=0, halting CPU.\n");
@@ -794,7 +794,7 @@ void *mips64_jit_run_cpu(cpu_gen_t *gen)
             pthread_join(timer_irq_thread,NULL);
             return NULL;
       }
-      
+
       /* CPU is paused */
       usleep(200000);
    }

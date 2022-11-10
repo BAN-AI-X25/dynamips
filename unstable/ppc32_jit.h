@@ -47,7 +47,7 @@ struct ppc32_insn_patch {
 /* Instruction patch table */
 #define PPC32_INSN_PATCH_TABLE_SIZE  32
 
-struct ppc32_jit_patch_table {   
+struct ppc32_jit_patch_table {
    struct ppc32_jit_patch_table *next;
    struct ppc32_insn_patch patches[PPC32_INSN_PATCH_TABLE_SIZE];
    u_int cur_patch;
@@ -61,7 +61,7 @@ struct ppc32_jit_tcb {
    u_int flags;
    m_uint32_t start_ia;
    m_uint32_t exec_state;
-   
+
    u_char **jit_insn_ptr;
    m_uint64_t acc_count;
    ppc_insn_t *ppc_code;
@@ -77,7 +77,7 @@ struct ppc32_jit_tcb {
    m_uint32_t phys_page;
    m_uint32_t phys_hash;
    ppc32_jit_tcb_t **phys_pprev,*phys_next;
-   
+
    /* 1024 instructions per page, one bit per instruction */
    m_uint32_t target_bitmap[32];
    m_uint32_t target_undef_cnt;
@@ -94,7 +94,7 @@ struct ppc32_insn_tag {
 };
 
 /* Mark the specified IA as a target for further recompiling */
-static inline void 
+static inline void
 ppc32_jit_tcb_set_target_bit(ppc32_jit_tcb_t *b,m_uint32_t ia)
 {
    int index,pos;
@@ -118,7 +118,7 @@ ppc32_jit_tcb_get_target_bit(ppc32_jit_tcb_t *b,m_uint32_t ia)
 }
 
 /* Get the JIT instruction pointer in a translated block */
-static forced_inline 
+static forced_inline
 u_char *ppc32_jit_tcb_get_host_ptr(ppc32_jit_tcb_t *tcb,m_uint32_t vaddr)
 {
    m_uint32_t offset;
@@ -128,7 +128,7 @@ u_char *ppc32_jit_tcb_get_host_ptr(ppc32_jit_tcb_t *tcb,m_uint32_t vaddr)
 }
 
 /* Check if the specified address belongs to the specified block */
-static forced_inline 
+static forced_inline
 int ppc32_jit_tcb_local_addr(ppc32_jit_tcb_t *tcb,m_uint32_t vaddr,
                              u_char **jit_addr)
 {
@@ -141,7 +141,7 @@ int ppc32_jit_tcb_local_addr(ppc32_jit_tcb_t *tcb,m_uint32_t vaddr,
 }
 
 /* Check if PC register matches the compiled block virtual address */
-static forced_inline 
+static forced_inline
 int ppc32_jit_tcb_match(cpu_ppc_t *cpu,ppc32_jit_tcb_t *tcb)
 {
    m_uint32_t vpage;
@@ -174,7 +174,7 @@ ppc32_jit_find_by_phys_page(cpu_ppc_t *cpu,m_uint32_t phys_page)
 {
    m_uint32_t page_hash = ppc32_jit_get_phys_hash(phys_page);
    ppc32_jit_tcb_t *tcb;
-   
+
    for(tcb=cpu->tcb_phys_hash[page_hash];tcb;tcb=tcb->phys_next)
       if (tcb->phys_page == phys_page)
          return tcb;
@@ -224,7 +224,7 @@ ppc32_op_emit_insn_output(cpu_ppc_t *cpu,u_int size_index,char *insn_name)
 }
 
 /* EMIT_LOAD_GPR */
-static inline 
+static inline
 void ppc32_op_emit_load_gpr(cpu_ppc_t *cpu,int host_reg,int ppc_reg)
 {
    jit_op_t *op = jit_op_get(cpu->gen,0,JIT_OP_LOAD_GPR);
@@ -235,7 +235,7 @@ void ppc32_op_emit_load_gpr(cpu_ppc_t *cpu,int host_reg,int ppc_reg)
 }
 
 /* EMIT_STORE_GPR */
-static inline 
+static inline
 void ppc32_op_emit_store_gpr(cpu_ppc_t *cpu,int ppc_reg,int host_reg)
 {
    jit_op_t *op = jit_op_get(cpu->gen,0,JIT_OP_STORE_GPR);
@@ -246,7 +246,7 @@ void ppc32_op_emit_store_gpr(cpu_ppc_t *cpu,int ppc_reg,int host_reg)
 }
 
 /* EMIT_UPDATE_FLAGS */
-static inline 
+static inline
 void ppc32_op_emit_update_flags(cpu_ppc_t *cpu,int field,int is_signed)
 {
    jit_op_t *op = jit_op_get(cpu->gen,0,JIT_OP_UPDATE_FLAGS);
@@ -283,7 +283,7 @@ static inline void ppc32_op_emit_branch_target(cpu_ppc_t *cpu,
 }
 
 /* EMIT_SET_HOST_REG_IMM32 */
-static inline void 
+static inline void
 ppc32_op_emit_set_host_reg_imm32(cpu_ppc_t *cpu,int reg,m_uint32_t val)
 {
    jit_op_t *op = jit_op_get(cpu->gen,0,JIT_OP_SET_HOST_REG_IMM32);

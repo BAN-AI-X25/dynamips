@@ -43,7 +43,7 @@ void *mips64_exec_run_cpu(cpu_gen_t *cpu);
                                            mips_insn_t *insn);
 
                                            /* Execute a single instruction */
-/*static forced_inline*/ int 
+/*static forced_inline*/ int
 mips64_exec_single_instruction(cpu_mips_t *cpu,mips_insn_t instruction);
 
 #endif

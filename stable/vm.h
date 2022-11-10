@@ -54,7 +54,7 @@ struct vm_ghost_image {
 #define VM_PCI_POOL_SIZE  32
 
 /* VM instance status */
-enum {   
+enum {
    VM_STATUS_HALTED = 0,      /* VM is halted and no HW resources are used */
    VM_STATUS_SHUTDOWN,        /* Shutdown procedure engaged */
    VM_STATUS_RUNNING,         /* VM is running */
@@ -119,7 +119,7 @@ struct vm_instance {
    int jit_use;                   /* CPUs use JIT */
    int sparse_mem;                /* Use sparse virtual memory */
    u_int nm_iomem_size;           /* IO mem size to be passed to Smart Init */
-   
+
    /* GDB Server variables */
    int gdb_server_running;        /* Indicate current state of the GDB Server */
    int gdb_port;                  /* TCP port for listening incomming GDB client connections. */
@@ -156,7 +156,7 @@ struct vm_instance {
 
    /* Filename for ghosted RAM */
    char *ghost_ram_filename;
-   
+
    /* Ghost RAM image handling */
    int ghost_status;
 

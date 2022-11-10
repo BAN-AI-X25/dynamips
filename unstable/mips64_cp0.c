@@ -22,36 +22,36 @@
 
 /* MIPS cp0 registers names */
 char *mips64_cp0_reg_names[MIPS64_CP0_REG_NR] = {
-   "index" , 
-   "random", 
-   "entry_lo0", 
-   "entry_lo1", 
-   "context", 
+   "index" ,
+   "random",
+   "entry_lo0",
+   "entry_lo1",
+   "context",
    "pagemask",
-   "wired", 
+   "wired",
    "info",
-   "badvaddr", 
-   "count", 
-   "entry_hi", 
-   "compare", 
-   "status", 
+   "badvaddr",
+   "count",
+   "entry_hi",
+   "compare",
+   "status",
    "cause",
-   "epc", 
-   "prid", 
-   "config", 
-   "ll_addr", 
-   "watch_lo", 
-   "watch_hi", 
+   "epc",
+   "prid",
+   "config",
+   "ll_addr",
+   "watch_lo",
+   "watch_hi",
    "xcontext",
    "cp0_r21",
    "cp0_r22",
    "cp0_r23",
    "cp0_r24",
    "cp0_r25",
-   "ecc", 
-   "cache_err", 
-   "tag_lo", 
-   "tag_hi", 
+   "ecc",
+   "cache_err",
+   "tag_lo",
+   "tag_hi",
    "err_epc",
    "cp0_r31",
 };
@@ -120,7 +120,7 @@ static inline m_uint64_t mips64_cp0_get_reg_fast(cpu_mips_t *cpu,u_int cp0_reg)
       case MIPS_CP0_INFO:
          return(MIPS64_R7000_TLB64_ENABLE);
 
-      case MIPS_CP0_RANDOM:        
+      case MIPS_CP0_RANDOM:
          return(mips64_cp0_get_random_reg(cpu));
 
       default:
@@ -147,11 +147,11 @@ static inline void mips64_cp0_set_reg(cpu_mips_t *cpu,u_int cp0_reg,
          cp0->reg[cp0_reg] = val;
          mips64_update_irq_flag(cpu);
          break;
-         
+
       case MIPS_CP0_PAGEMASK:
          cp0->reg[cp0_reg] = val & MIPS_TLB_PAGE_MASK;
          break;
-         
+
       case MIPS_CP0_COMPARE:
          mips64_clear_irq(cpu,7);
          mips64_update_irq_flag(cpu);
@@ -246,7 +246,7 @@ static inline void mips64_cp0_s1_set_reg(cpu_mips_t *cpu,u_int cp0_s1_reg,
       case MIPS_CP0_S1_DERRADDR0:
          cp0->derraddr0 = val;
          break;
-         
+
       case MIPS_CP0_S1_DERRADDR1:
          cp0->derraddr1 = val;
          break;
@@ -306,7 +306,7 @@ static char *get_page_size_str(char *buffer,size_t len,m_uint32_t page_mask)
    m_uint32_t page_size;
 
    page_size = get_page_size(page_mask);
-   
+
    /* Mb ? */
    if (page_size >= (1024*1024))
       snprintf(buffer,len,"%uMB",page_size >> 20);
@@ -328,7 +328,7 @@ static inline void mips64_cp0_tlb_callback(cpu_mips_t *cpu,tlb_entry_t *entry,
 
    if (entry->lo0 & MIPS_TLB_V_MASK) {
       paddr0 = (entry->lo0 & MIPS_TLB_PFN_MASK) << 6;
-      
+
       /*printf("TLB: vaddr=0x%8.8llx -> paddr0=0x%10.10llx (size=0x%8.8x), "
              "action=%s\n",
              vaddr,paddr0,psize,
@@ -376,12 +376,12 @@ int mips64_cp0_tlb_lookup(cpu_mips_t *cpu,m_uint64_t vaddr,
 
          if ((vaddr & page_size) == 0) {
             /* Even Page */
-            if (entry->lo0 & MIPS_TLB_V_MASK) 
+            if (entry->lo0 & MIPS_TLB_V_MASK)
             {
                /* Check write protection */
                if ((op_type == MTS_WRITE) && !(entry->lo0 & MIPS_TLB_D_MASK))
                   return MIPS_TLB_LOOKUP_MOD;
-               
+
                res->flags = 0;
                res->vaddr = vaddr & MIPS_MIN_PAGE_MASK;
                res->paddr = (entry->lo0 & MIPS_TLB_PFN_MASK) << 6;
@@ -393,15 +393,15 @@ int mips64_cp0_tlb_lookup(cpu_mips_t *cpu,m_uint64_t vaddr,
                pca = (entry->lo0 & MIPS_TLB_C_MASK);
                pca >>= MIPS_TLB_C_SHIFT;
                res->cached = mips64_cca_cached(pca);
-               
+
                if (!(entry->lo0 & MIPS_TLB_D_MASK))
                   res->flags |= MTS_FLAG_RO;
-               
+
                return(MIPS_TLB_LOOKUP_OK);
             }
          } else {
             /* Odd Page */
-            if (entry->lo1 & MIPS_TLB_V_MASK) 
+            if (entry->lo1 & MIPS_TLB_V_MASK)
             {
                /* Check write protection */
                if ((op_type == MTS_WRITE) && !(entry->lo1 & MIPS_TLB_D_MASK))
@@ -417,11 +417,11 @@ int mips64_cp0_tlb_lookup(cpu_mips_t *cpu,m_uint64_t vaddr,
 
                pca = (entry->lo1 & MIPS_TLB_C_MASK);
                pca >>= MIPS_TLB_C_SHIFT;
-               res->cached = mips64_cca_cached(pca);     
-                                             
+               res->cached = mips64_cca_cached(pca);
+
                if (!(entry->lo0 & MIPS_TLB_D_MASK))
                   res->flags |= MTS_FLAG_RO;
-                         
+
                return(MIPS_TLB_LOOKUP_OK);
             }
          }
@@ -444,20 +444,20 @@ fastcall void mips64_cp0_exec_tlbp(cpu_mips_t *cpu)
    m_uint64_t page_mask;
    tlb_entry_t *entry;
    int i;
-  
+
    vpn2_mask = mips64_cp0_get_vpn2_mask(cpu);
    hi_reg = cp0->reg[MIPS_CP0_TLB_HI];
    asid = hi_reg & MIPS_TLB_ASID_MASK;
    vpn2 = hi_reg & vpn2_mask;
 
    cp0->reg[MIPS_CP0_INDEX] = 0xffffffff80000000ULL;
-   
+
    for(i=0;i<cp0->tlb_entries;i++) {
       entry = &cp0->tlb[i];
       page_mask = ~entry->mask;
 
       if (((entry->hi & vpn2_mask & page_mask) == (vpn2 & page_mask)) &&
-          ((entry->hi & MIPS_TLB_G_MASK) || 
+          ((entry->hi & MIPS_TLB_G_MASK) ||
            ((entry->hi & MIPS_TLB_ASID_MASK) == asid)))
       {
          cp0->reg[MIPS_CP0_INDEX] = i;
@@ -491,7 +491,7 @@ fastcall void mips64_cp0_exec_tlbr(cpu_mips_t *cpu)
       cp0->reg[MIPS_CP0_TLB_LO_0] = entry->lo0;
       cp0->reg[MIPS_CP0_TLB_LO_1] = entry->lo1;
 
-      /* 
+      /*
        * The G bit must be reported in both Lo0 and Lo1 registers,
        * and cleared in Hi register.
        */
@@ -588,7 +588,7 @@ void mips64_tlb_dump_entry(cpu_mips_t *cpu,u_int index)
    entry = &cpu->cp0.tlb[index];
 
    /* virtual Address */
-   printf(" %2d: vaddr=0x%8.8llx ", 
+   printf(" %2d: vaddr=0x%8.8llx ",
           index, entry->hi & mips64_cp0_get_vpn2_mask(cpu));
 
    /* global or ASID */
@@ -603,17 +603,17 @@ void mips64_tlb_dump_entry(cpu_mips_t *cpu,u_int index)
    if (entry->lo0 & MIPS_TLB_V_MASK)
       printf("0x%9.9llx",(entry->lo0 & MIPS_TLB_PFN_MASK) << 6);
    else
-      printf("(invalid)  ");            
-   
+      printf("(invalid)  ");
+
    printf(" %c ",(entry->lo0 & MIPS_TLB_D_MASK) ? 'D' : ' ');
-   
+
    /* 2nd page: Lo1 */
    printf("p1=");
 
    if (entry->lo1 & MIPS_TLB_V_MASK)
       printf("0x%9.9llx",(entry->lo1 & MIPS_TLB_PFN_MASK) << 6);
    else
-      printf("(invalid)  ");            
+      printf("(invalid)  ");
 
    printf(" %c ",(entry->lo1 & MIPS_TLB_D_MASK) ? 'D' : ' ');
 
@@ -629,8 +629,8 @@ void mips64_tlb_dump(cpu_gen_t *cpu)
 
    printf("TLB dump:\n");
 
-   for(i=0;i<mcpu->cp0.tlb_entries;i++) 
+   for(i=0;i<mcpu->cp0.tlb_entries;i++)
       mips64_tlb_dump_entry(mcpu,i);
-   
+
    printf("\n");
 }

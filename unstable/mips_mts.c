@@ -82,7 +82,7 @@ void MTS_PROTO(invalidate_cache)(cpu_mips_t *cpu)
    memset(MTS_CACHE(cpu),0xFF,len);
 }
 
-/* 
+/*
  * MTS mapping.
  *
  * It is NOT inlined since it triggers a GCC bug on my config (x86, GCC 3.3.5)
@@ -101,7 +101,7 @@ MTS_PROTO(map)(cpu_mips_t *cpu,u_int op_type,mts_map_t *map,
    if (!(dev = dev_lookup(cpu->vm,map->paddr,map->cached)))
       return NULL;
 
-   if (cpu->gen->tb_phys_hash != NULL) {      
+   if (cpu->gen->tb_phys_hash != NULL) {
       tb = mips64_jit_find_by_phys_page(cpu,map->paddr >> VM_PAGE_SHIFT);
 
       if ((tb != NULL) && !(tb->flags & TB_FLAG_SMC))
@@ -145,7 +145,7 @@ static void MTS_PROTO(invalidate_tcb)(cpu_mips_t *cpu,MTS_ENTRY *entry)
 
    phys_page = entry->gppa >> VM_PAGE_SHIFT;
    hp = mips64_jit_get_phys_hash(phys_page);
- 
+
    cpu->translate(cpu,cpu->pc,&pc_phys_page);
 
    entry->flags &= ~MTS_FLAG_EXEC;
@@ -386,7 +386,7 @@ fastcall void MTS_PROTO(ldr)(cpu_mips_t *cpu,m_uint64_t vaddr,u_int reg)
    m_shift = ((vaddr & 0x07) + 1) << 3;
    r_mask = (1ULL << m_shift) - 1;
    data >>= (64 - m_shift);
-   
+
    cpu->gpr[reg] &= ~r_mask;
    cpu->gpr[reg] |= data;
 }
