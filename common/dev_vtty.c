@@ -1191,7 +1191,7 @@ static void *vtty_thread_main(void *arg)
 
       /* Wait for incoming data */
       tv.tv_sec  = 0;
-      tv.tv_usec = 50 * 1000;  /* 50 ms */
+      tv.tv_usec = 10 * 1000;  /* 10 ms */
       res = select(fd_max+1,&rfds,NULL,NULL,&tv);
 
       if (res == -1) {
