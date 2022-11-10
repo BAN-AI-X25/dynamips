@@ -13,3 +13,5 @@ unstable/cmake_install.cmake
 unstable/cmake_uninstall.cmake
 unstable/common
 unstable/unstable
+CMakeCache.txt
+CMakeFiles/
