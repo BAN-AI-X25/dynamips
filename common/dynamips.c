@@ -75,7 +75,7 @@ const char *os_name = STRINGIFY(OSNAME);
 const char *sw_version = DYNAMIPS_VERSION"-"JIT_ARCH;
 
 /* Software version tag */
-const char *sw_version_tag = "2019071212";
+const char *sw_version_tag = "2023010200";
 
 /* Hypervisor */
 int hypervisor_mode = 0;
@@ -94,6 +94,9 @@ static char *default_platform = "7200";
 
 /* Binding address (NULL means any or 0.0.0.0) */
 char *binding_addr = NULL;
+
+/* Console (vtty tcp) binding address (NULL means any or 0.0.0.0) */
+char *console_binding_addr = NULL;
 
 /* Generic signal handler */
 void signal_gen_handler(int sig)
@@ -234,6 +237,7 @@ static void show_usage(vm_instance_t *vm,int argc,char *argv[])
           "  --noctrl           : Disable ctrl+] monitor console\n"
           "  --notelnetmsg      : Disable message when using tcp console/aux\n"
           "  --filepid filename : Store dynamips pid in a file\n"
+          "  --console-binding-addr: binding address for tcp console/aux\n"
           "\n",
           LOGFILE_DEFAULT_NAME,VM_TIMER_IRQ_CHECK_ITV,
           vm->ram_size,vm->rom_size,vm->nvram_size,vm->conf_reg_setup,
@@ -378,6 +382,7 @@ static struct option cmd_line_lopts[] = {
    { "filepid"    , 1, NULL, OPT_FILEPID },
    { "startup-config", 1, NULL, OPT_STARTUP_CONFIG_FILE },
    { "private-config", 1, NULL, OPT_PRIVATE_CONFIG_FILE },
+   { "console-binding-addr", 1, NULL, OPT_CONSOLE_BINDING_ADDR },
    { NULL         , 0, NULL, 0 },
 };
 
@@ -509,6 +514,12 @@ static int parse_std_cmd_line(int argc,char *argv[])
          /* IOS private configuration file */
          case OPT_PRIVATE_CONFIG_FILE:
             vm_ios_set_config(vm,vm->ios_startup_config,optarg);
+            break;
+
+         /* Global console (vtty tcp) binding address */
+         case OPT_CONSOLE_BINDING_ADDR:
+            console_binding_addr = strdup(optarg);
+            printf("Console binding address set to %s\n", console_binding_addr);
             break;
 
          /* Use physical memory to emulate RAM (no-mapped file) */
@@ -816,7 +827,7 @@ static int run_hypervisor(int argc,char *argv[])
 
          case OPT_NOTELMSG:
             vtty_set_telnetmsg(0); /* disable telnet greeting */
-            printf("Prevent telnet message on AUX/CONSOLE connecte.\n");
+            printf("Prevent telnet message on AUX/CONSOLE connect.\n");
             break;
 
          case OPT_FILEPID:
@@ -826,6 +837,12 @@ static int run_hypervisor(int argc,char *argv[])
             } else {
               printf("Unable to save to %s.\n",optarg);
             }
+            break;
+
+         /* Global console (vtty tcp) binding address */
+         case OPT_CONSOLE_BINDING_ADDR:
+            console_binding_addr = strdup(optarg);
+            printf("Console binding address set to %s\n", console_binding_addr);
             break;
 
          /* Oops ! */
@@ -897,6 +914,10 @@ static void destroy_cmd_line_vars(void)
    if (hypervisor_ip_address) {
       free(hypervisor_ip_address);
       hypervisor_ip_address = NULL;
+   }
+   if (console_binding_addr) {
+      free(console_binding_addr);
+      console_binding_addr = NULL;
    }
 }
 
