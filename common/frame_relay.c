@@ -25,8 +25,8 @@
 
 extern FILE *log_file;
 
-/* ANSI LMI packet header */   
-static const m_uint8_t lmi_ansi_hdr[] = { 
+/* ANSI LMI packet header */
+static const m_uint8_t lmi_ansi_hdr[] = {
    0x00, 0x01, 0x03, 0x08, 0x00, 0x75, 0x95,
 };
 
@@ -40,7 +40,7 @@ static inline u_int frsw_dlci_hash(u_int dlci)
 frsw_conn_t *frsw_dlci_lookup(frsw_table_t *t,netio_desc_t *input,u_int dlci)
 {
    frsw_conn_t *vc;
-   
+
    for(vc=t->dlci_table[frsw_dlci_hash(dlci)];vc;vc=vc->hash_next)
       if ((vc->input == input) && (vc->dlci_in == dlci))
          return vc;
@@ -59,7 +59,7 @@ ssize_t frsw_handle_lmi_ansi_pkt(frsw_table_t *t,netio_desc_t *input,
    frsw_conn_t *sc;
    u_int dlci;
 
-   if ((len <= sizeof(lmi_ansi_hdr)) || 
+   if ((len <= sizeof(lmi_ansi_hdr)) ||
        memcmp(pkt,lmi_ansi_hdr,sizeof(lmi_ansi_hdr)))
       return(-1);
 
@@ -74,7 +74,7 @@ ssize_t frsw_handle_lmi_ansi_pkt(frsw_table_t *t,netio_desc_t *input,
 
    preq = &pkt[sizeof(lmi_ansi_hdr)];
    pres = &resp[sizeof(lmi_ansi_hdr)];
-   
+
    msg_type = -1;
    seq_ok = FALSE;
 
@@ -120,7 +120,7 @@ ssize_t frsw_handle_lmi_ansi_pkt(frsw_table_t *t,netio_desc_t *input,
             if (input->fr_lmi_seq != preq[3]) {
                m_log(input->name,"resynchronization with LMI sequence...\n");
                input->fr_lmi_seq = preq[3];
-            } 
+            }
 
             input->fr_lmi_seq++;
             if (!input->fr_lmi_seq) input->fr_lmi_seq++;
@@ -134,7 +134,7 @@ ssize_t frsw_handle_lmi_ansi_pkt(frsw_table_t *t,netio_desc_t *input,
             pres += 4;
             seq_ok = TRUE;
             break;
-            
+
          default:
             m_log(input->name,"unknown LMI item type %u\n",itype);
             goto done;
@@ -216,7 +216,7 @@ ssize_t frsw_handle_pkt(frsw_table_t *t,netio_desc_t *input,
    if ((vc = frsw_dlci_lookup(t,input,dlci)) != NULL) {
       frsw_dlci_switch(vc,pkt);
       output = vc->output;
-   } 
+   }
 
 #if DEBUG_FRSW
    if (output) {
@@ -315,7 +315,7 @@ static void frsw_release_vc(frsw_conn_t *vc)
       }
 
       /* release output NIO */
-      if (vc->output) 
+      if (vc->output)
          netio_release(vc->output->name);
    }
 }
@@ -361,13 +361,13 @@ int frsw_create_vc(frsw_table_t *t,char *nio_input,u_int dlci_in,
    if (!(vc = mp_alloc(&t->mp,sizeof(*vc)))) {
       FRSW_UNLOCK(t);
       return(-1);
-   }   
+   }
 
    vc->input    = netio_acquire(nio_input);
    vc->output   = netio_acquire(nio_output);
    vc->dlci_in  = dlci_in;
    vc->dlci_out = dlci_out;
-   
+
    /* Check these NIOs are valid and the input VC does not exists */
    if (!vc->input || !vc->output)
       goto error;
@@ -424,7 +424,7 @@ int frsw_delete_vc(frsw_table_t *t,char *nio_input,u_int dlci_in,
    }
 
    hbucket = frsw_dlci_hash(dlci_in);
-   for(vc=&t->dlci_table[hbucket];*vc;vc=&(*vc)->hash_next) 
+   for(vc=&t->dlci_table[hbucket];*vc;vc=&(*vc)->hash_next)
    {
       p = *vc;
 
@@ -568,7 +568,7 @@ int frsw_cfg_create_vc(frsw_table_t *t,char **tokens,int count)
 
 /* Handle a FRSW configuration line */
 int frsw_handle_cfg_line(frsw_table_t *t,char *str)
-{  
+{
    char *tokens[FRSW_MAX_TOKENS];
    int count;
 
@@ -595,11 +595,11 @@ int frsw_read_cfg_file(frsw_table_t *t,char *filename)
       perror("fopen");
       return(-1);
    }
-   
+
    while(!feof(fd)) {
       if (!fgets(buffer,sizeof(buffer),fd))
          break;
-      
+
       /* skip comments and end of line */
       if ((ptr = strpbrk(buffer,"#\r\n")) != NULL)
          *ptr = 0;
@@ -608,7 +608,7 @@ int frsw_read_cfg_file(frsw_table_t *t,char *filename)
       if (strchr(buffer,':'))
          frsw_handle_cfg_line(t,buffer);
    }
-   
+
    fclose(fd);
    return(0);
 }
@@ -627,7 +627,7 @@ int frsw_start(char *filename)
       fprintf(stderr,"FRSW: unable to parse configuration file.\n");
       return(-1);
    }
-   
+
    frsw_release("default");
    return(0);
 }
