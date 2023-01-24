@@ -40,7 +40,7 @@
 pcap_t *gen_eth_init(char *device)
 {
    char pcap_errbuf[PCAP_ERRBUF_SIZE];
-   pcap_t *p;
+   pcap_t *p = NULL;
 
 #ifndef CYGWIN
    if (!(p = pcap_open_live(device,65535,TRUE,10,pcap_errbuf)))
