@@ -1,4 +1,4 @@
-/*  
+/*
  * Cisco router simulation platform.
  * Copyright (C) 2005,2006 Christophe Fillot.  All rights reserved.
  *
@@ -11,9 +11,9 @@
  *   - 0x0F: PA-8T-232
  *   - 0x10: PA-2H (HSSI)
  *   - 0x40: PA-4E1G/120
- * 
+ *
  * It seems that the PA-8T is a combination of two PA-4T+.
- * 
+ *
  * Note: "debug serial mueslix" gives more technical info.
  */
 
@@ -73,7 +73,7 @@ static int dev_c7200_pa_4t_shutdown(vm_instance_t *vm,struct cisco_card *card)
    /* Remove the PA EEPROM */
    cisco_card_unset_eeprom(card);
    c7200_set_slot_eeprom(VM_C7200(vm),card->slot_id,NULL);
-   
+
    /* Remove the Mueslix chip */
    dev_mueslix_remove(card->drv_info);
    return(0);
@@ -99,14 +99,14 @@ static int dev_c7200_pa_4t_unset_nio(vm_instance_t *vm,struct cisco_card *card,
 
    if (!data || (port_id >= MUESLIX_NR_CHANNELS))
       return(-1);
-   
+
    return(dev_mueslix_unset_nio(data,port_id));
 }
 
 /* PA-4T+ driver */
 struct cisco_card_driver dev_c7200_pa_4t_driver = {
    "PA-4T+", 1, 0,
-   dev_c7200_pa_4t_init, 
+   dev_c7200_pa_4t_init,
    dev_c7200_pa_4t_shutdown,
    NULL,
    dev_c7200_pa_4t_set_nio,
@@ -205,8 +205,8 @@ static int dev_c7200_pa_8t_unset_nio(vm_instance_t *vm,struct cisco_card *card,
 /* PA-8T driver */
 struct cisco_card_driver dev_c7200_pa_8t_driver = {
    "PA-8T", 1, 0,
-   dev_c7200_pa_8t_init, 
-   dev_c7200_pa_8t_shutdown, 
+   dev_c7200_pa_8t_init,
+   dev_c7200_pa_8t_shutdown,
    NULL,
    dev_c7200_pa_8t_set_nio,
    dev_c7200_pa_8t_unset_nio,

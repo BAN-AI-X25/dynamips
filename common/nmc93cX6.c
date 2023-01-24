@@ -122,7 +122,7 @@ static void nmc93cX6_check_clk_group(struct nmc93cX6_group *g,int group_id,
          if (g->state[group_id].cmd_len == cmd_len)
          {
 #if DEBUG_EEPROM
-            printf("nmc93cX6: %s(%d): command = %x\n", 
+            printf("nmc93cX6: %s(%d): command = %x\n",
                    g->description,group_id,g->state[group_id].cmd_val);
 #endif
             g->state[group_id].cmd_len = 0;
@@ -146,11 +146,11 @@ static void nmc93cX6_check_clk_group(struct nmc93cX6_group *g,int group_id,
          break;
 
       case EEPROM_STATE_DATAOUT:
-         /* 
+         /*
           * user want to read data. we read 16-bits.
           * extract address (6/9 bits) from command.
           */
-          
+
          cmd = g->state[group_id].cmd_val;
          addr = nmc94cX6_get_addr(g,cmd);
 
@@ -163,7 +163,7 @@ static void nmc93cX6_check_clk_group(struct nmc93cX6_group *g,int group_id,
                    g->eeprom[group_id]);
          }
 #endif
-          
+
          pos = g->state[group_id].dataout_pos++;
 
          if (g->reverse_data)

@@ -1,7 +1,7 @@
 /*
  * Cisco router simulation platform.
  * Copyright (c) 2006 Christophe Fillot.  All rights reserved.
- * 
+ *
  * RAM emulation.
  */
 
@@ -118,7 +118,7 @@ int dev_ram_ghost_init(vm_instance_t *vm,char *name,int sparse,char *filename,
    d->vm_obj.shutdown = (vm_shutdown_t)dev_ram_shutdown;
 
    if (!(d->dev = dev_create_ghost_ram(vm,name,sparse,d->filename,
-                                       paddr,len))) 
+                                       paddr,len)))
    {
       vm_error(vm,"RAM_ghost: unable to create device (filename=%s)\n",d->filename);
       goto err_dev_create;

@@ -20,7 +20,7 @@
 struct bswap_data {
    /* VM object info */
    vm_obj_t vm_obj;
-   
+
    /* VM instance */
    vm_instance_t *vm;
 

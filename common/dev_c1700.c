@@ -125,7 +125,7 @@ static int c1700_delete_instance(vm_instance_t *vm)
    /* Stop all CPUs */
    if (vm->cpu_group != NULL) {
       vm_stop(vm);
-      
+
       if (cpu_group_sync_state(vm->cpu_group) == -1) {
          vm_error(vm,"unable to sync with system CPUs.\n");
          return(FALSE);
@@ -182,7 +182,7 @@ int c1700_set_slot_eeprom(c1700_t *router,u_int slot,
 }
 
 /* Get slot/port corresponding to specified network IRQ */
-static inline void 
+static inline void
 c1700_net_irq_get_slot_port(u_int irq,u_int *slot,u_int *port)
 {
    irq -= C1700_NETIO_IRQ_BASE;
@@ -203,7 +203,7 @@ u_int c1700_net_irq_for_slot_port(u_int slot,u_int port)
 
 /* Find Cisco 1700 Mainboard info */
 static struct c1700_mb_id *c1700_get_mb_info(char *mainboard_type)
-{   
+{
    int i;
 
    for(i=0;c1700_mainboard_id[i].name;i++)
@@ -320,7 +320,7 @@ int c1700_chassis_set_mac_addr(c1700_t *router,char *mac_addr)
 
 /* Initialize a Cisco 1700 */
 static int c1700_init(c1700_t *router)
-{   
+{
    vm_instance_t *vm = router->vm;
 
    /* Create the PCI bus */
@@ -328,7 +328,7 @@ static int c1700_init(c1700_t *router)
       vm_error(vm,"unable to create PCI data.\n");
       return(-1);
    }
-   
+
    /* Bind PCI bus to slots 0 and 1 */
    vm->slots_pci_bus[0] = vm->pci_bus[0];
    vm->slots_pci_bus[1] = vm->pci_bus[0];
@@ -359,8 +359,8 @@ void c1700_show_hardware(c1700_t *router)
 
 /* Initialize default parameters for a C1700 */
 static void c1700_init_defaults(c1700_t *router)
-{   
-   vm_instance_t *vm = router->vm;   
+{
+   vm_instance_t *vm = router->vm;
    n_eth_addr_t *m;
    m_uint16_t pid;
 
@@ -498,7 +498,7 @@ static int c1700_init_platform(c1700_t *router)
 
    /* Set processor ID */
    ppc32_set_pvr(cpu,0x00500202);
-   
+
    /* Mark the Network IO interrupt as high priority */
    vm->irq_idle_preempt[C1700_NETIO_IRQ] = TRUE;
    vm->irq_idle_preempt[C1700_DUART_IRQ] = TRUE;
@@ -588,7 +588,7 @@ static struct ppc32_bat_prog bat_array[] = {
 
 /* Boot the IOS image */
 static int c1700_boot_ios(c1700_t *router)
-{   
+{
    vm_instance_t *vm = router->vm;
    cpu_ppc_t *cpu;
 
@@ -623,7 +623,7 @@ static int c1700_boot_ios(c1700_t *router)
    /* Load IOS image */
    if (ppc32_load_elf_image(cpu,vm->ios_image,
                             (vm->ghost_status == VM_GHOST_RAM_USE),
-                            &vm->ios_entry_point) < 0) 
+                            &vm->ios_entry_point) < 0)
    {
       vm_error(vm,"failed to load Cisco IOS image '%s'.\n",vm->ios_image);
       return(-1);
@@ -650,7 +650,7 @@ static int c1700_boot_ios(c1700_t *router)
 
 /* Initialize a Cisco 1700 instance */
 static int c1700_init_instance(vm_instance_t *vm)
-{   
+{
    c1700_t *router = VM_C1700(vm);
    m_uint32_t rom_entry_point;
    cpu_ppc_t *cpu0;
@@ -696,7 +696,7 @@ static int c1700_stop_instance(vm_instance_t *vm)
    /* Stop all CPUs */
    if (vm->cpu_group != NULL) {
       vm_stop(vm);
-      
+
       if (cpu_group_sync_state(vm->cpu_group) == -1) {
          vm_error(vm,"unable to sync with system CPUs.\n");
          return(-1);
@@ -707,7 +707,7 @@ static int c1700_stop_instance(vm_instance_t *vm)
    vm_slot_shutdown_all(vm);
    vm_hardware_shutdown(vm);
 
-   /* Cleanup */   
+   /* Cleanup */
    VM_C1700(vm)->iofpga_data = NULL;
    VM_C1700(vm)->mpc_data = NULL;
    return(0);

@@ -70,7 +70,7 @@ struct c3745_iofpga_data {
    vm_obj_t vm_obj;
    struct vdevice dev;
    c3745_t *router;
-   
+
    /* Network IRQ status */
    m_uint16_t net_irq_status[2];
 
@@ -107,12 +107,12 @@ static const struct nmc93cX6_eeprom_def eeprom_mp_def = {
 
 /* System EEPROM group */
 static const struct nmc93cX6_group eeprom_sys_group = {
-   EEPROM_TYPE_NMC93C46, 3, 0, 
+   EEPROM_TYPE_NMC93C46, 3, 0,
    EEPROM_DORD_NORMAL,
    EEPROM_DOUT_HIGH,
    EEPROM_DEBUG_DISABLED,
-   "System EEPROM", 
-   { &eeprom_mb_def, &eeprom_io_def, &eeprom_mp_def }, 
+   "System EEPROM",
+   { &eeprom_mb_def, &eeprom_io_def, &eeprom_mp_def },
 };
 
 /* NM EEPROM definition */
@@ -123,7 +123,7 @@ static const struct nmc93cX6_eeprom_def eeprom_nm_def = {
 
 /* NM EEPROM */
 static const struct nmc93cX6_group eeprom_nm_group = {
-   EEPROM_TYPE_NMC93C46, 1, 0, 
+   EEPROM_TYPE_NMC93C46, 1, 0,
    EEPROM_DORD_NORMAL,
    EEPROM_DOUT_HIGH,
    EEPROM_DEBUG_DISABLED,
@@ -173,7 +173,7 @@ void dev_c3745_iofpga_net_clear_irq(struct c3745_iofpga_data *d,
 
 /* Read a WIC EEPROM */
 static m_uint16_t dev_c3745_read_wic_eeprom(struct c3745_iofpga_data *d)
-{   
+{
    struct cisco_eeprom *eeprom;
    u_int wic_port;
    u_int eeprom_offset;
@@ -219,7 +219,7 @@ dev_c3745_iofpga_access(cpu_gen_t *cpu,struct vdevice *dev,
 
    if (op_type == MTS_READ)
       *data = 0x0;
-   
+
 #if DEBUG_ACCESS
    if (op_type == MTS_READ) {
       cpu_log(cpu,"IO_FPGA","reading reg 0x%x at pc=0x%llx (size=%u)\n",
@@ -290,9 +290,9 @@ dev_c3745_iofpga_access(cpu_gen_t *cpu,struct vdevice *dev,
             *data = nmc93cX6_read(&d->router->sys_eeprom_group);
          break;
 
-      /* 
+      /*
        * Network interrupt status.
-       * 
+       *
        * Bit 0: 0 = GT96100 Ethernet ports.
        * Bit 8: 0 = AIM slot 0.
        * Bit 9: 0 = AIM slot 1.
@@ -302,7 +302,7 @@ dev_c3745_iofpga_access(cpu_gen_t *cpu,struct vdevice *dev,
             *data = d->net_irq_status[0];
          break;
 
-      /* 
+      /*
        * Network interrupt status.
        *
        * Bit  0: 0 = Interrupt for slot 1
@@ -314,8 +314,8 @@ dev_c3745_iofpga_access(cpu_gen_t *cpu,struct vdevice *dev,
          if (op_type == MTS_READ)
             *data = d->net_irq_status[1];
          break;
-      
-      /* 
+
+      /*
        * Read when PA Mgmt IRQ (4) is received.
        * Message: "Error: Unexpected NM Interrupt received from slot: X"
        *
@@ -329,7 +329,7 @@ dev_c3745_iofpga_access(cpu_gen_t *cpu,struct vdevice *dev,
             *data = 0x00FF;
          break;
 
-      /* 
+      /*
        * Read when OIR IRQ (6) is received.
        * Bits 0-3: 1 = OIR for slots 1-4
        * Bits 4-8: 1 = OIR "Watchdog" (???) for slots 1-4
@@ -343,7 +343,7 @@ dev_c3745_iofpga_access(cpu_gen_t *cpu,struct vdevice *dev,
          }
          break;
 
-      /* 
+      /*
        * Per Slot Intr Mask (seen with "sh platform").
        * IO Mask 1 is the lower 8-bits.
        */
@@ -380,14 +380,14 @@ dev_c3745_iofpga_access(cpu_gen_t *cpu,struct vdevice *dev,
          if (op_type == MTS_READ)
             *data = 0xFFFF;
          break;
-   
+
       /* AIM slot 1 EEPROM */
       case 0x00004A:
          if (op_type == MTS_READ)
             *data = 0xFFFF;
          break;
 
-      /* 
+      /*
        * NM presence.
        *
        * Bit  0: 0 = NM present in slot 2 (0x42)
@@ -398,7 +398,7 @@ dev_c3745_iofpga_access(cpu_gen_t *cpu,struct vdevice *dev,
       case 0x00004e:
          if (op_type == MTS_READ) {
             *data = 0xFFFF;
-            
+
             if (vm_slot_check_eeprom(d->router->vm,1,0))
                *data &= ~0x0100;
 
@@ -413,8 +413,8 @@ dev_c3745_iofpga_access(cpu_gen_t *cpu,struct vdevice *dev,
          }
          break;
 
-      /* 
-       * VWIC/WIC related 
+      /*
+       * VWIC/WIC related
        * Bits 0-2: WIC presence
        */
       case 0x100004:
@@ -451,7 +451,7 @@ dev_c3745_iofpga_access(cpu_gen_t *cpu,struct vdevice *dev,
                *data = 0xFFFF;
             }
          } else {
-            /* 
+            /*
              * Store the EEPROM command (in 2 words).
              *
              * For a read, we have:
@@ -459,7 +459,7 @@ dev_c3745_iofpga_access(cpu_gen_t *cpu,struct vdevice *dev,
              *    Word 1: 0 (no data).
              */
             d->wic_cmd[d->wic_cmd_pos++] = *data;
-            
+
             if (d->wic_cmd_pos == 2) {
                d->wic_cmd_pos = 0;
                d->wic_cmd_valid = TRUE;
@@ -497,7 +497,7 @@ void c3745_init_eeprom_groups(c3745_t *router)
       router->sys_eeprom_group.eeprom[i] = &router->sys_eeprom[i];
       router->sys_eeprom[i].data = NULL;
       router->sys_eeprom[i].len  = 0;
-   }      
+   }
 
    /* EEPROMs for Network Modules */
    for(i=1;i<=4;i++) {
@@ -507,7 +507,7 @@ void c3745_init_eeprom_groups(c3745_t *router)
 }
 
 /* Shutdown the IO FPGA device */
-static void 
+static void
 dev_c3745_iofpga_shutdown(vm_instance_t *vm,struct c3745_iofpga_data *d)
 {
    if (d != NULL) {

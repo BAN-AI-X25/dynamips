@@ -50,7 +50,7 @@ void ppc32_jit_tcb_exec(cpu_ppc_t *cpu,ppc32_jit_tcb_t *block)
 
    if (unlikely(!jit_code)) {
       ppc32_jit_tcb_set_target_bit(block,cpu->ia);
-      
+
       if (++block->target_undef_cnt == 16) {
          ppc32_jit_tcb_recompile(cpu,block);
          jit_code = (insn_tblock_fptr)block->jit_insn_ptr[offset];

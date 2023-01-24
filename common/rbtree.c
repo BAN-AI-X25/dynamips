@@ -94,7 +94,7 @@ static inline void rbtree_left_rotate(rbtree_tree *tree,rbtree_node *x)
       x->right->parent = x;
 
    y->parent = x->parent;
-   
+
    if (NIL(tree,x->parent))
       tree->root = y;
    else {
@@ -144,8 +144,8 @@ static rbtree_node *rbtree_insert_new(rbtree_tree *tree,void *key,void *value,
    nodeplace = &tree->root;
    parent = NULL;
    *exists = FALSE;
-   
-   for(;;) 
+
+   for(;;)
    {
       node = *nodeplace;
 
@@ -198,7 +198,7 @@ int rbtree_insert(rbtree_tree *tree,void *key,void *value)
       {
          y = x->parent->parent->right;
 
-         if (y->color == RBTREE_RED) 
+         if (y->color == RBTREE_RED)
          {
             x->parent->color = RBTREE_BLACK;
             y->color = RBTREE_BLACK;
@@ -221,7 +221,7 @@ int rbtree_insert(rbtree_tree *tree,void *key,void *value)
       {
          y = x->parent->parent->left;
 
-         if (y->color == RBTREE_RED) 
+         if (y->color == RBTREE_RED)
          {
             x->parent->color = RBTREE_BLACK;
             y->color = RBTREE_BLACK;
@@ -263,12 +263,12 @@ static inline rbtree_node *rbtree_lookup_node(rbtree_tree *tree,void *key)
 
       node = (comp > 0) ? node->right : node->left;
    }
-   
+
    return(node);
 }
 
-/* 
- * Lookup for a node corresponding to "key". If node does not exist, 
+/*
+ * Lookup for a node corresponding to "key". If node does not exist,
  * function returns null pointer.
  */
 void *rbtree_lookup(rbtree_tree *tree,void *key)
@@ -360,10 +360,10 @@ void *rbtree_remove(rbtree_tree *tree,void *key)
    rbtree_node *z = rbtree_lookup_node(tree,key);
    rbtree_node *x,*y;
    void *value;
-   
+
    if (NIL(tree,z))
       return NULL;
-   
+
    value = z->value;
 
    if (NIL(tree,z->left) || NIL(tree,z->right))
@@ -463,7 +463,7 @@ static int rbtree_check_node(rbtree_tree *tree,rbtree_node *node)
    if (!NIL(tree,node->left)) {
       if (tree->key_cmp(node->key,node->left->key,tree->opt_data) <= 0)
          return(-1);
-      
+
       if (rbtree_check_node(tree,node->left) == -1)
          return(-1);
    }

@@ -87,7 +87,7 @@ int lnx_eth_init_socket(char *device)
    }
 
    if (setsockopt(sck,SOL_PACKET,PACKET_ADD_MEMBERSHIP,
-                  &mreq,sizeof(mreq)) == -1) 
+                  &mreq,sizeof(mreq)) == -1)
    {
       fprintf(stderr,"eth_init_socket: setsockopt: %s\n",strerror(errno));
       return(-1);

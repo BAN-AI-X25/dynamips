@@ -96,7 +96,7 @@ static int tty_trigger_dummy_irq(struct sb1_io_data *d,void *arg)
    u_int mask;
 
    d->duart_irq_seq++;
-   
+
    if (d->duart_irq_seq == 2) {
       mask = DUART_IMR_TXA|DUART_IMR_TXB;
       if (d->duart_imr & mask) {
@@ -106,7 +106,7 @@ static int tty_trigger_dummy_irq(struct sb1_io_data *d,void *arg)
 
       d->duart_irq_seq = 0;
    }
-   
+
    return(0);
 }
 
@@ -200,7 +200,7 @@ void *dev_sb1_io_access(cpu_gen_t *cpu,struct vdevice *dev,
                odata |= DUART_SR_RX_RDY;
 
             odata |= DUART_SR_TX_RDY;
-         
+
             vm_clear_irq(d->vm,d->duart_irq);
             *data = odata;
          }
@@ -214,7 +214,7 @@ void *dev_sb1_io_access(cpu_gen_t *cpu,struct vdevice *dev,
                odata |= DUART_SR_RX_RDY;
 
             odata |= DUART_SR_TX_RDY;
-         
+
             //vm_clear_irq(d->vm,d->duart_irq);
             *data = odata;
          }
@@ -283,7 +283,7 @@ void dev_sb1_io_shutdown(vm_instance_t *vm,struct sb1_io_data *d)
 
 /* Create SB-1 I/O devices */
 int dev_sb1_io_init(vm_instance_t *vm,u_int duart_irq)
-{   
+{
    struct sb1_io_data *d;
 
    /* allocate private data structure */
@@ -319,7 +319,7 @@ int dev_sb1_io_init(vm_instance_t *vm,u_int duart_irq)
    d->duart_irq_tid = ptask_add((ptask_callback)tty_trigger_dummy_irq,d,NULL);
 
    /* Map this device to the VM */
-   vm_bind_device(vm,&d->dev);  
+   vm_bind_device(vm,&d->dev);
    vm_object_add(vm,&d->vm_obj);
    return(0);
 }

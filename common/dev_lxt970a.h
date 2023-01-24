@@ -34,7 +34,7 @@ Pin states used for the default values:
  CFG1 = High
  TRSTE = Low
  FDE = High
- MDDIS = Low, RESET = High, PWERDWN = Low (2.4.1.2, MDIO Control) 
+ MDDIS = Low, RESET = High, PWERDWN = Low (2.4.1.2, MDIO Control)
 */
 
 /*

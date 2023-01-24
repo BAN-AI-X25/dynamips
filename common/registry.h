@@ -2,7 +2,7 @@
  * IPFlow Collector
  * Copyright (c) 2003 Christophe Fillot.
  * E-mail: cf@utc.fr
- * 
+ *
  * registry.h: Object Registry.
  */
 
@@ -81,7 +81,7 @@ void *registry_exists(char *name,int object_type);
 /* Release a reference of an entry (decrement the reference count) */
 int registry_unref(char *name,int object_type);
 
-/* 
+/*
  * Execute action on an object if its reference count is less or equal to
  * the specified count.
  */

@@ -65,7 +65,7 @@ struct nmc93cX6_eeprom_def {
    u_int dout_bit;
 };
 
-struct nmc93cX6_eeprom_state {   
+struct nmc93cX6_eeprom_state {
    u_int cmd_len;
    u_int cmd_val;
    u_int state;

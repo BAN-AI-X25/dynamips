@@ -71,8 +71,8 @@ static int dev_c7200_jcpa_unset_nio(vm_instance_t *vm,struct cisco_card *card,
 /* Jacket card driver */
 struct cisco_card_driver dev_c7200_jcpa_driver = {
    "C7200-JC-PA", 1, 0,
-   dev_c7200_jcpa_init, 
-   dev_c7200_jcpa_shutdown, 
+   dev_c7200_jcpa_init,
+   dev_c7200_jcpa_shutdown,
    NULL,
    dev_c7200_jcpa_set_nio,
    dev_c7200_jcpa_unset_nio,

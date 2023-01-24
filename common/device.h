@@ -75,7 +75,7 @@ void *dev_access_fast(cpu_gen_t *cpu,u_int dev_id,m_uint32_t offset,
 }
 
 #else
-static forced_inline 
+static forced_inline
 void *dev_access_fast(cpu_gen_t *cpu,u_int dev_id,m_uint32_t offset,
                       u_int op_size,u_int op_type,m_uint64_t *data)
 {

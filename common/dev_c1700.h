@@ -94,7 +94,7 @@ struct c1700_router {
    /* I/O FPGA */
    struct c1700_iofpga_data *iofpga_data;
 
-   /* 
+   /*
     * Mainboard EEPROM.
     * It can be modified to change the chassis MAC address.
     */

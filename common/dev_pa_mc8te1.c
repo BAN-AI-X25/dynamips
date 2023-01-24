@@ -1,4 +1,4 @@
-/*  
+/*
  * Cisco router simulation platform.
  * Copyright (C) 2005-2006 Christophe Fillot.  All rights reserved.
  *
@@ -92,7 +92,7 @@ static void *dev_ssram_access(cpu_gen_t *cpu,struct vdevice *dev,
    }
 #endif
 
-   switch(offset) {      
+   switch(offset) {
       case 0xfff0c:
          if (op_type == MTS_READ)
             *data = 0xdeadbeef;
@@ -119,7 +119,7 @@ static void *dev_ssram_access(cpu_gen_t *cpu,struct vdevice *dev,
          if (op_type == MTS_READ)
             *data = 0x0;
          break;
-         
+
       case 0x0c:  /* rx drops */
          if (op_type == MTS_READ)
             *data = 0;

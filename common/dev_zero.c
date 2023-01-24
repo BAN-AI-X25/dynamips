@@ -66,7 +66,7 @@ int dev_zero_init(vm_instance_t *vm,char *name,m_uint64_t paddr,m_uint32_t len)
    d->dev.phys_addr = paddr;
    d->dev.phys_len  = len;
    d->dev.handler   = dev_zero_access;
-   
+
    /* Map this device to the VM */
    vm_bind_device(vm,&d->dev);
    vm_object_add(vm,&d->vm_obj);

@@ -1,4 +1,4 @@
-/*  
+/*
  * Cisco router simulation platform.
  * Copyright (C) 2006 Christophe Fillot.  All rights reserved.
  *
@@ -128,7 +128,7 @@ struct am79c971_data {
 
    /* Lock */
    pthread_mutex_t lock;
-   
+
    /* Interface type (10baseT or 100baseTX) */
    int type;
 
@@ -140,7 +140,7 @@ struct am79c971_data {
 
    /* CSR and BCR registers */
    m_uint32_t csr[256],bcr[256];
-   
+
    /* RX/TX rings start addresses */
    m_uint32_t rx_start,tx_start;
 
@@ -152,7 +152,7 @@ struct am79c971_data {
 
    /* RX/TX ring positions */
    m_uint32_t rx_pos,tx_pos;
-   
+
    /* MII registers */
    m_uint16_t mii_regs[32][32];
 
@@ -230,7 +230,7 @@ static inline int am79c971_handle_mac_addr(struct am79c971_data *d,
    /* Accept frames directly for us, discard others */
    if (!memcmp(&d->mac_addr,&hdr->daddr,N_ETH_ALEN))
       return(TRUE);
-      
+
    return(FALSE);
 }
 
@@ -241,14 +241,14 @@ static void am79c971_update_irq_status(struct am79c971_data *d)
 
    /* Bits set in CR3 disable the specified interrupts */
    mask = AM79C971_CSR3_IM_MASK & ~(d->csr[3] & AM79C971_CSR3_IM_MASK);
-   
+
    if (d->csr[0] & mask)
       d->csr[0] |= AM79C971_CSR0_INTR;
    else
       d->csr[0] &= ~AM79C971_CSR0_INTR;
 
    if ((d->csr[0] & (AM79C971_CSR0_INTR|AM79C971_CSR0_IENA)) ==
-       (AM79C971_CSR0_INTR|AM79C971_CSR0_IENA)) 
+       (AM79C971_CSR0_INTR|AM79C971_CSR0_IENA))
    {
       pci_dev_trigger_irq(d->vm,d->pci_dev);
    } else {
@@ -259,7 +259,7 @@ static void am79c971_update_irq_status(struct am79c971_data *d)
 /* Update RX/TX ON bits of csr0 */
 static void am79c971_update_rx_tx_on_bits(struct am79c971_data *d)
 {
-   /* 
+   /*
     * Set RX ON if DRX in csr15 is cleared, and set TX on if DTX
     * in csr15 is cleared. The START bit must be set.
     */
@@ -268,7 +268,7 @@ static void am79c971_update_rx_tx_on_bits(struct am79c971_data *d)
    if (d->csr[0] & AM79C971_CSR0_STRT) {
       if (!(d->csr[15] & AM79C971_CSR15_DRX))
          d->csr[0] |= AM79C971_CSR0_RXON;
-      
+
       if (!(d->csr[15] & AM79C971_CSR15_DTX))
          d->csr[0] |= AM79C971_CSR0_TXON;
    }
@@ -301,7 +301,7 @@ static int am79c971_fetch_init_block(struct am79c971_data *d)
 
    AM79C971_LOG(d,"fetching init block at address 0x%8.8x\n",ib_addr);
    physmem_copy_from_vm(d->vm,ib,ib_addr,sizeof(ib));
-   
+
    /* Extract RX/TX ring addresses */
    d->rx_start = vmtoh32(ib[5]);
    d->tx_start = vmtoh32(ib[6]);
@@ -327,14 +327,14 @@ static int am79c971_fetch_init_block(struct am79c971_data *d)
    d->mac_addr.eth_addr_byte[2] = (ib_tmp >> 16) & 0xFF;
    d->mac_addr.eth_addr_byte[1] = (ib_tmp >>  8) & 0xFF;
    d->mac_addr.eth_addr_byte[0] = ib_tmp & 0xFF;
-   
+
    ib_tmp = vmtoh32(ib[2]);
    d->csr[14] = ib_tmp & 0xFFFF;
    d->mac_addr.eth_addr_byte[5] = (ib_tmp >> 8) & 0xFF;
    d->mac_addr.eth_addr_byte[4] = ib_tmp & 0xFF;
 
-   /* 
-    * Mark the initialization as done is csr0. 
+   /*
+    * Mark the initialization as done is csr0.
     */
    d->csr[0] |= AM79C971_CSR0_IDON;
 
@@ -364,7 +364,7 @@ static void am79c971_rdp_access(cpu_gen_t *cpu,struct am79c971_data *d,
             //AM79C971_LOG(d,"reading CSR0 (val=0x%4.4x)\n",d->csr[0]);
             *data = d->csr[0];
          } else {
-            /* 
+            /*
              * The STOP bit clears other bits.
              * It has precedence over INIT and START bits.
              */
@@ -375,7 +375,7 @@ static void am79c971_rdp_access(cpu_gen_t *cpu,struct am79c971_data *d,
                am79c971_update_irq_status(d);
                break;
             }
-            
+
             /* These bits are cleared when set to 1 */
             mask  = AM79C971_CSR0_BABL | AM79C971_CSR0_CERR;
             mask |= AM79C971_CSR0_MISS | AM79C971_CSR0_MERR;
@@ -419,7 +419,7 @@ static void am79c971_rdp_access(cpu_gen_t *cpu,struct am79c971_data *d,
          } else {
             *data = (d->tx_l2len << 12) | (d->rx_l2len << 8);
          }
-         break;            
+         break;
 
       case 15:  /* CSR15: Mode */
          if (op_type == MTS_WRITE) {
@@ -599,7 +599,7 @@ static int rxdesc_read(struct am79c971_data *d,m_uint32_t rxd_addr,
 
       default:
          AM79C971_LOG(d,"invalid software style %u!\n",sw_style);
-         return(-1);     
+         return(-1);
    }
 
    return(0);
@@ -630,7 +630,7 @@ static void rxdesc_put_pkt(struct am79c971_data *d,struct rx_desc *rxd,
    len = ~((rxd->rmd[1] & AM79C971_RMD1_LEN) - 1);
    len &= AM79C971_RMD1_LEN;
    cp_len = m_min(len,*pkt_len);
-      
+
    /* Copy packet data to the VM physical RAM */
 #if DEBUG_RECEIVE
    AM79C971_LOG(d,"am79c971_handle_rxring: storing %u bytes at 0x%8.8x\n",
@@ -647,7 +647,7 @@ static void rxdesc_put_pkt(struct am79c971_data *d,struct rx_desc *rxd,
  */
 static int am79c971_receive_pkt(struct am79c971_data *d,
                                 u_char *pkt,ssize_t pkt_len)
-{ 
+{
    m_uint32_t rx_start,rx_current,rx_next,rxdn_rmd1;
    struct rx_desc rxd0,rxdn,*rxdc;
    ssize_t tot_len = pkt_len;
@@ -661,7 +661,7 @@ static int am79c971_receive_pkt(struct am79c971_data *d,
    /* Copy the current rxring descriptor */
    rx_start = rx_current = rxdesc_get_current(d);
    rxdesc_read(d,rx_start,&rxd0);
-   
+
    /* We must have the first descriptor... */
    if (!(rxd0.rmd[1] & AM79C971_RMD1_OWN))
       return(FALSE);
@@ -745,7 +745,7 @@ static int am79c971_handle_rxring(netio_desc_t *nio,
                                   u_char *pkt,ssize_t pkt_len,
                                   struct am79c971_data *d)
 {
-   /* 
+   /*
     * Don't start receive if the RX ring address has not been set
     * and if RX ON is not set.
     */
@@ -759,8 +759,8 @@ static int am79c971_handle_rxring(netio_desc_t *nio,
 
    AM79C971_LOCK(d);
 
-   /* 
-    * Receive only multicast/broadcast trafic + unicast traffic 
+   /*
+    * Receive only multicast/broadcast trafic + unicast traffic
     * for this virtual machine.
     */
    if (am79c971_handle_mac_addr(d,pkt))
@@ -800,7 +800,7 @@ static int txdesc_read(struct am79c971_data *d,m_uint32_t txd_addr,
 
       default:
          AM79C971_LOG(d,"invalid software style %u!\n",sw_style);
-         return(-1);     
+         return(-1);
    }
 
    return(0);
@@ -828,23 +828,23 @@ static int am79c971_handle_txring_single(struct am79c971_data *d)
    struct tx_desc txd0,ctxd,ntxd,*ptxd;
    m_uint32_t tx_start,tx_current;
    m_uint32_t clen,tot_len;
-   
+
    if ((d->tx_start == 0) || !(d->csr[0] & AM79C971_CSR0_TXON))
       return(FALSE);
-   
+
    /* Check if the NIO can transmit */
    if (!netio_can_transmit(d->nio))
       return(FALSE);
-   
+
    /* Copy the current txring descriptor */
    tx_start = tx_current = txdesc_get_current(d);
    ptxd = &txd0;
    txdesc_read(d,tx_start,ptxd);
-   
+
    /* If we don't own the first descriptor, we cannot transmit */
    if (!(ptxd->tmd[1] & AM79C971_TMD1_OWN))
       return(FALSE);
-    
+
 #if DEBUG_TRANSMIT
    AM79C971_LOG(d,"am79c971_handle_txring: 1st desc: "
                 "tmd[0]=0x%x, tmd[1]=0x%x, tmd[2]=0x%x, tmd[3]=0x%x\n",
@@ -941,7 +941,7 @@ static int am79c971_handle_txring(struct am79c971_data *d)
  */
 static m_uint32_t pci_am79c971_read(cpu_gen_t *cpu,struct pci_device *dev,
                                     int reg)
-{   
+{
    struct am79c971_data *d = dev->priv_data;
 
 #if DEBUG_PCI_REGS
@@ -1010,7 +1010,7 @@ static void pci_am79c971_write(cpu_gen_t *cpu,struct pci_device *dev,
    }
 }
 
-/* 
+/*
  * dev_am79c971_init()
  *
  * Generic AMD Am79c971 initialization code.
@@ -1083,7 +1083,7 @@ void dev_am79c971_remove(struct am79c971_data *d)
 
 /* Bind a NIO to an AMD Am79c971 device */
 int dev_am79c971_set_nio(struct am79c971_data *d,netio_desc_t *nio)
-{   
+{
    /* check that a NIO is not already bound */
    if (d->nio != NULL)
       return(-1);

@@ -29,7 +29,7 @@ int rommon_load_file(struct rommon_var_list *rvl);
 /* Add a new variable */
 int rommon_var_add(struct rommon_var_list *rvl,char *name,char *value);
 
-/* 
+/*
  * Add a new variable, specified at the format: var=value.
  * The string is modified.
  */

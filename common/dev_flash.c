@@ -84,7 +84,7 @@ void *dev_flash_access(cpu_gen_t *cpu,struct vdevice *dev,
                   case 0xB0:
                      /* Erase/Program Suspend */
                      d->state = 0;
-                     break;                    
+                     break;
                   case 0x30:
                      /* Erase/Program Resume */
                      d->state = 0;
@@ -113,7 +113,7 @@ void *dev_flash_access(cpu_gen_t *cpu,struct vdevice *dev,
                case 0x80:
                   d->state = 3;
                   break;
-               case 0xA0: 
+               case 0xA0:
                   /* Byte/Word program */
                   d->state = 4;
                   break;
@@ -239,7 +239,7 @@ void dev_flash_shutdown(vm_instance_t *vm,struct flash_data *d)
 /* Create a Flash device */
 vm_obj_t *dev_flash_init(vm_instance_t *vm,char *name,
                          m_uint64_t paddr,m_uint32_t len)
-{  
+{
    struct flash_data *d;
    u_char *ptr;
 

@@ -46,7 +46,7 @@
 #define C7200_DEFAULT_DISK0_SIZE   64
 #define C7200_DEFAULT_DISK1_SIZE   0
 
-/* 
+/*
  * 6 slots + 1 I/O card.
  * Slot 8 is special: it is for the NPE-G2 ethernet ports, but doesn't
  * represent something real.

@@ -48,7 +48,7 @@ struct net_irq_distrib  {
    u_int c3660_offset;
 };
 
-/* 
+/*
  * Network IRQ distribution for c3620/c3640
  *
  *  Slot 0 | 3620/3640: reg 0x20001 | 3660: reg 0x20010, offset 0
@@ -74,7 +74,7 @@ struct c3600_iofpga_data {
    vm_obj_t vm_obj;
    struct vdevice dev;
    c3600_t *router;
-   
+
    /* Network IRQ status */
    m_uint32_t net_irq_status[2];
 
@@ -95,11 +95,11 @@ static const struct nmc93cX6_eeprom_def eeprom_mb_def = {
 
 /* Mainboard EEPROM */
 static const struct nmc93cX6_group eeprom_mb_group = {
-   EEPROM_TYPE_NMC93C46, 1, 0, 
+   EEPROM_TYPE_NMC93C46, 1, 0,
    EEPROM_DORD_NORMAL,
    EEPROM_DOUT_HIGH,
    EEPROM_DEBUG_DISABLED,
-   "Mainboard EEPROM", 
+   "Mainboard EEPROM",
    { &eeprom_mb_def },
 };
 
@@ -111,11 +111,11 @@ static const struct nmc93cX6_eeprom_def eeprom_nm_def = {
 
 /* NM EEPROM */
 static const struct nmc93cX6_group eeprom_nm_group = {
-   EEPROM_TYPE_NMC93C46, 1, 0, 
+   EEPROM_TYPE_NMC93C46, 1, 0,
    EEPROM_DORD_NORMAL,
    EEPROM_DOUT_HIGH,
    EEPROM_DEBUG_DISABLED,
-   "NM EEPROM", 
+   "NM EEPROM",
    { &eeprom_nm_def },
 };
 
@@ -153,7 +153,7 @@ static u_int nm_get_status_1(struct c3600_iofpga_data *d)
       if (vm_slot_check_eeprom(d->router->vm,i,0))
          res &= ~(0x1111 << i);
    }
-   
+
    return(res);
 }
 
@@ -181,12 +181,12 @@ static u_int nm_get_status_2(struct c3600_iofpga_data *d,u_int pos)
       if (vm_slot_check_eeprom(d->router->vm,i,0))
          res &= c3660_nm_masks[i-1];
    }
-   
+
    return(res);
 }
 
 /* Update network interrupt status */
-static inline void 
+static inline void
 dev_c3620_c3640_iofpga_net_update_irq(struct c3600_iofpga_data *d)
 {
    if (d->net_irq_status[0]) {
@@ -196,7 +196,7 @@ dev_c3620_c3640_iofpga_net_update_irq(struct c3600_iofpga_data *d)
    }
 }
 
-static inline void 
+static inline void
 dev_c3660_iofpga_net_update_irq(struct c3600_iofpga_data *d)
 {
    if (d->net_irq_status[0] || d->net_irq_status[1]) {
@@ -299,10 +299,10 @@ dev_c3620_c3640_iofpga_access(cpu_gen_t *cpu,struct vdevice *dev,
             *data = 0x1000;
          break;
 
-      /* 
+      /*
        * 0x7d00 is written here regularly.
        * Some kind of hardware watchdog ?
-       */     
+       */
       case 0x0000c:
          break;
 
@@ -314,7 +314,7 @@ dev_c3620_c3640_iofpga_access(cpu_gen_t *cpu,struct vdevice *dev,
             *data = nmc93cX6_read(&d->router->mb_eeprom_group);
          break;
 
-      /* 
+      /*
        * Network modules presence.
        *
        * Bit 0: 0 = NM in slot 0 is valid
@@ -329,7 +329,7 @@ dev_c3620_c3640_iofpga_access(cpu_gen_t *cpu,struct vdevice *dev,
          if (op_type == MTS_READ)
             *data = nm_get_status_1(d);
          break;
-        
+
       /*
        * NM EEPROMs.
        */
@@ -361,7 +361,7 @@ dev_c3620_c3640_iofpga_access(cpu_gen_t *cpu,struct vdevice *dev,
             *data = d->net_irq_status[0];
          break;
 
-      /* 
+      /*
        * Read when a PA Management interrupt is triggered.
        *
        * If not 0, we get:
@@ -373,7 +373,7 @@ dev_c3620_c3640_iofpga_access(cpu_gen_t *cpu,struct vdevice *dev,
          vm_clear_irq(d->router->vm,C3600_NM_MGMT_IRQ);
          break;
 
-      /* 
+      /*
        * Read when an external interrupt is triggered.
        *
        * Bit 4: 1 = %UNKNOWN-1-GT64010: Unknown fatal interrupt(s)
@@ -392,7 +392,7 @@ dev_c3620_c3640_iofpga_access(cpu_gen_t *cpu,struct vdevice *dev,
          if (op_type == MTS_READ) {
             *data = 0x0000;
          }
-         break;         
+         break;
 
       /* IO Mask (displayed by "show c3600") */
       case 0x20008:
@@ -402,9 +402,9 @@ dev_c3620_c3640_iofpga_access(cpu_gen_t *cpu,struct vdevice *dev,
             d->io_mask = *data;
          break;
 
-      /* 
+      /*
        * Platform type ?
-       * 0: 3640, 4 << 5: 3620, 3 << 5: 3660 
+       * 0: 3640, 4 << 5: 3620, 3 << 5: 3660
        */
       case 0x30000:
          if (op_type == MTS_READ) {
@@ -433,8 +433,8 @@ dev_c3620_c3640_iofpga_access(cpu_gen_t *cpu,struct vdevice *dev,
          }
          break;
 
-      /* 
-       * Environmental parameters, determined with "sh env all". 
+      /*
+       * Environmental parameters, determined with "sh env all".
        *
        * Bit 0: 0 = overtemperature condition.
        * Bit 4: 0 = RPS present.
@@ -494,10 +494,10 @@ dev_c3660_iofpga_access(cpu_gen_t *cpu,struct vdevice *dev,
 #endif
 
    switch(offset) {
-      /* 
+      /*
        * 0x7d00 is written here regularly.
        * Some kind of hardware watchdog ?
-       */     
+       */
       case 0x0000c:
          break;
 
@@ -524,7 +524,7 @@ dev_c3660_iofpga_access(cpu_gen_t *cpu,struct vdevice *dev,
          if (op_type == MTS_READ)
             *data = nm_get_status_2(d,1);
          break;
-      
+
       /* Fan status, PS presence */
       case 0x10018:
          if (op_type == MTS_READ)
@@ -532,7 +532,7 @@ dev_c3660_iofpga_access(cpu_gen_t *cpu,struct vdevice *dev,
          break;
 
       /* unknown, read by env monitor */
-      case 0x1001a: 
+      case 0x1001a:
          if (op_type == MTS_READ)
             *data = 0x0000;
          break;
@@ -568,7 +568,7 @@ dev_c3660_iofpga_access(cpu_gen_t *cpu,struct vdevice *dev,
             *data = 0x00;
          break;
 
-      /* 
+      /*
        * Backplane EEPROM.
        *
        * Bit 7: 0=Telco chassis, 1=Enterprise chassis.
@@ -625,17 +625,17 @@ dev_c3660_iofpga_access(cpu_gen_t *cpu,struct vdevice *dev,
 
       /* 0: 3640, 4 << 5: 3620, 3 << 5: 3660 */
       case 0x30000:
-         if (op_type == MTS_READ)            
+         if (op_type == MTS_READ)
             *data = 3 << 5;
          break;
 
-      /* ??? */   
+      /* ??? */
       case 0x30008:
         if (op_type == MTS_READ)
            *data = 0xFF;
         break;
 
-      /* 
+      /*
        * Read at net interrupt (size 4).
        * It seems that there are 4 lines per slot.
        *
@@ -653,19 +653,19 @@ dev_c3660_iofpga_access(cpu_gen_t *cpu,struct vdevice *dev,
             *data = d->net_irq_status[0];
          break;
 
-      /* 
-       * Read at net interrupt (size 1) 
+      /*
+       * Read at net interrupt (size 1)
        *
        *   Bit 7-6: we get "Unexpected AIM interrupt on AIM slot 1".
        *   Bit 5-4: we get "Unexpected AIM interrupt on AIM slot 0".
        *   Bit 0-3: net interrupt for slot 0.
-       */        
+       */
       case 0x20010:
          if (op_type == MTS_READ)
             *data = d->net_irq_status[1];
          break;
 
-      /* 
+      /*
        * Read when a PA Management interrupt is triggered.
        *
        * If not 0, we get:
@@ -677,7 +677,7 @@ dev_c3660_iofpga_access(cpu_gen_t *cpu,struct vdevice *dev,
          vm_clear_irq(d->router->vm,C3600_NM_MGMT_IRQ);
          break;
 
-      /* 
+      /*
        * Read when an external interrupt is triggered.
        *
        * Bit 4: 1 = %UNKNOWN-1-GT64010: Unknown fatal interrupt(s)
@@ -695,9 +695,9 @@ dev_c3660_iofpga_access(cpu_gen_t *cpu,struct vdevice *dev,
          vm_clear_irq(d->router->vm,C3600_EXT_IRQ);
          break;
 
-      /* 
-       * oir_ctrl (seen with "debug oir") 
-       * 
+      /*
+       * oir_ctrl (seen with "debug oir")
+       *
        * Bits   0-2 : OIR event for slots 2,4,6
        * Bit      3 : Summary for slots 2,4,6
        * Bits   4-6 : OIR watchdog (?) for slots 2,4,6
@@ -705,7 +705,7 @@ dev_c3660_iofpga_access(cpu_gen_t *cpu,struct vdevice *dev,
        * Bits  8-10 : OIR event for slots 1,3,5
        * Bit     11 : Summary for slots 1,3,5
        * Bits 12-14 : OIR watchdog (?) for slots 1,3,5
-       * Bit     15 : Unknown/unused ?       
+       * Bit     15 : Unknown/unused ?
        */
       case 0x10004:
          if (op_type == MTS_READ)
@@ -755,7 +755,7 @@ void c3600_init_eeprom_groups(c3600_t *router)
 }
 
 /* Shutdown the IO FPGA device */
-static void 
+static void
 dev_c3600_iofpga_shutdown(vm_instance_t *vm,struct c3600_iofpga_data *d)
 {
    if (d != NULL) {

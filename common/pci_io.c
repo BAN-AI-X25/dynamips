@@ -46,7 +46,7 @@ struct pci_io_device *pci_io_add(struct pci_io_data *d,
 
    d->dev_list = p;
    return p;
-}            
+}
 
 /* Remove a PCI I/O device */
 void pci_io_remove(struct pci_io_device *dev)
@@ -123,7 +123,7 @@ struct pci_io_data *pci_io_data_init(vm_instance_t *vm,m_uint64_t paddr)
    d->dev.phys_addr = paddr;
    d->dev.phys_len  = 2 * 1048576;
    d->dev.handler   = pci_io_access;
-   
+
    /* Map this device to the VM */
    vm_bind_device(vm,&d->dev);
    return(d);

@@ -54,12 +54,12 @@ struct pci_bus *pci_bus_lookup(struct pci_bus *pci_bus_root,int bus)
    while(cur_bus != NULL) {
       if (cur_bus->bus == bus)
          return cur_bus;
-      
+
       /* Try busses behind PCI bridges */
       next_bus = NULL;
 
       for(bridge=cur_bus->bridge_list;bridge;bridge=bridge->next) {
-         /* 
+         /*
           * Specific case: final bridge with no checking of secondary
           * bus number. Dynamically programming.
           */
@@ -128,7 +128,7 @@ void pci_dev_addr_handler(cpu_gen_t *cpu,struct pci_bus *pci_bus,
  */
 void pci_dev_data_handler(cpu_gen_t *cpu,struct pci_bus *pci_bus,
                           u_int op_type,int swap,m_uint64_t *data)
-{   
+{
    struct pci_device *dev;
    int bus,device,function,reg;
 
@@ -138,7 +138,7 @@ void pci_dev_data_handler(cpu_gen_t *cpu,struct pci_bus *pci_bus,
    /*
     * http://www.mega-tokyo.com/osfaq2/index.php/PciSectionOfPentiumVme
     *
-    * 31      : Enable Bit 
+    * 31      : Enable Bit
     * 30 - 24 : Reserved
     * 23 - 16 : Bus Number
     * 15 - 11 : Device Number
@@ -162,7 +162,7 @@ void pci_dev_data_handler(cpu_gen_t *cpu,struct pci_bus *pci_bus,
       } else {
          cpu_log(cpu,"PCI","write request (data=0x%8.8x) for unknown device "
                  "at pc=0x%llx (bus=%d,device=%d,function=%d,reg=0x%2.2x).\n",
-                 pci_swap(*data,swap), cpu_get_pc(cpu), 
+                 pci_swap(*data,swap), cpu_get_pc(cpu),
                  bus, device, function, reg);
       }
 
@@ -178,7 +178,7 @@ void pci_dev_data_handler(cpu_gen_t *cpu,struct pci_bus *pci_bus,
       } else {
          cpu_log(cpu,"PCI","write request (data=0x%8.8x) for device '%s' at pc=0x%llx: "
                  "bus=%d,device=%d,function=%d,reg=0x%2.2x\n",
-                 pci_swap(*data,swap), dev->name, cpu_get_pc(cpu), 
+                 pci_swap(*data,swap), dev->name, cpu_get_pc(cpu),
                  bus, device, function, reg);
       }
 #endif
@@ -438,7 +438,7 @@ static m_uint32_t pci_bridge_read_reg(cpu_gen_t *cpu,struct pci_device *dev,
       default:
          if (bridge->fallback_read != NULL)
             val = bridge->fallback_read(cpu,dev,reg);
-   
+
          /* Returns appropriate PCI bridge class code if nothing defined */
          if ((reg == 0x08) && !val)
             val = 0x06040000;
@@ -469,7 +469,7 @@ static void pci_bridge_write_reg(cpu_gen_t *cpu,struct pci_device *dev,
 
          pci_bridge_set_bus_info(bridge,pri_bus,sec_bus,sub_bus);
          break;
-         
+
       default:
          if (bridge->fallback_write != NULL)
             bridge->fallback_write(cpu,dev,reg,value);
@@ -494,10 +494,10 @@ struct pci_device *pci_bridge_create_dev(struct pci_bus *pci_bus,char *name,
    /* Create the PCI device corresponding to the bridge */
    dev = pci_dev_add(pci_bus,name,vendor_id,product_id,device,function,-1,
                      bridge,NULL,pci_bridge_read_reg,pci_bridge_write_reg);
-   
+
    if (!dev)
       goto err_pci_dev;
-   
+
    /* Keep the associated PCI device for this bridge */
    bridge->pci_dev = dev;
 

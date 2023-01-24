@@ -124,12 +124,12 @@ int rommon_var_add(struct rommon_var_list *rvl,char *name,char *value)
    } else {
       rommon_var_set(var,value);
    }
-   
+
    /* synchronize disk file */
    return(rommon_var_update_file(rvl));
 }
 
-/* 
+/*
  * Add a new variable, specified at the format: var=value.
  * The string is modified.
  */
@@ -139,7 +139,7 @@ int rommon_var_add_str(struct rommon_var_list *rvl,char *str)
 
    if (!(eq_sym = strchr(str,'=')))
       return(-1);
-   
+
    /* The variable cannot be null */
    if (str == eq_sym)
       return(-1);
@@ -153,7 +153,7 @@ int rommon_var_get(struct rommon_var_list *rvl,char *name,
                    char *buffer,size_t len)
 {
    struct rommon_var *var;
-   
+
    if (!(var = rommon_var_find(rvl,name)) || !var->value)
       return(-1);
 

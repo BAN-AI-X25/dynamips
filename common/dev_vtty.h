@@ -82,7 +82,7 @@ struct virtual_tty {
 
    /* FD Pool (for TCP connections) */
    fd_pool_t fd_pool;
-   
+
    /* Read notification */
    void (*read_notifier)(vtty_t *);
 

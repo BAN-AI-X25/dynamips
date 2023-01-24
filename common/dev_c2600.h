@@ -98,7 +98,7 @@ struct c2600_router {
    /* I/O FPGA */
    struct c2600_iofpga_data *iofpga_data;
 
-   /* 
+   /*
     * Mainboard EEPROM.
     * It can be modified to change the chassis MAC address.
     */

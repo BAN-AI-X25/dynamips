@@ -1,4 +1,4 @@
-/*  
+/*
  * Copyright (c) 2005,2006 Christophe Fillot.
  * E-mail: cf@utc.fr
  *
@@ -9,12 +9,12 @@
 #include "net.h"
 #include "crc.h"
 
-/* 
- * IP mask table, which allows to find quickly a network mask 
+/*
+ * IP mask table, which allows to find quickly a network mask
  * with a prefix length.
  */
 n_ip_addr_t ip_masks[N_IP_ADDR_BITS+1] = {
-   0x0, 
+   0x0,
    0x80000000, 0xC0000000, 0xE0000000, 0xF0000000,
    0xF8000000, 0xFC000000, 0xFE000000, 0xFF000000,
    0xFF800000, 0xFFC00000, 0xFFE00000, 0xFFF00000,
@@ -25,8 +25,8 @@ n_ip_addr_t ip_masks[N_IP_ADDR_BITS+1] = {
    0xFFFFFFF8, 0xFFFFFFFC, 0xFFFFFFFE, 0xFFFFFFFF
 };
 
-/* 
- * IPv6 mask table, which allows to find quickly a network mask 
+/*
+ * IPv6 mask table, which allows to find quickly a network mask
  * with a prefix length. Note this is a particularly ugly way
  * to do this, since we use statically 2 Kb.
  */
@@ -40,7 +40,7 @@ void ipv6_init_masks(void)
    /* Set all bits to 1 */
    memset(ipv6_masks,0xff,sizeof(ipv6_masks));
 
-   for(i=0;i<N_IPV6_ADDR_BITS;i++) 
+   for(i=0;i<N_IPV6_ADDR_BITS;i++)
    {
       index = i >> 3;  /* Compute byte index (divide by 8) */
 
@@ -110,7 +110,7 @@ int ip_parse_cidr(char *token,n_ip_addr_t *net_addr,n_ip_addr_t *net_mask)
 
    if ((tmp = strdup(token)) == NULL)
       return(-1);
-    
+
    sl = strchr(tmp,'/');
    *sl = 0;
 
@@ -149,7 +149,7 @@ int ipv6_parse_cidr(char *token,n_ipv6_addr_t *net_addr,u_int *net_mask)
 
    if ((tmp = strdup(token)) == NULL)
       return(-1);
-    
+
    sl = strchr(tmp,'/');
    *sl = 0;
 
@@ -191,7 +191,7 @@ int parse_board_id(m_uint8_t *buf,const char *id,int encode)
     return (0);
   } else if (encode == 9) {
     int res;
-  
+
     res = sscanf(id,"%c%c%c%2hx%2hx%c%c%c%c",
       &buf[0],&buf[1],
       &buf[2],(unsigned short int *)&buf[3],
@@ -205,7 +205,7 @@ int parse_board_id(m_uint8_t *buf,const char *id,int encode)
     return (0);
   } else if (encode == 11) {
     int res;
-  
+
     res = sscanf(id,"%c%c%c%c%c%c%c%c%c%c%c",
       &buf[0],&buf[1],
       &buf[2],&buf[3],
@@ -306,7 +306,7 @@ int udp_connect(int local_port,char *remote_host,int remote_port)
 
       /* bind to the local port */
       memset(&st,0,sizeof(st));
-      
+
       switch(res->ai_family) {
          case PF_INET: {
             struct sockaddr_in *sin = (struct sockaddr_in *)&st;
@@ -350,14 +350,14 @@ int udp_connect(int local_port,char *remote_host,int remote_port)
    return(sck);
 }
 #else
-/* 
+/*
  * Create a new socket to connect to specified host.
  * Version for old systems that do not support RFC 2553 (getaddrinfo())
  *
  * See http://www.faqs.org/rfcs/rfc2553.html for more info.
  */
 int udp_connect(int local_port,char *remote_host,int remote_port)
-{ 
+{
    struct sockaddr_in sin;
    struct hostent *hp;
    int sck, yes = 1;
@@ -438,7 +438,7 @@ int ip_listen(char *ip_addr,int port,int sock_type,int max_fd,int fd_array[])
                                res->ai_protocol);
 
       if (fd_array[nsock] < 0)
-         continue;      
+         continue;
 
       setsockopt(fd_array[nsock],SOL_SOCKET,SO_REUSEADDR,&reuse,sizeof(reuse));
 
@@ -521,16 +521,16 @@ static int ip_socket_set_port(struct sockaddr *addr,int port)
 {
    if (!addr)
       return(-1);
-   
+
    switch(addr->sa_family) {
       case AF_INET:
          ((struct sockaddr_in *)addr)->sin_port = htons(port);
          return(0);
-                  
+
       case AF_INET6:
          ((struct sockaddr_in6 *)addr)->sin6_port = htons(port);
          return(0);
-         
+
       default:
          fprintf(stderr,"ip_socket_set_port: unknown address family %d\n",
                  addr->sa_family);
@@ -542,10 +542,10 @@ static int ip_socket_set_port(struct sockaddr *addr,int port)
 static int ip_socket_bind(struct addrinfo *addr)
 {
    int fd,off=0;
-   
+
    if ((fd = socket(addr->ai_family,addr->ai_socktype,addr->ai_protocol)) < 0)
       return(-1);
-      
+
 #ifdef IPV6_V6ONLY
    setsockopt(fd,IPPROTO_IPV6,IPV6_V6ONLY,&off,sizeof(off));
 #endif
@@ -586,7 +586,7 @@ int ip_listen_range(char *ip_addr,int port_start,int port_end,int *port,
    for(i=port_start;i<=port_end;i++) {
       for(res=res0;res!=NULL;res=res->ai_next) {
          ip_socket_set_port(res->ai_addr,i);
-         
+
          if ((fd = ip_socket_bind(res)) >= 0) {
             st_len = sizeof(st);
             getsockname(fd,(struct sockaddr *)&st,&st_len);
@@ -595,7 +595,7 @@ int ip_listen_range(char *ip_addr,int port_start,int port_end,int *port,
          }
       }
    }
-   
+
  done:
    freeaddrinfo(res0);
    return(fd);
@@ -634,17 +634,17 @@ int ip_connect_fd(int fd,char *remote_host,int remote_port)
 static int ip_socket_bind(struct sockaddr_in *sin,int sock_type)
 {
    int fd;
-   
+
    if ((fd = socket(sin->sin_family,sock_type,0)) < 0)
       return(-1);
-   
+
    if ( (bind(fd,(struct sockaddr *)sin,sizeof(*sin)) < 0) ||
         ((sock_type == SOCK_STREAM) && (listen(fd,5) < 0)) )
    {
       close(fd);
       return(-1);
    }
-   
+
    return(fd);
 }
 
@@ -659,19 +659,19 @@ int ip_listen_range(char *ip_addr,int port_start,int port_end,int *port,
 
    memset(&sin,0,sizeof(sin));
    sin.sin_family = PF_INET;
-   
+
    if (ip_addr && strlen(ip_addr)) {
       if (!(hp = gethostbyname(ip_addr))) {
          fprintf(stderr,"ip_listen_range: unable to resolve '%s'\n",ip_addr);
          return(-1);
       }
-   
+
       memcpy(&sin.sin_addr,hp->h_addr_list[0],sizeof(struct in_addr));
    }
-      
+
    for(i=port_start;i<=port_end;i++) {
       sin.sin_port = htons(i);
-      
+
       if ((fd = ip_socket_bind(&sin,sock_type)) >= 0) {
          len = sizeof(sin);
          getsockname(fd,(struct sockaddr *)&sin,&len);
@@ -679,7 +679,7 @@ int ip_listen_range(char *ip_addr,int port_start,int port_end,int *port,
          return(fd);
       }
    }
-   
+
    return(-1);
 }
 
@@ -688,12 +688,12 @@ int ip_connect_fd(int fd,char *remote_host,int remote_port)
 {
    struct sockaddr_in sin;
    struct hostent *hp;
- 
+
    if (!(hp = gethostbyname(remote_host))) {
       fprintf(stderr,"ip_connect_fd: unable to resolve '%s'\n",remote_host);
       return(-1);
    }
-   
+
    /* try to connect to remote host */
    memset(&sin,0,sizeof(sin));
    memcpy(&sin.sin_addr,hp->h_addr_list[0],sizeof(struct in_addr));
@@ -711,7 +711,7 @@ int udp_listen_range(char *ip_addr,int port_start,int port_end,int *port)
 }
 
 
-/* 
+/*
  * ISL rewrite.
  *
  * See: http://www.cisco.com/en/US/tech/tk389/tk390/technologies_tech_note09186a0080094665.shtml
@@ -728,10 +728,10 @@ void cisco_isl_rewrite(m_uint8_t *pkt,m_uint32_t tot_len)
       real_offset = N_ETH_HLEN + N_ISL_HDR_SIZE;
       real_len    = ntohs(hdr->type);
       real_len    -= (N_ISL_HDR_SIZE + 4);
-   
+
       if ((real_offset+real_len) > tot_len)
          return;
-   
+
       /* Rewrite the destination MAC address */
       hdr->daddr.eth_addr_byte[4] = 0x00;
 
@@ -765,7 +765,7 @@ int ip_verify_cksum(n_ip_hdr_t *hdr)
 
 /* Compute an IP checksum */
 void ip_compute_cksum(n_ip_hdr_t *hdr)
-{  
+{
    m_uint8_t *p = (m_uint8_t *)hdr;
    m_uint32_t sum = 0;
    u_int len;
@@ -775,7 +775,7 @@ void ip_compute_cksum(n_ip_hdr_t *hdr)
    len = (hdr->ihl & 0x0F) << 1;
    while(len-- > 0) {
       sum += ((m_uint16_t)p[0] << 8) | p[1];
-      p += sizeof(m_uint16_t);      
+      p += sizeof(m_uint16_t);
    }
 
    while(sum >> 16)
@@ -797,7 +797,7 @@ static inline m_uint32_t ip_cksum_partial(m_uint8_t *buf,int len)
 
    if (len == 1)
       sum += (m_uint16_t)(*buf) << 8;
-   
+
    return(sum);
 }
 
@@ -870,7 +870,7 @@ m_uint16_t pkt_ctx_tcp_cksum(n_pkt_ctx_t *ctx,int ph)
 
    len = ntohs(ctx->ip->tot_len) - ((ctx->ip->ihl & 0x0F) << 2);
    sum = ip_cksum_partial(ctx->l4,len);
-   
+
    /* include pseudo-header */
    if (ph) {
       sum += ip_cksum_partial((m_uint8_t *)&ctx->ip->saddr,8);
@@ -959,9 +959,9 @@ int pkt_ctx_analyze(n_pkt_ctx_t *ctx,m_uint8_t *pkt,size_t pkt_len)
          ctx->ip = ip = (n_ip_hdr_t *)p;
 
          /* Check header */
-         if (((ip->ihl & 0xF0) != 0x40) || 
+         if (((ip->ihl & 0xF0) != 0x40) ||
              ((len = ip->ihl & 0x0F) < N_IP_MIN_HLEN) ||
-             ((len << 2) > ntohs(ip->tot_len)) || 
+             ((len << 2) > ntohs(ip->tot_len)) ||
              !ip_verify_cksum(ctx->ip))
             return(TRUE);
 

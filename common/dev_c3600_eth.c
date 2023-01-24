@@ -1,4 +1,4 @@
-/*  
+/*
  * Cisco C3600 simulation platform.
  * Copyright (c) 2006 Christophe Fillot (cf@utc.fr)
  *
@@ -63,7 +63,7 @@ static int dev_c3600_nm_eth_init(vm_instance_t *vm,struct cisco_card *card,
    /* Get PCI bus info about this bay */
    chassis_id = c3600_chassis_get_id(VM_C3600(vm));
    bay_info = c3600_nm_get_bay_info(chassis_id,slot);
-      
+
    if (!bay_info) {
       vm_error(vm,"unable to get info for NM bay %u\n",slot);
       return(-1);
@@ -194,7 +194,7 @@ static int dev_c3600_nm_16esw_init(vm_instance_t *vm,struct cisco_card *card)
    /* Get PCI bus info about this bay */
    chassis_id = c3600_chassis_get_id(VM_C3600(vm));
    bay_info = c3600_nm_get_bay_info(chassis_id,slot);
-      
+
    if (!bay_info) {
       vm_error(vm,"unable to get info for NM bay %u\n",slot);
       return(-1);
@@ -211,7 +211,7 @@ static int dev_c3600_nm_16esw_init(vm_instance_t *vm,struct cisco_card *card)
 }
 
 /* Remove a NM-16ESW from the specified slot */
-static int 
+static int
 dev_c3600_nm_16esw_shutdown(vm_instance_t *vm,struct cisco_card *card)
 {
    struct nm_16esw_data *data = card->drv_info;
@@ -226,7 +226,7 @@ dev_c3600_nm_16esw_shutdown(vm_instance_t *vm,struct cisco_card *card)
 }
 
 /* Bind a Network IO descriptor */
-static int 
+static int
 dev_c3600_nm_16esw_set_nio(vm_instance_t *vm,struct cisco_card *card,
                            u_int port_id,netio_desc_t *nio)
 {
@@ -246,7 +246,7 @@ static int dev_c3600_nm_16esw_unset_nio(vm_instance_t *vm,
 }
 
 /* Show debug info */
-static int 
+static int
 dev_c3600_nm_16esw_show_info(vm_instance_t *vm,struct cisco_card *card)
 {
    struct nm_16esw_data *d = card->drv_info;
@@ -258,7 +258,7 @@ dev_c3600_nm_16esw_show_info(vm_instance_t *vm,struct cisco_card *card)
 /* Leopard-2FE                                                            */
 /* ====================================================================== */
 
-/* 
+/*
  * Leopard-2FE: 2 FastEthernet ports on C3660 motherboard.
  *
  * Leopard-2FE is the FRU/Product Number displayed by "show diag".
@@ -275,7 +275,7 @@ static m_uint16_t eeprom_c3600_leopard_2fe_data[] = {
 };
 
 static const struct cisco_eeprom eeprom_c3600_leopard_2fe = {
-   "Leopard-2FE", (m_uint16_t *)eeprom_c3600_leopard_2fe_data, 
+   "Leopard-2FE", (m_uint16_t *)eeprom_c3600_leopard_2fe_data,
    sizeof(eeprom_c3600_leopard_2fe_data)/2,
 };
 
@@ -284,7 +284,7 @@ static const struct cisco_eeprom eeprom_c3600_leopard_2fe = {
  *
  * Add Leopard-2FE (only Cisco 3660, in slot 0).
  */
-static int 
+static int
 dev_c3600_leopard_2fe_init(vm_instance_t *vm,struct cisco_card *card)
 {
    if (card->slot_id != 0) {
@@ -302,7 +302,7 @@ dev_c3600_leopard_2fe_init(vm_instance_t *vm,struct cisco_card *card)
 /* NM-1FE-TX driver */
 struct cisco_card_driver dev_c3600_nm_1fe_tx_driver = {
    "NM-1FE-TX", 1, 0,
-   dev_c3600_nm_1fe_tx_init, 
+   dev_c3600_nm_1fe_tx_init,
    dev_c3600_nm_eth_shutdown,
    NULL,
    dev_c3600_nm_eth_set_nio,
@@ -313,7 +313,7 @@ struct cisco_card_driver dev_c3600_nm_1fe_tx_driver = {
 /* NM-1E driver */
 struct cisco_card_driver dev_c3600_nm_1e_driver = {
    "NM-1E", 1, 0,
-   dev_c3600_nm_1e_init, 
+   dev_c3600_nm_1e_init,
    dev_c3600_nm_eth_shutdown,
    NULL,
    dev_c3600_nm_eth_set_nio,
@@ -324,7 +324,7 @@ struct cisco_card_driver dev_c3600_nm_1e_driver = {
 /* NM-4E driver */
 struct cisco_card_driver dev_c3600_nm_4e_driver = {
    "NM-4E", 1, 0,
-   dev_c3600_nm_4e_init, 
+   dev_c3600_nm_4e_init,
    dev_c3600_nm_eth_shutdown,
    NULL,
    dev_c3600_nm_eth_set_nio,
@@ -335,7 +335,7 @@ struct cisco_card_driver dev_c3600_nm_4e_driver = {
 /* NM-16ESW driver */
 struct cisco_card_driver dev_c3600_nm_16esw_driver = {
    "NM-16ESW", 1, 0,
-   dev_c3600_nm_16esw_init, 
+   dev_c3600_nm_16esw_init,
    dev_c3600_nm_16esw_shutdown,
    NULL,
    dev_c3600_nm_16esw_set_nio,
@@ -346,7 +346,7 @@ struct cisco_card_driver dev_c3600_nm_16esw_driver = {
 /* Leopard-2FE driver */
 struct cisco_card_driver dev_c3600_leopard_2fe_driver = {
    "Leopard-2FE", 1, 0,
-   dev_c3600_leopard_2fe_init, 
+   dev_c3600_leopard_2fe_init,
    dev_c3600_nm_eth_shutdown,
    NULL,
    dev_c3600_nm_eth_set_nio,

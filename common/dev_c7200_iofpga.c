@@ -108,7 +108,7 @@ struct iofpga_data {
 
    /* DUART & Console Management */
    u_int duart_isr,duart_imr,duart_irq_seq;
-   
+
    /* IO control register */
    u_int io_ctrl_reg;
 
@@ -139,15 +139,15 @@ static const struct nmc93cX6_eeprom_def eeprom_pem_def = {
 
 /* IOFPGA manages simultaneously CPU and Midplane EEPROM */
 static const struct nmc93cX6_group eeprom_cpu_midplane = {
-   EEPROM_TYPE_NMC93C46, 2, 0, 
+   EEPROM_TYPE_NMC93C46, 2, 0,
    EEPROM_DORD_NORMAL,
    EEPROM_DOUT_HIGH,
    EEPROM_DEBUG_DISABLED,
    "CPU and Midplane EEPROM",
-   { &eeprom_cpu_def, &eeprom_midplane_def }, 
+   { &eeprom_cpu_def, &eeprom_midplane_def },
 };
 
-/* 
+/*
  * IOFPGA manages also PEM EEPROM (for NPE-B)
  * PEM stands for "Power Entry Module":
  * http://www.cisco.com/en/US/products/hw/routers/ps341/products_field_notice09186a00801cb26d.shtml
@@ -157,7 +157,7 @@ static const struct nmc93cX6_group eeprom_pem_npeb = {
    EEPROM_DORD_NORMAL,
    EEPROM_DOUT_HIGH,
    EEPROM_DEBUG_DISABLED,
-   "PEM (NPE-B) EEPROM", 
+   "PEM (NPE-B) EEPROM",
    { &eeprom_pem_def },
 };
 
@@ -168,7 +168,7 @@ static m_uint32_t g2_envm_read(struct iofpga_data *d)
    m_uint32_t p1;
 
    p1 = ((d->envm_r2 & 0xFF) << 8) | d->envm_r0 >> 3;
-   
+
    switch(p1) {
       case 0x2a00:     /* CPU Die Temperature */
          val = 0x3000;
@@ -257,7 +257,7 @@ static int tty_trigger_dummy_irq(struct iofpga_data *d,void *arg)
 
    IOFPGA_LOCK(d);
    d->duart_irq_seq++;
-   
+
    if (d->duart_irq_seq == 2) {
       mask = DUART_TXRDYA|DUART_TXRDYB;
       if (d->duart_imr & mask) {
@@ -267,7 +267,7 @@ static int tty_trigger_dummy_irq(struct iofpga_data *d,void *arg)
 
       d->duart_irq_seq = 0;
    }
-   
+
    IOFPGA_UNLOCK(d);
    return(0);
 }
@@ -352,15 +352,15 @@ void *dev_c7200_iofpga_access(cpu_gen_t *cpu,struct vdevice *dev,
       case 0x338:
          break;
 
-      /* 
-       * NPE-G1/NPE-G2 - has influence on slot 0 / flash / pcmcia ... 
+      /*
+       * NPE-G1/NPE-G2 - has influence on slot 0 / flash / pcmcia ...
        * Bit 24: 1=I/O slot present
        * Lower 16 bits: FPGA version (displayed by "sh c7200")
        */
       case 0x390:
          if (op_type == MTS_READ) {
             *data = 0x0102;
-            
+
             /* If we have an I/O slot, we use the I/O slot DUART */
             if (c7200_slot0_iocard_present(router))
                *data |= 0x01000000;
@@ -400,7 +400,7 @@ void *dev_c7200_iofpga_access(cpu_gen_t *cpu,struct vdevice *dev,
       case 0x234:
          break;
 
-      /* 
+      /*
        * FPGA release/presence ? Flash SIMM size:
        *   0x0001: 2048K  Flash (2 banks)
        *   0x0504: 8192K  Flash (2 banks)
@@ -443,7 +443,7 @@ void *dev_c7200_iofpga_access(cpu_gen_t *cpu,struct vdevice *dev,
                odata |= DUART_RX_READY;
 
             odata |= DUART_TX_READY;
-         
+
             vm_clear_irq(vm,C7200_DUART_IRQ);
             *data = odata;
          }
@@ -452,7 +452,7 @@ void *dev_c7200_iofpga_access(cpu_gen_t *cpu,struct vdevice *dev,
       case 0x414:   /* Command Register A (CRA) */
          /* Disable TX = High */
          if ((op_type == MTS_WRITE) && (*data & 0x8)) {
-            vm->vtty_con->managed_flush = TRUE;          
+            vm->vtty_con->managed_flush = TRUE;
             vtty_flush(vm->vtty_con);
          }
          break;
@@ -490,7 +490,7 @@ void *dev_c7200_iofpga_access(cpu_gen_t *cpu,struct vdevice *dev,
                odata |= DUART_RX_READY;
 
             odata |= DUART_TX_READY;
-         
+
             //vm_clear_irq(vm,C7200_DUART_IRQ);
             *data = odata;
          }
@@ -548,7 +548,7 @@ void *dev_c7200_iofpga_access(cpu_gen_t *cpu,struct vdevice *dev,
          }
          break;
 
-      /* 
+      /*
        * NPE-G1 - Voltages + Power Supplies.
        * I don't understand exactly how it works, it seems that the low
        * part must be equal to the high part to have the better values.
@@ -592,7 +592,7 @@ void *dev_c7200_iofpga_access(cpu_gen_t *cpu,struct vdevice *dev,
                case C7200_MUX_N12V:
                   *data = C7200_A2D_N12V;
                   break;
-                  
+
                default:
                   *data = 0;
             }

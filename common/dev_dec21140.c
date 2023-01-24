@@ -1,4 +1,4 @@
-/*  
+/*
  * Cisco router simlation platform.
  * Copyright (C) 2005,2006 Christophe Fillot.  All rights reserved.
  *
@@ -6,7 +6,7 @@
  *
  * It allows to emulate a C7200-IO-FE card with 1 port and PA-FE-TX cards.
  *
- * Many many thanks to mtve (aka "Mtv Europe") for his great work on 
+ * Many many thanks to mtve (aka "Mtv Europe") for his great work on
  * this stuff.
  *
  * Manuals:
@@ -148,7 +148,7 @@ struct tx_desc {
 /* DEC21140 Data */
 struct dec21140_data {
    char *name;
-   
+
    /* Physical addresses of current RX and TX descriptors */
    m_uint32_t rx_current;
    m_uint32_t tx_current;
@@ -206,7 +206,7 @@ static inline int dec21140_handle_mac_addr(struct dec21140_data *d,
    for(i=0;i<d->mac_addr_count;i++)
       if (!memcmp(&d->mac_addr[i],&hdr->daddr,N_ETH_ALEN))
          return(TRUE);
-      
+
    return(FALSE);
 }
 
@@ -256,7 +256,7 @@ _maybe_used static char *pci_cfgreg_name(int reg)
 
 /*
  * read from register of DP83840A PHY
- */ 
+ */
 static m_uint16_t mii_reg_read(struct dec21140_data *d)
 {
 #if DEBUG_MII_REGS
@@ -279,7 +279,7 @@ static m_uint16_t mii_reg_read(struct dec21140_data *d)
 
 /*
  * write to register of DP83840A PHY
- */ 
+ */
 static void mii_reg_write(struct dec21140_data *d)
 {
 #if DEBUG_MII_REGS
@@ -388,7 +388,7 @@ static inline void dev_dec21140_update_irq_status(struct dec21140_data *d)
 
    /* Work on a temporary copy of csr5 */
    csr5 = d->csr[5];
-   
+
    /* Compute Interrupt Summary */
    csr5 &= ~(DEC21140_CSR5_AIS|DEC21140_CSR5_NIS);
 
@@ -403,7 +403,7 @@ static inline void dev_dec21140_update_irq_status(struct dec21140_data *d)
    }
 
    d->csr[5] = csr5;
-   
+
    if (trigger)
       pci_dev_trigger_irq(d->vm,d->pci_dev);
    else {
@@ -420,7 +420,7 @@ void *dev_dec21140_access(cpu_gen_t *cpu,struct vdevice *dev,
 {
    struct dec21140_data *d = dev->priv_data;
    u_int reg;
-   
+
    /* which CSR register ? */
    reg = offset / 8;
 
@@ -440,10 +440,10 @@ void *dev_dec21140_access(cpu_gen_t *cpu,struct vdevice *dev,
 
             if (d->csr[6] & DEC21140_CSR6_START_RX)
                *data |= 0x03 << DEC21140_CSR5_RS_SHIFT;
-               
+
             if (d->csr[6] & DEC21140_CSR6_START_TX)
                *data |= 0x03 << DEC21140_CSR5_TS_SHIFT;
-         
+
             *data |= d->csr[5];
             break;
 
@@ -452,7 +452,7 @@ void *dev_dec21140_access(cpu_gen_t *cpu,struct vdevice *dev,
             d->csr[reg] = 0;
             *data = 0;
             break;
-            
+
          default:
             *data = d->csr[reg];
       }
@@ -496,12 +496,12 @@ void *dev_dec21140_access(cpu_gen_t *cpu,struct vdevice *dev,
                else
                   d->csr[9] &= ~DEC21140_CSR9_RX_BIT;
                d->mii_outbits <<= 1;
-            } else if((*data&~DEC21140_CSR9_TX_BIT) == 
+            } else if((*data&~DEC21140_CSR9_TX_BIT) ==
                       (DEC21140_CSR9_WRITE|DEC21140_CSR9_MDC_CLOCK)) {
                /*
                 * write, we've got input, do state machine
                 */
-               mii_newbit(d,(*data&DEC21140_CSR9_TX_BIT) ? 1 : 0);            
+               mii_newbit(d,(*data&DEC21140_CSR9_TX_BIT) ? 1 : 0);
             }
             break;
 
@@ -548,7 +548,7 @@ static void rxdesc_read(struct dec21140_data *d,m_uint32_t rxd_addr,
    rxd->rdes[3] = vmtoh32(rxd->rdes[3]);
 }
 
-/* 
+/*
  * Try to acquire the specified RX descriptor. Returns TRUE if we have it.
  * It assumes that the byte-swapping is done.
  */
@@ -566,16 +566,16 @@ static void rxdesc_put_pkt(struct dec21140_data *d,struct rx_desc *rxd,
    /* get rbs1 and rbs2 */
    len1 = rxd->rdes[1] & DEC21140_RXDESC_LEN_MASK;
    len2 = (rxd->rdes[1] >> 10) & DEC21140_RXDESC_LEN_MASK;
-   
+
    /* try with buffer #1 */
    if (len1 != 0)
    {
       /* compute the data length to copy */
       cp_len = m_min(len1,*pkt_len);
-      
+
       /* copy packet data to the VM physical RAM */
       physmem_copy_to_vm(d->vm,*pkt,rxd->rdes[2],cp_len);
-      
+
       *pkt += cp_len;
       *pkt_len -= cp_len;
    }
@@ -585,10 +585,10 @@ static void rxdesc_put_pkt(struct dec21140_data *d,struct rx_desc *rxd,
    {
       /* compute the data length to copy */
       cp_len = m_min(len2,*pkt_len);
-      
+
       /* copy packet data to the VM physical RAM */
       physmem_copy_to_vm(d->vm,*pkt,rxd->rdes[3],cp_len);
-      
+
       *pkt += cp_len;
       *pkt_len -= cp_len;
    }
@@ -683,7 +683,7 @@ static int dev_dec21140_handle_rxring(netio_desc_t *nio,
                                       u_char *pkt,ssize_t pkt_len,
                                       struct dec21140_data *d)
 {
-   /* 
+   /*
     * Don't start receive if the RX ring address has not been set
     * and if the SR bit in CSR6 is not set yet.
     */
@@ -695,8 +695,8 @@ static int dev_dec21140_handle_rxring(netio_desc_t *nio,
    mem_dump(log_file,pkt,pkt_len);
 #endif
 
-   /* 
-    * Receive only multicast/broadcast trafic + unicast traffic 
+   /*
+    * Receive only multicast/broadcast trafic + unicast traffic
     * for this virtual machine.
     */
    if (dec21140_handle_mac_addr(d,pkt))
@@ -734,14 +734,14 @@ static void txdesc_set_next(struct dec21140_data *d,struct tx_desc *txd)
 
 /* Handle the TX ring (single packet) */
 static int dev_dec21140_handle_txring_single(struct dec21140_data *d)
-{   
+{
    u_char pkt[DEC21140_MAX_PKT_SIZE],*pkt_ptr;
    u_char setup_frame[DEC21140_SETUP_FRAME_SIZE];
    m_uint32_t tx_start,len1,len2,clen,tot_len;
    struct tx_desc txd0,ctxd,*ptxd;
    int done = FALSE;
 
-   /* 
+   /*
     * Don't start transmit if the txring address has not been set
     * and if the ST bit in CSR6 is not set yet.
     */
@@ -753,7 +753,7 @@ static int dev_dec21140_handle_txring_single(struct dec21140_data *d)
       return(FALSE);
 
    /* Copy the current txring descriptor */
-   tx_start = d->tx_current;   
+   tx_start = d->tx_current;
    ptxd = &txd0;
    txdesc_read(d,tx_start,ptxd);
 
@@ -761,12 +761,12 @@ static int dev_dec21140_handle_txring_single(struct dec21140_data *d)
    if (!(txd0.tdes[0] & DEC21140_TXDESC_OWN))
       return(FALSE);
 
-   /* 
+   /*
     * Ignore setup frames (clear the own bit and skip).
     * We extract unicast MAC addresses to allow only appropriate traffic
     * to pass.
     */
-   if (!(txd0.tdes[1] & (DEC21140_TXDESC_FS|DEC21140_TXDESC_LS))) 
+   if (!(txd0.tdes[1] & (DEC21140_TXDESC_FS|DEC21140_TXDESC_LS)))
    {
       len1 = ptxd->tdes[1] & DEC21140_TXDESC_LEN_MASK;
       len2 = (ptxd->tdes[1] >> 11) & DEC21140_TXDESC_LEN_MASK;
@@ -812,7 +812,7 @@ static int dev_dec21140_handle_txring_single(struct dec21140_data *d)
       {
          if (len1 != 0)
             physmem_copy_from_vm(d->vm,pkt_ptr,ptxd->tdes[2],len1);
-         
+
          if ((len2 != 0) && !(ptxd->tdes[1] & DEC21140_TXDESC_TCH))
             physmem_copy_from_vm(d->vm,pkt_ptr+len1,ptxd->tdes[3],len2);
       }
@@ -827,8 +827,8 @@ static int dev_dec21140_handle_txring_single(struct dec21140_data *d)
       /* Go to the next descriptor */
       txdesc_set_next(d,ptxd);
 
-      /* 
-       * Copy the next txring descriptor (ignore setup frames that 
+      /*
+       * Copy the next txring descriptor (ignore setup frames that
        * have both FS and LS bit cleared).
        */
       if (!(ptxd->tdes[1] & (DEC21140_TXDESC_LS|DEC21140_TXDESC_SET))) {
@@ -853,19 +853,19 @@ static int dev_dec21140_handle_txring_single(struct dec21140_data *d)
  clear_txd0_own_bit:
    /* Clear the OWN flag of the first descriptor */
    physmem_copy_u32_to_vm(d->vm,tx_start,0);
- 
+
    /* Interrupt on completion ? */
-   if (txd0.tdes[1] & DEC21140_TXDESC_IC) {      
+   if (txd0.tdes[1] & DEC21140_TXDESC_IC) {
       d->csr[5] |= DEC21140_CSR5_TI;
       dev_dec21140_update_irq_status(d);
    }
-   
+
    return(TRUE);
 }
 
 /* Handle the TX ring */
 static int dev_dec21140_handle_txring(struct dec21140_data *d)
-{  
+{
    int i;
 
    for(i=0;i<DEC21140_TXRING_PASS_COUNT;i++)
@@ -883,7 +883,7 @@ static int dev_dec21140_handle_txring(struct dec21140_data *d)
  */
 static m_uint32_t pci_dec21140_read(cpu_gen_t *cpu,struct pci_device *dev,
                                     int reg)
-{   
+{
    struct dec21140_data *d = dev->priv_data;
 
 #if DEBUG_PCI_REGS
@@ -924,7 +924,7 @@ static void pci_dec21140_write(cpu_gen_t *cpu,struct pci_device *dev,
    }
 }
 
-/* 
+/*
  * dev_dec21140_init()
  *
  * Generic DEC21140 initialization code.
@@ -999,7 +999,7 @@ void dev_dec21140_remove(struct dec21140_data *d)
 
 /* Bind a NIO to DEC21140 device */
 int dev_dec21140_set_nio(struct dec21140_data *d,netio_desc_t *nio)
-{   
+{
    /* check that a NIO is not already bound */
    if (d->nio != NULL)
       return(-1);

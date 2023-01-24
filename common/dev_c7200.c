@@ -193,7 +193,7 @@ static struct cisco_card_driver *pa_drivers[] = {
    &dev_c7200_pa_8t_driver,
    &dev_c7200_pa_a1_driver,
    &dev_c7200_pa_pos_oc3_driver,
-   &dev_c7200_pa_4b_driver,   
+   &dev_c7200_pa_4b_driver,
    &dev_c7200_pa_mc8te1_driver,
    &dev_c7200_jcpa_driver,
    NULL,
@@ -204,7 +204,7 @@ static struct cisco_card_driver *pa_drivers[] = {
 /* ======================================================================== */
 #define DECLARE_NPE(type) \
    int (c7200_init_##type)(c7200_t *router)
-   
+
 DECLARE_NPE(npe100);
 DECLARE_NPE(npe150);
 DECLARE_NPE(npe175);
@@ -216,21 +216,21 @@ DECLARE_NPE(npeg1);
 DECLARE_NPE(npeg2);
 
 static struct c7200_npe_driver npe_drivers[] = {
-   { "npe-100" , C7200_NPE_FAMILY_MIPS, c7200_init_npe100, 256, 1, 
+   { "npe-100" , C7200_NPE_FAMILY_MIPS, c7200_init_npe100, 256, 1,
      C7200_NVRAM_ADDR, TRUE, 0, 5,  0, 6 },
-   { "npe-150" , C7200_NPE_FAMILY_MIPS, c7200_init_npe150, 256, 1, 
+   { "npe-150" , C7200_NPE_FAMILY_MIPS, c7200_init_npe150, 256, 1,
      C7200_NVRAM_ADDR, TRUE, 0, 5,  0, 6 },
-   { "npe-175" , C7200_NPE_FAMILY_MIPS, c7200_init_npe175, 256, 1, 
+   { "npe-175" , C7200_NPE_FAMILY_MIPS, c7200_init_npe175, 256, 1,
      C7200_NVRAM_ADDR, TRUE, 2, 16, 1, 0 },
-   { "npe-200" , C7200_NPE_FAMILY_MIPS, c7200_init_npe200, 256, 1, 
+   { "npe-200" , C7200_NPE_FAMILY_MIPS, c7200_init_npe200, 256, 1,
      C7200_NVRAM_ADDR, TRUE, 0, 5,  0, 6 },
-   { "npe-225" , C7200_NPE_FAMILY_MIPS, c7200_init_npe225, 256, 1, 
+   { "npe-225" , C7200_NPE_FAMILY_MIPS, c7200_init_npe225, 256, 1,
      C7200_NVRAM_ADDR, TRUE, 2, 16, 1, 0 },
-   { "npe-300" , C7200_NPE_FAMILY_MIPS, c7200_init_npe300, 256, 1, 
+   { "npe-300" , C7200_NPE_FAMILY_MIPS, c7200_init_npe300, 256, 1,
      C7200_NVRAM_ADDR, TRUE, 2, 16, 1, 0 },
-   { "npe-400" , C7200_NPE_FAMILY_MIPS, c7200_init_npe400, 512, 1, 
+   { "npe-400" , C7200_NPE_FAMILY_MIPS, c7200_init_npe400, 512, 1,
      C7200_NVRAM_ADDR, TRUE, 2, 16, 1, 0 },
-   { "npe-g1"  , C7200_NPE_FAMILY_MIPS, c7200_init_npeg1, 1024, 0, 
+   { "npe-g1"  , C7200_NPE_FAMILY_MIPS, c7200_init_npeg1, 1024, 0,
      C7200_G1_NVRAM_ADDR, FALSE, 17, 16, 16, 0 },
    { "npe-g2"  , C7200_NPE_FAMILY_PPC , c7200_init_npeg2, 1024, 0,
      C7200_G2_NVRAM_ADDR, FALSE, 17, 16, 16, 0 },
@@ -392,7 +392,7 @@ int c7200_slot0_iocard_present(c7200_t *router)
 
    if (!(eeprom = router->pa_eeprom_g1.eeprom[0]))
       return(FALSE);
-    
+
    /* Read EEPROM format version */
    card_type = 0;
    cisco_eeprom_get_byte(eeprom,0,&eeprom_ver);
@@ -408,7 +408,7 @@ int c7200_slot0_iocard_present(c7200_t *router)
          if (!cisco_eeprom_v4_find_field(eeprom,0x40,&offset)) {
             cisco_eeprom_get_byte(eeprom,offset,&data[0]);
             cisco_eeprom_get_byte(eeprom,offset+1,&data[1]);
-            card_type = ((m_uint16_t)data[0] << 8) | data[1];        
+            card_type = ((m_uint16_t)data[0] << 8) | data[1];
          }
          break;
    }
@@ -446,7 +446,7 @@ int c7200_set_slot_eeprom(c7200_t *router,u_int slot,
       /* Group 2: bays 2, 5, 6 */
       case 2:
          router->pa_eeprom_g2.eeprom[0] = eeprom;
-         break;        
+         break;
       case 5:
          router->pa_eeprom_g2.eeprom[1] = eeprom;
          break;
@@ -477,7 +477,7 @@ static struct net_irq_distrib net_irq_dist[C7200_MAX_PA_BAYS] = {
    { 0, 16 },  /* Slot 4: reg 0x10,  0x00XX0000 */
    { 1, 24 },  /* Slot 5: reg 0x18,  0xXX000000 */
    { 1, 16 },  /* Slot 6: reg 0x18,  0x00XX0000 */
-   { 2, 24 },  /* Slot 7: reg 0x294, 0xXX000000 */ 
+   { 2, 24 },  /* Slot 7: reg 0x294, 0xXX000000 */
 };
 
 /* Get register offset for the specified slot */
@@ -493,7 +493,7 @@ void dev_c7200_net_update_irq(c7200_t *router)
 
    for(i=0;i<3;i++)
       status |= router->net_irq_status[i] & router->net_irq_mask[i];
-   
+
    if (status) {
       vm_set_irq(router->vm,C7200_NETIO_IRQ);
    } else {
@@ -530,7 +530,7 @@ void dev_c7200_net_clear_irq(c7200_t *router,u_int slot,u_int port)
 }
 
 /* Get slot/port corresponding to specified network IRQ */
-static inline void 
+static inline void
 c7200_net_irq_get_slot_port(u_int irq,u_int *slot,u_int *port)
 {
    irq -= C7200_NETIO_IRQ_BASE;
@@ -645,7 +645,7 @@ static void c7200_npe_show_drivers(void)
              npe_drivers[i].npe_type,
              !npe_drivers[i].supported ? "(NOT WORKING)" : "");
    }
-   
+
    printf("\n");
 }
 
@@ -677,7 +677,7 @@ int c7200_midplane_set_type(c7200_t *router,char *midplane_type)
 
    /* Get the midplane version */
    cisco_eeprom_get_byte(&router->mp_eeprom,2,&version);
-   router->midplane_version = version;  
+   router->midplane_version = version;
    router->midplane_type = eeprom->name;
    c7200_refresh_systemid(router);
    return(0);
@@ -738,14 +738,14 @@ int c7200_midplane_set_mac_addr(c7200_t *router,char *mac_addr)
 
 /* Create the main PCI bus for a GT64010 based system */
 static int c7200_init_gt64010(c7200_t *router)
-{   
+{
    vm_instance_t *vm = router->vm;
 
    if (!(vm->pci_bus[0] = pci_bus_create("MB0/MB1/MB2",0))) {
       vm_error(vm,"unable to create PCI data.\n");
       return(-1);
    }
-   
+
    return(dev_gt64010_init(vm,"gt64010",C7200_GT64K_ADDR,0x1000,
                            C7200_GT64K_IRQ));
 }
@@ -762,7 +762,7 @@ static int c7200_init_gt64120(c7200_t *router)
       vm_error(vm,"unable to create PCI data.\n");
       return(-1);
    }
-   
+
    return(dev_gt64120_init(vm,"gt64120",C7200_GT64K_ADDR,0x1000,
                            C7200_GT64K_IRQ));
 }
@@ -779,7 +779,7 @@ static int c7200_init_dual_gt64120(c7200_t *router)
       vm_error(vm,"unable to create PCI data.\n",vm->name);
       return(-1);
    }
-   
+
    /* Initialize the first GT64120 at 0x14000000 */
    if (dev_gt64120_init(vm,"gt64120(1)",C7200_GT64K_ADDR,0x1000,
                         C7200_GT64K_IRQ) == -1)
@@ -811,7 +811,7 @@ static int c7200_init_mv64460(c7200_t *router)
 
 /* Create the PA PCI busses */
 static int c7200_pa_create_pci_busses(c7200_t *router)
-{   
+{
    vm_instance_t *vm = router->vm;
    char bus_name[128];
    int i;
@@ -846,14 +846,14 @@ static int c7200_pa_init_pci_bridge(c7200_t *router,u_int pa_bay,
    return(0);
 }
 
-/* 
+/*
  * Hidden "I/O" PCI bridge hack for PCMCIA controller.
  *
  * On NPE-175, NPE-225, NPE-300 and NPE-400, PCMCIA controller is
  * identified on PCI as Bus=2,Device=16. On NPE-G1, this is Bus=17,Device=16.
  *
  * However, I don't understand how the bridging between PCI bus 1 and 2
- * is done (16 and 17 on NPE-G1). 
+ * is done (16 and 17 on NPE-G1).
  *
  * Maybe I'm missing something about PCI-to-PCI bridge mechanism, or there
  * is a special hidden device that does the job silently (it should be
@@ -861,7 +861,7 @@ static int c7200_pa_init_pci_bridge(c7200_t *router,u_int pa_bay,
  *
  * BTW, it works.
  */
-static int 
+static int
 c7200_create_io_pci_bridge(c7200_t *router,struct pci_bus *parent_bus)
 {
    vm_instance_t *vm = router->vm;
@@ -883,7 +883,7 @@ c7200_create_io_pci_bridge(c7200_t *router,struct pci_bus *parent_bus)
 
 /* Initialize an NPE-100 board */
 int c7200_init_npe100(c7200_t *router)
-{   
+{
    vm_instance_t *vm = router->vm;
    int i;
 
@@ -959,7 +959,7 @@ int c7200_init_npe150(c7200_t *router)
    dev_dec21050_init(vm->pci_bus[0],3,NULL);
    dev_dec21050_init(vm->pci_bus[0],4,vm->pci_bus_pool[25]);
 
-   /* Map the PA PCI busses */   
+   /* Map the PA PCI busses */
    vm->slots_pci_bus[0] = vm->pci_bus[0];
 
    for(i=1;i<C7200_MAX_PA_BAYS;i++)
@@ -1088,7 +1088,7 @@ int c7200_init_npe200(c7200_t *router)
 
 /* Initialize an NPE-225 board */
 int c7200_init_npe225(c7200_t *router)
-{   
+{
    vm_instance_t *vm = router->vm;
    int i;
 
@@ -1193,7 +1193,7 @@ int c7200_init_npe400(c7200_t *router)
    /* Set the processor type: R7000 */
    mips64_set_prid(CPU_MIPS64(vm->boot_cpu),MIPS_PRID_R7000);
 
-   /* 
+   /*
     * Add supplemental memory (as "iomem") if we have more than 256 Mb.
     */
    if (VM_C7200(vm)->npe400_ram_size > C7200_BASE_RAM_LIMIT) {
@@ -1240,7 +1240,7 @@ int c7200_init_npe400(c7200_t *router)
 
 /* Initialize an NPE-G1 board (XXX not working) */
 int c7200_init_npeg1(c7200_t *router)
-{     
+{
    vm_instance_t *vm = router->vm;
    int i;
 
@@ -1298,7 +1298,7 @@ int c7200_init_npeg1(c7200_t *router)
 
 /* Initialize an NPE-G2 board (XXX not working) */
 int c7200_init_npeg2(c7200_t *router)
-{     
+{
    vm_instance_t *vm = router->vm;
    int i;
 
@@ -1451,7 +1451,7 @@ static int c7200_init_platform_pa(c7200_t *router)
 static int c7200m_init_platform(c7200_t *router)
 {
    struct vm_instance *vm = router->vm;
-   cpu_mips_t *cpu0; 
+   cpu_mips_t *cpu0;
    cpu_gen_t *gen0;
 
    /* Copy config register setup into "active" config register */
@@ -1465,7 +1465,7 @@ static int c7200m_init_platform(c7200_t *router)
       vm_error(vm,"%u is not a valid RAM size for this NPE. "
                "Fallback to %u Mb.\n\n",
                vm->ram_size,router->npe_driver->max_ram_size);
-   
+
       vm->ram_size = router->npe_driver->max_ram_size;
    }
 
@@ -1572,7 +1572,7 @@ static int c7200m_init_platform(c7200_t *router)
 static int c7200p_init_platform(c7200_t *router)
 {
    struct vm_instance *vm = router->vm;
-   cpu_ppc_t *cpu0; 
+   cpu_ppc_t *cpu0;
    cpu_gen_t *gen0;
    vm_obj_t *obj;
 
@@ -1587,7 +1587,7 @@ static int c7200p_init_platform(c7200_t *router)
       vm_error(vm,"%u is not a valid RAM size for this NPE. "
                "Fallback to %u Mb.\n\n",
                vm->ram_size,router->npe_driver->max_ram_size);
-   
+
       vm->ram_size = router->npe_driver->max_ram_size;
    }
 
@@ -1672,7 +1672,7 @@ static int c7200p_init_platform(c7200_t *router)
    /* Initialize the Port Adapters */
    if (c7200_init_platform_pa(router) == -1)
       return(-1);
-   
+
    /* IO FPGA */
    if (dev_c7200_iofpga_init(router,C7200_G2_IOFPGA_ADDR,0x1000) == -1)
       return(-1);
@@ -1681,8 +1681,8 @@ static int c7200p_init_platform(c7200_t *router)
    if (dev_c7200_mpfpga_init(router,C7200_G2_MPFPGA_ADDR,0x10000) == -1)
       return(-1);
 
-   /* 
-    * If we have no i/o card in slot 0, the console is handled by 
+   /*
+    * If we have no i/o card in slot 0, the console is handled by
     * the MV64460.
     */
    if (!c7200_slot0_iocard_present(router)) {
@@ -1698,7 +1698,7 @@ static int c7200p_init_platform(c7200_t *router)
 
 /* Boot the IOS image (MIPS) */
 static int c7200m_boot_ios(c7200_t *router)
-{   
+{
    vm_instance_t *vm = router->vm;
    cpu_mips_t *cpu;
 
@@ -1735,7 +1735,7 @@ static int c7200m_boot_ios(c7200_t *router)
    vm_log(vm,"C7200_BOOT",
           "starting instance (CPU0 PC=0x%llx,idle_pc=0x%llx,JIT %s)\n",
           cpu->pc,cpu->idle_pc,vm->jit_use ? "on":"off");
-   
+
    /* Start main CPU */
    if (vm->ghost_status != VM_GHOST_RAM_GENERATE) {
       vm->status = VM_STATUS_RUNNING;
@@ -1748,7 +1748,7 @@ static int c7200m_boot_ios(c7200_t *router)
 
 /* Boot the IOS image (PowerPC) */
 static int c7200p_boot_ios(c7200_t *router)
-{   
+{
    vm_instance_t *vm = router->vm;
    cpu_ppc_t *cpu;
 
@@ -1785,7 +1785,7 @@ static int c7200p_boot_ios(c7200_t *router)
    vm_log(vm,"C7200P_BOOT",
           "starting instance (CPU0 IA=0x%8.8x,idle_pc=0x%8.8x,JIT %s)\n",
           cpu->ia,cpu->idle_pc,vm->jit_use ? "on":"off");
-   
+
    /* Start main CPU */
    if (vm->ghost_status != VM_GHOST_RAM_GENERATE) {
       vm->status = VM_STATUS_RUNNING;
@@ -1863,7 +1863,7 @@ static int c7200m_init_instance(c7200_t *router)
    /* Load ROM (ELF image or embedded) */
    cpu0 = CPU_MIPS64(vm->boot_cpu);
    rom_entry_point = (m_uint32_t)MIPS_ROM_PC;
-   
+
    if ((vm->rom_filename != NULL) &&
        (mips64_load_elf_image(cpu0,vm->rom_filename,0,&rom_entry_point) < 0))
    {
@@ -1930,7 +1930,7 @@ static void c7200p_clear_irq(vm_instance_t *vm,u_int irq)
       case C7200_PA_MGMT_IRQ:
          dev_mv64460_clear_gpp_intr(router->mv64460_sysctr,20);
          break;
-      case C7200_OIR_IRQ: 
+      case C7200_OIR_IRQ:
          dev_mv64460_clear_gpp_intr(router->mv64460_sysctr,0);
          break;
       case C7200_NETIO_IRQ_BASE ... C7200_NETIO_IRQ_END:
@@ -2019,7 +2019,7 @@ static int c7200_init_instance(vm_instance_t *vm)
 
       case C7200_NPE_FAMILY_PPC:
          return(c7200p_init_instance(router));
-         
+
       default:
          vm_error(router->vm,"unsupported NPE family %d",
                   router->npe_driver->npe_family);
@@ -2036,7 +2036,7 @@ static int c7200_stop_instance(vm_instance_t *vm)
    /* Stop all CPUs */
    if (vm->cpu_group != NULL) {
       vm_stop(vm);
-      
+
       if (cpu_group_sync_state(vm->cpu_group) == -1) {
          vm_error(vm,"unable to sync with system CPUs.\n");
          return(-1);
@@ -2075,7 +2075,7 @@ static int c7200_pa_init_online(vm_instance_t *vm,u_int slot,u_int subslot)
       return(-1);
    }
 
-   /* 
+   /*
     * Suspend CPU activity while adding new hardware (since we change the
     * memory maps).
     */
@@ -2101,7 +2101,7 @@ static int c7200_pa_init_online(vm_instance_t *vm,u_int slot,u_int subslot)
 
 /* Stop a PA while the virtual router is online (OIR) */
 static int c7200_pa_stop_online(vm_instance_t *vm,u_int slot,u_int subslot)
-{   
+{
    if (!slot) {
       vm_error(vm,"OIR not supported on slot 0.\n");
       return(-1);
@@ -2119,7 +2119,7 @@ static int c7200_pa_stop_online(vm_instance_t *vm,u_int slot,u_int subslot)
    /* We can safely trigger the OIR event */
    c7200_trigger_oir_event(VM_C7200(vm),slot);
 
-   /* 
+   /*
     * Suspend CPU activity while removing the hardware (since we change the
     * memory maps).
     */
@@ -2183,7 +2183,7 @@ static void c7200_cli_show_options(vm_instance_t *vm)
           "  -M <midplane>      : Select Midplane (\"std\" or \"vxr\")\n"
           "  -p <pa_desc>       : Define a Port Adapter\n"
           "  -s <pa_nio>        : Bind a Network IO interface to a "
-          "Port Adapter\n" 
+          "Port Adapter\n"
           "  -I <serialno>      : Set Processor Board Serial Number\n",
           C7200_DEFAULT_NPE_TYPE);
 }

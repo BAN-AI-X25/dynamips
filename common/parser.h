@@ -16,7 +16,7 @@ enum {
 };
 
 /* Parser states */
-enum {   
+enum {
    PARSER_STATE_DONE,
    PARSER_STATE_SKIP,
    PARSER_STATE_BLANK,

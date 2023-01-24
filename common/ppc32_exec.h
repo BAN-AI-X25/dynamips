@@ -23,10 +23,10 @@ static forced_inline m_uint32_t ppc32_rotate_mask(m_uint32_t mb,m_uint32_t me)
    m_uint32_t mask;
 
    mask = (0xFFFFFFFFU >> mb) ^ ((0xFFFFFFFFU >> me) >> 1);
-   
+
    if (me < mb)
       mask = ~mask;
-        
+
    return(mask);
 }
 

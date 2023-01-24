@@ -30,7 +30,7 @@ struct sb1_pci_data {
 
    /* PCI configuration (Bus 0, Device 0) */
    struct pci_device *pci_cfg_dev;
-   
+
    /* HyperTransport configuration (Bus 0, Device 1) */
    struct pci_device *ht_cfg_dev;
 };
@@ -109,7 +109,7 @@ void dev_sb1_pci_shutdown(vm_instance_t *vm,struct sb1_pci_data *d)
 
 /* Create the SB-1 PCI bus configuration zone */
 int dev_sb1_pci_init(vm_instance_t *vm,char *name,m_uint64_t paddr)
-{  
+{
    struct sb1_pci_data *d;
 
    /* allocate the private data structure */

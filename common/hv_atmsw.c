@@ -106,7 +106,7 @@ static int cmd_delete(hypervisor_conn_t *conn,int argc,char *argv[])
    return(res);
 }
 
-/* 
+/*
  * Create a Virtual Path Connection
  *
  * Parameters: <atmsw_name> <input_nio> <input_vpi> <output_nio> <output_vpi>
@@ -130,7 +130,7 @@ static int cmd_create_vpc(hypervisor_conn_t *conn,int argc,char *argv[])
    return(0);
 }
 
-/* 
+/*
  * Delete a Virtual Path Connection
  *
  * Parameters: <atmsw_name> <input_nio> <input_vpi> <output_nio> <output_vpi>
@@ -154,7 +154,7 @@ static int cmd_delete_vpc(hypervisor_conn_t *conn,int argc,char *argv[])
    return(0);
 }
 
-/* 
+/*
  * Create a Virtual Circuit Connection
  *
  * Parameters: <atmsw_name> <input_nio> <input_vpi> <input_vci>
@@ -166,10 +166,10 @@ static int cmd_create_vcc(hypervisor_conn_t *conn,int argc,char *argv[])
 
    if (!(t = hypervisor_find_object(conn,argv[0],OBJ_TYPE_ATMSW)))
       return(-1);
-   
+
    /* create the connection */
    if (atmsw_create_vcc(t,argv[1],atoi(argv[2]),atoi(argv[3]),
-                        argv[4],atoi(argv[5]),atoi(argv[6])) == -1) 
+                        argv[4],atoi(argv[5]),atoi(argv[6])) == -1)
    {
       atmsw_release(argv[0]);
       hypervisor_send_reply(conn,HSC_ERR_BINDING,1,"unable to create VCC");
@@ -181,7 +181,7 @@ static int cmd_create_vcc(hypervisor_conn_t *conn,int argc,char *argv[])
    return(0);
 }
 
-/* 
+/*
  * Delete a Virtual Circuit Connection
  *
  * Parameters: <atmsw_name> <input_nio> <input_vpi> <input_vci>
@@ -193,10 +193,10 @@ static int cmd_delete_vcc(hypervisor_conn_t *conn,int argc,char *argv[])
 
    if (!(t = hypervisor_find_object(conn,argv[0],OBJ_TYPE_ATMSW)))
       return(-1);
-   
+
    /* create the connection */
    if (atmsw_delete_vcc(t,argv[1],atoi(argv[2]),atoi(argv[3]),
-                        argv[4],atoi(argv[5]),atoi(argv[6])) == -1) 
+                        argv[4],atoi(argv[5]),atoi(argv[6])) == -1)
    {
       atmsw_release(argv[0]);
       hypervisor_send_reply(conn,HSC_ERR_BINDING,1,"unable to delete VCC");

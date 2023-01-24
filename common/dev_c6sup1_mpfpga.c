@@ -1,4 +1,4 @@
-/* 
+/*
  * Cisco router simulation platform.
  * Copyright (c) 2007 Christophe Fillot (cf@utc.fr)
  *
@@ -21,7 +21,7 @@
 #define DEBUG_ACCESS   1
 #define DEBUG_NET_IRQ  1
 
-/* 
+/*
  * Function 0xX000:
  *   bit 0: 0:present, 1:absent.
  *   bit 1: power ok (?)
@@ -29,8 +29,8 @@
 #define SLOT_NOT_PRESENT   0x01
 #define SLOT_POWER_OK      0x02
 
-/* 
- * Function 0xX200: requires bit 3 to be set to avoid error about power 
+/*
+ * Function 0xX200: requires bit 3 to be set to avoid error about power
  * convertor failure.
  */
 #define SLOT_POWER_CONVERTOR   0x08
@@ -105,14 +105,14 @@ static const struct nmc93cX6_eeprom_def eeprom_bp_def_vtt3 = {
 
 /* Backplane EEPROMs */
 static const struct nmc93cX6_group eeprom_bp_group = {
-   EEPROM_TYPE_NMC93C56, 9, 0, 
+   EEPROM_TYPE_NMC93C56, 9, 0,
    EEPROM_DORD_REVERSED,
    EEPROM_DOUT_KEEP,
    EEPROM_DEBUG_DISABLED,
    "Backplane EEPROMs",
    {
       &eeprom_bp_def_chassis,
-      &eeprom_bp_def_chassis2, 
+      &eeprom_bp_def_chassis2,
       &eeprom_bp_def_ps1,
       &eeprom_bp_def_ps2,
       &eeprom_bp_def_clk1,
@@ -144,7 +144,7 @@ static const struct nmc93cX6_eeprom_def eeprom_earl_def = {
 
 /* Supervisor EEPROMs */
 static const struct nmc93cX6_group eeprom_sup_group = {
-   EEPROM_TYPE_NMC93C56, 2, 0, 
+   EEPROM_TYPE_NMC93C56, 2, 0,
    EEPROM_DORD_REVERSED,
    EEPROM_DOUT_KEEP,
    EEPROM_DEBUG_DISABLED,
@@ -163,7 +163,7 @@ static const struct nmc93cX6_eeprom_def eeprom_slot_def = {
 };
 
 static const struct nmc93cX6_group eeprom_slot_group = {
-   EEPROM_TYPE_NMC93C56, 1, 0, 
+   EEPROM_TYPE_NMC93C56, 1, 0,
    EEPROM_DORD_REVERSED,
    EEPROM_DOUT_KEEP,
    EEPROM_DEBUG_DISABLED,
@@ -174,7 +174,7 @@ static const struct nmc93cX6_group eeprom_slot_group = {
 /* ------------------------------------------------------------------------ */
 
 /* Update network interrupt status */
-static inline 
+static inline
 void dev_c6sup1_mpfpga_net_update_irq(struct c6sup1_mpfpga_data *d)
 {
    if (d->irq_status) {
@@ -310,24 +310,24 @@ void *dev_c6sup1_mpfpga_access(cpu_gen_t *cpu,struct vdevice *dev,
                   //printf("Marking slot %u as powered ON\n",slot);
                   d->slot_status[slot-1] = TRUE;
                }
-            }              
+            }
          }
          break;
-         
+
       /* Slot EEPROM write */
       case 0x000048:
          if (op_type == MTS_WRITE)
             nmc93cX6_write(&d->router->slot_eeprom_group,(u_int)(*data));
          break;
 
-      /* Slot EEPROM read */ 
+      /* Slot EEPROM read */
       case 0x00004c:
          if (op_type == MTS_READ) {
             grp = &d->router->slot_eeprom_group;
             slot = (d->slot_sel & 0xF000) >> 12;
             func = (d->slot_sel & 0x0F00) >> 8;
             *data = 0;
-            
+
             switch(func) {
                /* Presence + power ? */
                case 0x00:
@@ -337,7 +337,7 @@ void *dev_c6sup1_mpfpga_access(cpu_gen_t *cpu,struct vdevice *dev,
                      *data = 0;
 
                      /* The SUP slot is always powered */
-                     if (d->slot_status[slot-1] || 
+                     if (d->slot_status[slot-1] ||
                          (slot == d->router->sup_slot))
                         *data |= SLOT_POWER_OK;
                   }
@@ -401,18 +401,18 @@ void *dev_c6sup1_mpfpga_access(cpu_gen_t *cpu,struct vdevice *dev,
          }
 #endif
    }
-	
+
    return NULL;
 }
 
 /* Shutdown the MP FPGA device */
-static void 
+static void
 dev_c6sup1_mpfpga_shutdown(vm_instance_t *vm,struct c6sup1_mpfpga_data *d)
 {
    if (d != NULL) {
       /* Remove the device */
       dev_remove(vm,&d->dev);
-      
+
       /* Free the structure itself */
       free(d);
    }
@@ -445,16 +445,16 @@ void c6sup1_init_eeprom_groups(c6sup1_t *router)
 
    cisco_eeprom_copy(&router->slot_eeprom[0],
                      cisco_eeprom_find_c6k("C6K-SUP-SUP1A-2GE"));
-   
+
    cisco_eeprom_copy(&router->slot_eeprom[8],
                      cisco_eeprom_find_c6k("C6K-LC-WS-X6248"));
 }
 
-/* 
+/*
  * dev_c6sup1_mpfpga_init()
  */
 int dev_c6sup1_mpfpga_init(c6sup1_t *router,m_uint64_t paddr,m_uint32_t len)
-{   
+{
    struct c6sup1_mpfpga_data *d;
 
    /* Allocate private data structure */
@@ -465,7 +465,7 @@ int dev_c6sup1_mpfpga_init(c6sup1_t *router,m_uint64_t paddr,m_uint32_t len)
 
    memset(d,0,sizeof(*d));
    d->router = router;
-   
+
    vm_object_init(&d->vm_obj);
    d->vm_obj.name = "mp_fpga";
    d->vm_obj.data = d;

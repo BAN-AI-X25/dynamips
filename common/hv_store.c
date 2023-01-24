@@ -84,7 +84,7 @@ static int so_delete_from_registry(char *name)
 
 /* Write an object (data provided in base64 encoding) */
 static int cmd_write(hypervisor_conn_t *conn,int argc,char *argv[])
-{   
+{
    struct store_object *so;
    u_char *buffer;
    ssize_t len;
@@ -113,7 +113,7 @@ static int cmd_write(hypervisor_conn_t *conn,int argc,char *argv[])
    return(-1);
 }
 
-/* Read an object and return data in base64 encoding */ 
+/* Read an object and return data in base64 encoding */
 static int cmd_read(hypervisor_conn_t *conn,int argc,char *argv[])
 {
    struct store_object *so;
@@ -122,7 +122,7 @@ static int cmd_read(hypervisor_conn_t *conn,int argc,char *argv[])
    if (!(so = hypervisor_find_object(conn,argv[0],OBJ_TYPE_STORE)))
       return(-1);
 
-   /* 
+   /*
     * Convert data to base64. base64 is about 1/3 larger than input,
     * let's be on the safe side with twice longer.
     */

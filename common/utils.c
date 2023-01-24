@@ -1,4 +1,4 @@
-/*  
+/*
  * Cisco router simulation platform.
  * Copyright (c) 2005,2006 Christophe Fillot.  All rights reserved.
  *
@@ -116,7 +116,7 @@ int m_strsplit(char *str,char delim,char **array,int max_count)
       str = ptr + 1;
       pos++;
    }while(*ptr);
-   
+
    return(pos);
 
  error:
@@ -151,13 +151,13 @@ int m_strtok(char *str,char delim,char **array,int max_count)
       memcpy(array[pos],str,len);
       array[pos][len] = 0;
 
-      while(*ptr == delim) 
+      while(*ptr == delim)
          ptr++;
 
       str = ptr;
       pos++;
    }while(*ptr);
-   
+
    return(pos);
 
  error:
@@ -170,7 +170,7 @@ int m_strtok(char *str,char delim,char **array,int max_count)
 char *m_strquote(char *buffer,size_t buf_len,char *str)
 {
    char *p;
-   
+
    if (!(p = strpbrk(str," \t\"'")))
       return str;
 
@@ -178,7 +178,7 @@ char *m_strquote(char *buffer,size_t buf_len,char *str)
    return buffer;
 }
 
-/* 
+/*
  * Decode from hex.
  *
  * hex to raw bytes, returning count of bytes.
@@ -365,7 +365,7 @@ void *m_memalign(size_t boundary,size_t size)
 #if defined(__CYGWIN__) || defined(SUNOS)
    if (!(p = memalign(boundary,size)))
 #else
-   if (!(p = malloc(size)))    
+   if (!(p = malloc(size)))
 #endif
 #endif
       return NULL;
@@ -517,10 +517,10 @@ int memzone_open_file(char *filename,u_char **ptr,off_t *fsize)
    *fsize = fprop.st_size;
    if (!(*ptr = memzone_map_file(fd,*fsize)))
       goto err_mmap;
-   
+
    return(fd);
 
- err_mmap:   
+ err_mmap:
  err_fstat:
    close(fd);
    return(-1);
@@ -540,17 +540,17 @@ int memzone_open_file_ro(char *filename,u_char **ptr,off_t *fsize)
    *fsize = fprop.st_size;
    if (!(*ptr = memzone_map_file_ro(fd,*fsize)))
       goto err_mmap;
-   
+
    return(fd);
 
- err_mmap:   
+ err_mmap:
  err_fstat:
    close(fd);
    return(-1);
 }
 
 /* Compute NVRAM checksum */
-m_uint16_t nvram_cksum(m_uint16_t *ptr,size_t count) 
+m_uint16_t nvram_cksum(m_uint16_t *ptr,size_t count)
 {
    m_uint32_t sum = 0;
 
@@ -560,8 +560,8 @@ m_uint16_t nvram_cksum(m_uint16_t *ptr,size_t count)
       count -= sizeof(m_uint16_t);
    }
 
-   if (count > 0) 
-      sum = sum + ((ntohs(*ptr) & 0xFF) << 8); 
+   if (count > 0)
+      sum = sum + ((ntohs(*ptr) & 0xFF) << 8);
 
    while(sum>>16)
       sum = (sum & 0xffff) + (sum >> 16);
@@ -589,7 +589,7 @@ m_uint8_t m_reverse_u8(m_uint8_t val)
    for(i=0;i<8;i++)
       if (val & (1 << i))
          res |= 1 << (7 - i);
-   
+
    return(res);
 }
 
@@ -607,17 +607,17 @@ void fd_pool_free(fd_pool_t *pool)
 {
    fd_pool_t *p,*next;
    int i;
-   
+
    for(p=pool;p;p=next) {
       next = p->next;
-      
+
       for(i=0;i<FD_POOL_MAX;i++) {
          if (p->fd[i] != -1) {
             shutdown(p->fd[i],2);
             close(p->fd[i]);
          }
       }
-               
+
       if (pool != p)
          free(p);
    }
@@ -627,7 +627,7 @@ void fd_pool_free(fd_pool_t *pool)
 void fd_pool_init(fd_pool_t *pool)
 {
    int i;
-   
+
    for(i=0;i<FD_POOL_MAX;i++)
       pool->fd[i] = -1;
 
@@ -639,7 +639,7 @@ int fd_pool_get_free_slot(fd_pool_t *pool,int **slot)
 {
    fd_pool_t *p;
    int i;
-   
+
    for(p=pool;p;p=p->next) {
       for(i=0;i<FD_POOL_MAX;i++) {
          if (p->fd[i] == -1) {
@@ -648,14 +648,14 @@ int fd_pool_get_free_slot(fd_pool_t *pool,int **slot)
          }
       }
    }
-   
+
    /* No free slot, allocate a new pool */
    if (!(p = malloc(sizeof(*p))))
       return(-1);
 
-   fd_pool_init(p);      
+   fd_pool_init(p);
    *slot = &p->fd[0];
-      
+
    p->next = pool->next;
    pool->next = p;
    return(0);
@@ -666,17 +666,17 @@ int fd_pool_set_fds(fd_pool_t *pool,fd_set *fds)
 {
    fd_pool_t *p;
    int i,max_fd = -1;
-   
+
    for(p=pool;p;p=p->next)
       for(i=0;i<FD_POOL_MAX;i++) {
          if (p->fd[i] != -1) {
             FD_SET(p->fd[i],fds);
-            
+
             if (p->fd[i] > max_fd)
                max_fd = p->fd[i];
          }
       }
-      
+
    return(max_fd);
 }
 
@@ -686,14 +686,14 @@ int fd_pool_send(fd_pool_t *pool,void *buffer,size_t len,int flags)
    fd_pool_t *p;
    ssize_t res;
    int i,err;
-   
+
    for(p=pool,err=0;p;p=p->next)
       for(i=0;i<FD_POOL_MAX;i++) {
          if (p->fd[i] == -1)
             continue;
-         
+
          res = send(p->fd[i],buffer,len,flags);
-         
+
          if (res != len) {
             shutdown(p->fd[i],2);
             close(p->fd[i]);
@@ -701,7 +701,7 @@ int fd_pool_send(fd_pool_t *pool,void *buffer,size_t len,int flags)
             err++;
          }
       }
-      
+
    return(err);
 }
 
@@ -711,7 +711,7 @@ int fd_pool_check_input(fd_pool_t *pool,fd_set *fds,
 {
    fd_pool_t *p;
    int i,count;
-   
+
    for(p=pool,count=0;p;p=p->next)
       for(i=0;i<FD_POOL_MAX;i++) {
          if ((p->fd[i] != -1) && FD_ISSET(p->fd[i],fds)) {
@@ -719,7 +719,7 @@ int fd_pool_check_input(fd_pool_t *pool,fd_set *fds,
             count++;
          }
       }
-   
+
    return(count);
 }
 
@@ -728,10 +728,10 @@ ssize_t fd_printf(int fd,int flags,char *fmt,...)
 {
    char buffer[2048];
    va_list ap;
-    
+
    va_start(ap,fmt);
    vsnprintf(buffer,sizeof(buffer),fmt,ap);
    va_end(ap);
-   
+
    return(send(fd,buffer,strlen(buffer),flags));
 }

@@ -215,7 +215,7 @@ struct pcmcia_disk_data {
    m_uint8_t cyl_low,cyl_high;
    m_uint8_t head,sect_no;
    m_uint8_t sect_count;
-   
+
    /* Current sector */
    m_uint32_t sect_pos;
 
@@ -318,7 +318,7 @@ static int disk_read_sector(struct pcmcia_disk_data *d,m_uint32_t sect,
       perror("read_sector: lseek");
       return(-1);
    }
-   
+
    if (read(d->fd,buffer,SECTOR_SIZE) != SECTOR_SIZE) {
       perror("read_sector: read");
       return(-1);
@@ -330,7 +330,7 @@ static int disk_read_sector(struct pcmcia_disk_data *d,m_uint32_t sect,
 /* Write a sector to disk file */
 static int disk_write_sector(struct pcmcia_disk_data *d,m_uint32_t sect,
                              m_uint8_t *buffer)
-{  
+{
    off_t disk_offset = (off_t)sect * SECTOR_SIZE;
 
 #if DEBUG_WRITE
@@ -341,7 +341,7 @@ static int disk_write_sector(struct pcmcia_disk_data *d,m_uint32_t sect,
       perror("write_sector: lseek");
       return(-1);
    }
-   
+
    if (write(d->fd,buffer,SECTOR_SIZE) != SECTOR_SIZE) {
       perror("write_sector: write");
       return(-1);
@@ -433,7 +433,7 @@ static void ata_set_sect_pos(struct pcmcia_disk_data *d)
    } else {
       cyl = (((u_int)d->cyl_high) << 8) + d->cyl_low;
       d->sect_pos = chs_to_lba(d,cyl,d->head & 0x0F,d->sect_no);
-     
+
 #if DEBUG_ATA
       vm_log(d->vm,d->dev.name,
              "ata_set_sect_pos: cyl=0x%x,head=0x%x,sect=0x%x => "
@@ -536,7 +536,7 @@ void *dev_pcmcia_disk_access_0(cpu_gen_t *cpu,struct vdevice *dev,
 
    /* Compute the good internal offset */
    offset = (offset >> 1) ^ 1;
-   
+
 #if DEBUG_ACCESS
    if (op_type == MTS_READ) {
       cpu_log(cpu,d->dev.name,
@@ -556,7 +556,7 @@ void *dev_pcmcia_disk_access_0(cpu_gen_t *cpu,struct vdevice *dev,
 
       return NULL;
    }
-      
+
    switch(offset) {
       case 0x102:     /* Pin Replacement Register */
          if (op_type == MTS_READ)
@@ -588,12 +588,12 @@ void *dev_pcmcia_disk_access_0(cpu_gen_t *cpu,struct vdevice *dev,
             d->ata_cmd = *data >> 8;
             d->head = *data;
             ata_handle_cmd(d);
-         }            
+         }
          break;
 
       default:
          /* Data buffer access ? */
-         if ((offset >= d->data_offset) && 
+         if ((offset >= d->data_offset) &&
              (offset < d->data_offset + (SECTOR_SIZE/2)))
          {
             if (op_type == MTS_READ) {
@@ -603,13 +603,13 @@ void *dev_pcmcia_disk_access_0(cpu_gen_t *cpu,struct vdevice *dev,
                d->data_buffer[(d->data_pos << 1)]   = *data & 0xFF;
                d->data_buffer[(d->data_pos << 1)+1] = *data >> 8;
             }
-            
+
             d->data_pos++;
 
             /* Buffer complete: call the callback function */
             if (d->data_pos == (SECTOR_SIZE/2)) {
                d->data_pos = 0;
-               
+
                if (d->ata_cmd_callback)
                   d->ata_cmd_callback(d);
             }
@@ -630,7 +630,7 @@ void *dev_pcmcia_disk_access_1(cpu_gen_t *cpu,struct vdevice *dev,
 
    /* Compute the good internal offset */
    offset = (offset >> 1) ^ 1;
-   
+
 #if DEBUG_ACCESS
    if (op_type == MTS_READ) {
       cpu_log(cpu,d->dev.name,
@@ -711,7 +711,7 @@ void dev_pcmcia_disk_shutdown(vm_instance_t *vm,struct pcmcia_disk_data *d)
 
       /* Free filename */
       free(d->filename);
-      
+
       /* Free the structure itself */
       free(d);
    }

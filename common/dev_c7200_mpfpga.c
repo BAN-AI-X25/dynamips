@@ -1,4 +1,4 @@
-/* 
+/*
  * Cisco router simulation platform.
  * Copyright (c) 2005-2007 Christophe Fillot (cf@utc.fr)
  *
@@ -138,19 +138,19 @@ static const struct nmc93cX6_eeprom_def eeprom_bay_def[C7200_MAX_PA_BAYS] = {
 
 /* EEPROM group #1 (Bays 0, 1, 3, 4) */
 static const struct nmc93cX6_group eeprom_bays_g1 = {
-   EEPROM_TYPE_NMC93C46, 4, 0, 
+   EEPROM_TYPE_NMC93C46, 4, 0,
    EEPROM_DORD_NORMAL,
    EEPROM_DOUT_HIGH,
    EEPROM_DEBUG_DISABLED,
-   "PA Bays (Group #1) EEPROM", 
-   { &eeprom_bay_def[0], &eeprom_bay_def[1], 
+   "PA Bays (Group #1) EEPROM",
+   { &eeprom_bay_def[0], &eeprom_bay_def[1],
      &eeprom_bay_def[3], &eeprom_bay_def[4],
    },
 };
 
 /* EEPROM group #2 (Bays 2, 5, 6) */
 static const struct nmc93cX6_group eeprom_bays_g2 = {
-   EEPROM_TYPE_NMC93C46, 3, 0, 
+   EEPROM_TYPE_NMC93C46, 3, 0,
    EEPROM_DORD_NORMAL,
    EEPROM_DOUT_HIGH,
    EEPROM_DEBUG_DISABLED,
@@ -160,12 +160,12 @@ static const struct nmc93cX6_group eeprom_bays_g2 = {
 
 /* EEPROM group #3 (Bay 7) */
 static const struct nmc93cX6_group eeprom_bays_g3 = {
-   EEPROM_TYPE_NMC93C46, 1, 0, 
+   EEPROM_TYPE_NMC93C46, 1, 0,
    EEPROM_DORD_NORMAL,
    EEPROM_DOUT_HIGH,
    EEPROM_DEBUG_DISABLED,
-   "PA Bay (Group #3) EEPROM", 
-   { &eeprom_bay_def[7] }, 
+   "PA Bay (Group #3) EEPROM",
+   { &eeprom_bay_def[7] },
 };
 
 /* Midplane FPGA private data */
@@ -192,7 +192,7 @@ static void pa_update_status_reg(struct c7200_mpfpga_data *d)
    u_int i;
 
    router->pa_status_reg[0] = router->pa_status_reg[1] = 0;
-   
+
    for(i=0;i<C7200_MAX_PA_BAYS;i++) {
       if (pa_get_power_status(router,i)) {
          pw = &bay_power_info[i];
@@ -241,8 +241,8 @@ void *dev_c7200_mpfpga_access(cpu_gen_t *cpu,struct vdevice *dev,
             /* if we have a card in slot 7, report status as for slot 0 */
             if (vm_slot_active(router->vm,7,0)) {
                u_int offset;
-               
-               offset = dev_c7200_net_get_reg_offset(0);               
+
+               offset = dev_c7200_net_get_reg_offset(0);
 
                if (router->net_irq_status[2]) {
                   *data |= 0xFF << offset;
@@ -282,13 +282,13 @@ void *dev_c7200_mpfpga_access(cpu_gen_t *cpu,struct vdevice *dev,
          }
          break;
 
-      /* 
+      /*
        * - PCI errors (seen with IRQ 6)
        * - Used when PA Mgmt IRQ is triggered.
-       * 
+       *
        * If the PA Mgmt IRQ is triggered for an undefined slot, a crash
        * occurs with "Error: Unexpected NM Interrupt received from slot: 6"
-       * So, we use the PA status reg as mask to return something safe 
+       * So, we use the PA status reg as mask to return something safe
        * (slot order is identical).
        */
       case 0x40:
@@ -303,8 +303,8 @@ void *dev_c7200_mpfpga_access(cpu_gen_t *cpu,struct vdevice *dev,
             *data = 0xFFFFFFFF;
          break;
 
-      /* 
-       * This corresponds to err_stat in error message when IRQ 6 is 
+      /*
+       * This corresponds to err_stat in error message when IRQ 6 is
        * triggered.
        *
        * Bit 7 => SRAM error.
@@ -324,12 +324,12 @@ void *dev_c7200_mpfpga_access(cpu_gen_t *cpu,struct vdevice *dev,
                     "(data=0x%llx)\n",offset,cpu_get_pc(cpu),*data);
 #endif
             router->oir_status[0] &= ~(*data);
-            vm_clear_irq(router->vm,C7200_OIR_IRQ);                    
+            vm_clear_irq(router->vm,C7200_OIR_IRQ);
          }
          break;
 
-      /* 
-       * This corresponds to err_enable in error message when IRQ 6 is 
+      /*
+       * This corresponds to err_enable in error message when IRQ 6 is
        * triggered. No idea of what it really means.
        */
       case 0x78:
@@ -356,7 +356,7 @@ void *dev_c7200_mpfpga_access(cpu_gen_t *cpu,struct vdevice *dev,
             *data = router->pa_status_reg[0];
          }
          break;
- 
+
       case 0x58:   /* Port Adapter Control */
          if (op_type == MTS_WRITE)
             router->pa_ctrl_reg[0] = *data;
@@ -402,7 +402,7 @@ void *dev_c7200_mpfpga_access(cpu_gen_t *cpu,struct vdevice *dev,
          }
 #endif
    }
-	
+
    return NULL;
 }
 
@@ -428,13 +428,13 @@ void c7200_init_mp_eeprom_groups(c7200_t *router)
 }
 
 /* Shutdown the MP FPGA device */
-static void 
+static void
 dev_c7200_mpfpga_shutdown(vm_instance_t *vm,struct c7200_mpfpga_data *d)
 {
    if (d != NULL) {
       /* Remove the device */
       dev_remove(vm,&d->dev);
-      
+
       /* Free the structure itself */
       free(d);
    }
@@ -442,7 +442,7 @@ dev_c7200_mpfpga_shutdown(vm_instance_t *vm,struct c7200_mpfpga_data *d)
 
 /* Create the c7200 Midplane FPGA */
 int dev_c7200_mpfpga_init(c7200_t *router,m_uint64_t paddr,m_uint32_t len)
-{   
+{
    struct c7200_mpfpga_data *d;
 
    /* Allocate private data structure */

@@ -86,7 +86,7 @@ static int gdb_debug_gdb_init(hypervisor_conn_t *conn,int argc,char *argv[])
       return(-1);
 
    // Set the GDB listener port and initiate GDB Server
-   vm->gdb_port = strtoul(argv[1], NULL, 0);   
+   vm->gdb_port = strtoul(argv[1], NULL, 0);
    res = gdb_server_start_listener(vm);
 
    vm_release(vm);

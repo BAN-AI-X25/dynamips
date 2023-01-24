@@ -102,7 +102,7 @@ struct c2691_router {
    /* Chassis information */
    m_uint8_t oir_status;
 
-   /* 
+   /*
     * Mainboard EEPROM.
     * It can be modified to change the chassis MAC address.
     */

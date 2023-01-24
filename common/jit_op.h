@@ -44,7 +44,7 @@ struct jit_op {
    void *arg_ptr;
    char *insn_name;
    struct jit_op *next;
-   
+
    /* JIT output buffer */
    u_int ob_size_index;
    u_char *ob_final;

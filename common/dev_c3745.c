@@ -45,7 +45,7 @@ static m_uint16_t eeprom_c3745_motherboard_data[] = {
 };
 
 struct cisco_eeprom eeprom_c3745_motherboard = {
-   "C3745 Motherboard", 
+   "C3745 Motherboard",
    eeprom_c3745_motherboard_data,
    sizeof(eeprom_c3745_motherboard_data)/2,
 };
@@ -63,7 +63,7 @@ static m_uint16_t eeprom_c3745_ioboard_data[] = {
 };
 
 struct cisco_eeprom eeprom_c3745_ioboard = {
-   "C3745 I/O board", 
+   "C3745 I/O board",
    eeprom_c3745_ioboard_data,
    sizeof(eeprom_c3745_ioboard_data)/2,
 };
@@ -81,7 +81,7 @@ static m_uint16_t eeprom_c3745_midplane_data[] = {
 };
 
 struct cisco_eeprom eeprom_c3745_midplane = {
-   "C3745 Midplane", 
+   "C3745 Midplane",
    eeprom_c3745_midplane_data,
    sizeof(eeprom_c3745_midplane_data)/2,
 };
@@ -181,7 +181,7 @@ static int c3745_delete_instance(vm_instance_t *vm)
    /* Stop all CPUs */
    if (vm->cpu_group != NULL) {
       vm_stop(vm);
-      
+
       if (cpu_group_sync_state(vm->cpu_group) == -1) {
          vm_error(vm,"unable to sync with system CPUs.\n");
          return(FALSE);
@@ -191,14 +191,14 @@ static int c3745_delete_instance(vm_instance_t *vm)
    /* Remove NIO bindings */
    for(i=0;i<vm->nr_slots;i++)
       vm_slot_remove_all_nio_bindings(vm,i);
-   
+
    /* Shutdown all Network Modules */
    vm_slot_shutdown_all(vm);
-   
+
    /* Free mainboard EEPROM */
    for(i=0;i<3;i++)
       cisco_eeprom_free(&router->sys_eeprom[i]);
-   
+
    /* Free all resources used by VM */
    vm_free(vm);
 
@@ -229,7 +229,7 @@ int c3745_set_slot_eeprom(c3745_t *router,u_int slot,
 }
 
 /* Get slot/port corresponding to specified network IRQ */
-static inline void 
+static inline void
 c3745_net_irq_get_slot_port(u_int irq,u_int *slot,u_int *port)
 {
    irq -= C3745_NETIO_IRQ_BASE;
@@ -325,7 +325,7 @@ static int c3745_init_gt96100(c3745_t *router)
       vm_error(router->vm,"unable to create PCI data.\n");
       return(-1);
    }
-   
+
    if (dev_gt96100_init(vm,"gt96100",C3745_GT96K_ADDR,0x200000,
                         C3745_GT96K_IRQ,
                         C3745_EXT_IRQ,
@@ -342,7 +342,7 @@ static int c3745_init_gt96100(c3745_t *router)
 
 /* Initialize a Cisco 3745 */
 static int c3745_init(c3745_t *router)
-{   
+{
    vm_instance_t *vm = router->vm;
    char bus_name[128];
    int i;
@@ -392,8 +392,8 @@ void c3745_show_hardware(c3745_t *router)
 
 /* Initialize default parameters for a C3745 */
 static void c3745_init_defaults(c3745_t *router)
-{   
-   vm_instance_t *vm = router->vm;   
+{
+   vm_instance_t *vm = router->vm;
    n_eth_addr_t *m;
    m_uint16_t pid;
 
@@ -541,7 +541,7 @@ static int c3745_init_platform(c3745_t *router)
 
 /* Boot the IOS image */
 static int c3745_boot_ios(c3745_t *router)
-{   
+{
    vm_instance_t *vm = router->vm;
    cpu_mips_t *cpu;
 
@@ -564,7 +564,7 @@ static int c3745_boot_ios(c3745_t *router)
    /* Load IOS image */
    if (mips64_load_elf_image(cpu,vm->ios_image,
                              (vm->ghost_status == VM_GHOST_RAM_USE),
-                             &vm->ios_entry_point) < 0) 
+                             &vm->ios_entry_point) < 0)
    {
       vm_error(vm,"failed to load Cisco IOS image '%s'.\n",vm->ios_image);
       return(-1);
@@ -632,7 +632,7 @@ static void c3745_clear_irq(vm_instance_t *vm,u_int irq)
 
 /* Initialize a Cisco 3745 instance */
 static int c3745_init_instance(vm_instance_t *vm)
-{   
+{
    c3745_t *router = VM_C3745(vm);
    m_uint32_t rom_entry_point;
    cpu_mips_t *cpu0;
@@ -688,7 +688,7 @@ static int c3745_stop_instance(vm_instance_t *vm)
    /* Stop all CPUs */
    if (vm->cpu_group != NULL) {
       vm_stop(vm);
-      
+
       if (cpu_group_sync_state(vm->cpu_group) == -1) {
          vm_error(vm,"unable to sync with system CPUs.\n");
          return(-1);
@@ -699,7 +699,7 @@ static int c3745_stop_instance(vm_instance_t *vm)
    vm_slot_shutdown_all(vm);
    vm_hardware_shutdown(vm);
 
-   /* Cleanup */   
+   /* Cleanup */
    VM_C3745(vm)->iofpga_data = NULL;
    VM_C3745(vm)->gt_data = NULL;
    return(0);
@@ -721,7 +721,7 @@ static int c3745_nm_init_online(vm_instance_t *vm,u_int slot,u_int subslot)
       return(-1);
    }
 
-   /* 
+   /*
     * Suspend CPU activity while adding new hardware (since we change the
     * memory maps).
     */
@@ -747,7 +747,7 @@ static int c3745_nm_init_online(vm_instance_t *vm,u_int slot,u_int subslot)
 
 /* Stop a NM while the virtual router is online (OIR) */
 static int c3745_nm_stop_online(vm_instance_t *vm,u_int slot,u_int subslot)
-{   
+{
    if (!slot) {
       vm_error(vm,"OIR not supported on slot 0.\n");
       return(-1);
@@ -765,7 +765,7 @@ static int c3745_nm_stop_online(vm_instance_t *vm,u_int slot,u_int subslot)
    /* We can safely trigger the OIR event */
    c3745_trigger_oir_event(VM_C3745(vm),1 << (slot - 1));
 
-   /* 
+   /*
     * Suspend CPU activity while removing the hardware (since we change the
     * memory maps).
     */
@@ -851,6 +851,6 @@ int c3745_platform_register(void)
 {
    if (vm_platform_register(&c3745_platform) == -1)
       return(-1);
-   
+
    return(hypervisor_c3745_init(&c3745_platform));
 }

@@ -42,7 +42,7 @@ void memlog_dump(cpu_gen_t *cpu)
    memlog_access_t *acc;
    char s_data[64];
    u_int i,pos;
-   
+
    for(i=0;i<MEMLOG_COUNT;i++) {
       pos = cpu->memlog_pos + i;
       pos &= (MEMLOG_COUNT-1);
@@ -70,7 +70,7 @@ void memlog_update_read(cpu_gen_t *cpu,m_iptr_t raddr)
 
    acc = &cpu->memlog_array[(cpu->memlog_pos-1) & (MEMLOG_COUNT-1)];
 
-   if (acc->op_type == MTS_READ) 
+   if (acc->op_type == MTS_READ)
    {
       switch(acc->op_size) {
          case 1:
@@ -135,14 +135,14 @@ void physmem_copy_from_vm(vm_instance_t *vm,void *real_buffer,
    while(len > 0) {
       r = m_min(VM_PAGE_SIZE - (paddr & VM_PAGE_IMASK), len);
       ptr = physmem_get_hptr(vm,paddr,0,MTS_READ,&dummy);
-      
+
       if (likely(ptr != NULL)) {
          memcpy(real_buffer,ptr,r);
       } else {
          r = m_min(len,4);
          switch(r) {
             case 4:
-               *(m_uint32_t *)real_buffer = 
+               *(m_uint32_t *)real_buffer =
                   htovm32(physmem_copy_u32_from_vm(vm,paddr));
                break;
             case 2:
@@ -172,7 +172,7 @@ void physmem_copy_to_vm(vm_instance_t *vm,void *real_buffer,
    while(len > 0) {
       r = m_min(VM_PAGE_SIZE - (paddr & VM_PAGE_IMASK), len);
       ptr = physmem_get_hptr(vm,paddr,0,MTS_WRITE,&dummy);
-      
+
       if (likely(ptr != NULL)) {
          memcpy(ptr,real_buffer,r);
       } else {
@@ -238,7 +238,7 @@ void physmem_copy_u16_to_vm(vm_instance_t *vm,m_uint64_t paddr,m_uint16_t val)
    m_uint64_t tmp = val;
    m_uint16_t *ptr;
 
-   if ((ptr = physmem_get_hptr(vm,paddr,2,MTS_WRITE,&tmp)) != NULL)   
+   if ((ptr = physmem_get_hptr(vm,paddr,2,MTS_WRITE,&tmp)) != NULL)
       *ptr = htovm16(val);
 }
 
@@ -260,7 +260,7 @@ void physmem_copy_u8_to_vm(vm_instance_t *vm,m_uint64_t paddr,m_uint8_t val)
    m_uint64_t tmp = val;
    m_uint8_t *ptr;
 
-   if ((ptr = physmem_get_hptr(vm,paddr,1,MTS_WRITE,&tmp)) != NULL)   
+   if ((ptr = physmem_get_hptr(vm,paddr,1,MTS_WRITE,&tmp)) != NULL)
       *ptr = val;
 }
 
@@ -300,7 +300,7 @@ size_t physmem_strlen(vm_instance_t *vm,m_uint64_t paddr)
    struct vdevice *vm_ram;
    size_t len = 0;
    char *ptr;
-   
+
    if ((vm_ram = dev_lookup(vm,paddr,TRUE)) != NULL) {
       ptr = (char *)vm_ram->host_addr + (paddr - vm_ram->phys_addr);
       len = strlen(ptr);

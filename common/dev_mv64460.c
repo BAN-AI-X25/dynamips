@@ -43,10 +43,10 @@
 /* Interrupt Low Main Cause Register */
 #define MV64460_REG_ILMCR   0x0004
 
-#define MV64460_ILMCR_IDMA0_COMP         0x00000010  /* IDMA 0 */ 
-#define MV64460_ILMCR_IDMA1_COMP         0x00000020  /* IDMA 1 */ 
-#define MV64460_ILMCR_IDMA2_COMP         0x00000040  /* IDMA 2 */ 
-#define MV64460_ILMCR_IDMA3_COMP         0x00000080  /* IDMA 3 */ 
+#define MV64460_ILMCR_IDMA0_COMP         0x00000010  /* IDMA 0 */
+#define MV64460_ILMCR_IDMA1_COMP         0x00000020  /* IDMA 1 */
+#define MV64460_ILMCR_IDMA2_COMP         0x00000040  /* IDMA 2 */
+#define MV64460_ILMCR_IDMA3_COMP         0x00000080  /* IDMA 3 */
 #define MV64460_ILMCR_TIMER0_EXP         0x00000100  /* Timer 0 */
 #define MV64460_ILMCR_TIMER1_EXP         0x00000200  /* Timer 1 */
 #define MV64460_ILMCR_TIMER2_EXP         0x00000400  /* Timer 2 */
@@ -189,7 +189,7 @@ struct idma_channel {
 /* SDMA channel */
 struct sdma_channel {
    u_int id;
-   
+
    m_uint32_t sdc;
    m_uint32_t sdcm;
    m_uint32_t rx_desc;
@@ -537,7 +537,7 @@ struct mv64460_data {
    m_uint32_t idma_sr[MV64460_IDMA_BAR_REGS];
    m_uint32_t idma_har[MV64460_IDMA_HAR_REGS];
    struct idma_channel idma[MV64460_IDMA_CHANNELS];
-   
+
    /* SDMA channels */
    m_uint32_t sdma_cause,sdma_mask;
    struct sdma_channel sdma[MV64460_SDMA_CHANNELS];
@@ -588,7 +588,7 @@ static m_uint32_t mv64460_ic_get_sel_cause(struct mv64460_data *d,
 
    lo_act = d->intr_lo & mask_lo;
    hi_act = d->intr_hi & mask_hi;
-            
+
    if (!lo_act && hi_act) {
       res = (d->intr_hi & MV64460_IC_CAUSE_MASK) | MV64460_IC_CAUSE_SEL;
    } else {
@@ -654,7 +654,7 @@ static void mv64460_gpio_update_int_status(struct mv64460_data *d)
 static int mv64460_idma_access(cpu_gen_t *cpu,struct vdevice *dev,
                                m_uint32_t offset,u_int op_size,u_int op_type,
                                m_uint64_t *data)
-{   
+{
    struct mv64460_data *mv_data = dev->priv_data;
    int cid;
 
@@ -766,13 +766,13 @@ static int mv64460_idma_access(cpu_gen_t *cpu,struct vdevice *dev,
 static int mv64460_idma_dec_access(cpu_gen_t *cpu,struct vdevice *dev,
                                    m_uint32_t offset,u_int op_size,
                                    u_int op_type, m_uint64_t *data)
-{   
+{
    struct mv64460_data *mv_data = dev->priv_data;
    int reg;
 
    if ((offset & 0xFF00) != MV64460_REG_IDMA_DEC_BASE)
       return(FALSE);
-   
+
    switch(offset) {
       case MV64460_REG_IDMA_BARE:
          if (op_type == MTS_READ)
@@ -891,7 +891,7 @@ static void mv64460_sdma_desc_write(struct mv64460_data *d,m_uint32_t addr,
                                     struct sdma_desc *desc)
 {
    struct sdma_desc tmp;
-   
+
    /* byte-swapping */
    tmp.cmd_stat = vmtoh32(desc->cmd_stat);
    tmp.buf_size = vmtoh32(desc->buf_size);
@@ -910,7 +910,7 @@ static void mv64460_sdma_send_buffer(struct mv64460_data *d,u_int chan_id,
 
    channel = &d->mpsc[chan_id];
    mode = mv64460_mpsc_get_channel_mode(d,chan_id);
-   
+
    switch(mode) {
       case MV64460_MPSC_MODE_HDLC:
          if (channel->nio != NULL)
@@ -919,7 +919,7 @@ static void mv64460_sdma_send_buffer(struct mv64460_data *d,u_int chan_id,
 
       case MV64460_MPSC_MODE_UART:
          if (channel->vtty != NULL)
-            vtty_put_buffer(channel->vtty,(char *)buffer,len);            
+            vtty_put_buffer(channel->vtty,(char *)buffer,len);
          break;
    }
 }
@@ -927,7 +927,7 @@ static void mv64460_sdma_send_buffer(struct mv64460_data *d,u_int chan_id,
 /* Start TX DMA process */
 static int mv64460_sdma_tx_start(struct mv64460_data *d,
                                  struct sdma_channel *chan)
-{   
+{
    u_char pkt[MV64460_MAX_PKT_SIZE],*pkt_ptr;
    struct sdma_desc txd0,ctxd,*ptxd;
    m_uint32_t tx_start,tx_current;
@@ -1021,13 +1021,13 @@ static void mv64460_sdma_rxdesc_put_pkt(struct mv64460_data *d,
    ssize_t len,cp_len;
 
    len = (rxd->buf_size & MV64460_RXDESC_BS_MASK) >> MV64460_RXDESC_BS_SHIFT;
-   
+
    /* compute the data length to copy */
    cp_len = m_min(len,*pkt_len);
-   
+
    /* copy packet data to the VM physical RAM */
    physmem_copy_to_vm(d->vm,*pkt,rxd->buf_ptr,cp_len);
-      
+
    /* set the byte count in descriptor */
    rxd->buf_size |= cp_len;
 
@@ -1081,8 +1081,8 @@ static int mv64460_sdma_handle_rxqueue(struct mv64460_data *d,
          rxdc->cmd_stat |= MV64460_RXDESC_L;
 
          /* Fake HDLC CRC */
-         if (mv64460_mpsc_get_channel_mode(d,channel->id) == 
-             MV64460_MPSC_MODE_HDLC) 
+         if (mv64460_mpsc_get_channel_mode(d,channel->id) ==
+             MV64460_MPSC_MODE_HDLC)
          {
             rxdc->buf_size += 2;  /* Add 2 bytes for CRC */
          }
@@ -1108,7 +1108,7 @@ static int mv64460_sdma_handle_rxqueue(struct mv64460_data *d,
 
    /* Update the RX pointers */
    channel->scrdp = rx_current;
-       
+
    /* Update the first RX descriptor */
    rxd0.cmd_stat |= MV64460_RXDESC_F;
    mv64460_sdma_desc_write(d,rx_start,&rxd0);
@@ -1131,7 +1131,7 @@ _Unused static int mv64460_sdma_handle_rx_pkt(netio_desc_t *nio,
 {
    u_int chan_id = (u_int)(u_long)arg;
 
-   MV64460_LOCK(d);   
+   MV64460_LOCK(d);
    mv64460_sdma_handle_rxqueue(d,&d->sdma[chan_id],pkt,pkt_len);
    MV64460_UNLOCK(d);
    return(TRUE);
@@ -1168,27 +1168,27 @@ int mv64460_sdma_bind_vtty(struct mv64460_data *d,u_int chan_id,vtty_t *vtty)
 static int mv64460_sdma_access(cpu_gen_t *cpu,struct vdevice *dev,
                                m_uint32_t offset,u_int op_size,u_int op_type,
                                m_uint64_t *data)
-{   
+{
    struct mv64460_data *mv_data = dev->priv_data;
    struct sdma_channel *channel;
    int id = -1;
 
    /* Access to SDMA channel 0 registers ? */
-   if ((offset >= MV64460_REG_SDMA0) && 
-       (offset < (MV64460_REG_SDMA0 + 0x1000))) 
+   if ((offset >= MV64460_REG_SDMA0) &&
+       (offset < (MV64460_REG_SDMA0 + 0x1000)))
    {
       offset -= MV64460_REG_SDMA0;
       id = 0;
    }
 
    /* Access to SDMA channel 1 registers ? */
-   if ((offset >= MV64460_REG_SDMA1) && 
-       (offset < (MV64460_REG_SDMA1 + 0x1000))) 
+   if ((offset >= MV64460_REG_SDMA1) &&
+       (offset < (MV64460_REG_SDMA1 + 0x1000)))
    {
       offset -= MV64460_REG_SDMA1;
       id = 1;
    }
-   
+
    if (id == -1)
       return(FALSE);
 
@@ -1254,7 +1254,7 @@ static int mv64460_sdma_access(cpu_gen_t *cpu,struct vdevice *dev,
 static u_int mv64460_mpsc_get_channel_mode(struct mv64460_data *d,u_int id)
 {
    struct mpsc_channel *channel;
-      
+
    channel = &d->mpsc[id];
    return(channel->mmcrl & MV64460_MMCRL_MODE_MASK);
 }
@@ -1270,21 +1270,21 @@ static int mv64460_mpsc_access(cpu_gen_t *cpu,struct vdevice *dev,
    int id = -1;
 
    /* Access to MPSC channel 0 registers ? */
-   if ((offset >= MV64460_REG_MPSC0) && 
-       (offset < (MV64460_REG_MPSC0 + 0x1000))) 
+   if ((offset >= MV64460_REG_MPSC0) &&
+       (offset < (MV64460_REG_MPSC0 + 0x1000)))
    {
       offset -= MV64460_REG_MPSC0;
       id = 0;
    }
 
    /* Access to SDMA channel 1 registers ? */
-   if ((offset >= MV64460_REG_MPSC1) && 
-       (offset < (MV64460_REG_MPSC1 + 0x1000))) 
+   if ((offset >= MV64460_REG_MPSC1) &&
+       (offset < (MV64460_REG_MPSC1 + 0x1000)))
    {
       offset -= MV64460_REG_MPSC1;
       id = 1;
    }
-   
+
    if (id == -1)
       return(FALSE);
 
@@ -1296,7 +1296,7 @@ static int mv64460_mpsc_access(cpu_gen_t *cpu,struct vdevice *dev,
          if (op_type == MTS_READ) {
             *data = channel->mmcrl;
          } else {
-#if DEBUG_MPSC            
+#if DEBUG_MPSC
             MV64460_LOG(gt_data,"MPSC channel %u set in mode %llu\n",
                         chan_id,*data & 0x07);
 #endif
@@ -1321,14 +1321,14 @@ static int mv64460_mpsc_access(cpu_gen_t *cpu,struct vdevice *dev,
          break;
 
       /* Channel registers */
-      case MV64460_MPSC_CHR1: 
-      case MV64460_MPSC_CHR2: 
+      case MV64460_MPSC_CHR1:
+      case MV64460_MPSC_CHR2:
       case MV64460_MPSC_CHR3:
-      case MV64460_MPSC_CHR4: 
-      case MV64460_MPSC_CHR5: 
+      case MV64460_MPSC_CHR4:
+      case MV64460_MPSC_CHR5:
       case MV64460_MPSC_CHR6:
-      case MV64460_MPSC_CHR7: 
-      case MV64460_MPSC_CHR8: 
+      case MV64460_MPSC_CHR7:
+      case MV64460_MPSC_CHR8:
       case MV64460_MPSC_CHR9:
          //case MV64460_MPSC_CHR10:
          reg = (offset - MV64460_MPSC_CHR1) >> 2;
@@ -1391,7 +1391,7 @@ static void mv64460_eth_update_pic(struct mv64460_data *d,
    } else {
       d->intr_hi &= ~(MV64460_IHMCR_ETH_MISC_SUM(port->id));
    }
-   
+
    /* Update the interrupt status */
    mv64460_ic_update_cpu0_status(d);
 }
@@ -1410,7 +1410,7 @@ static void mv64460_eth_update_pice(struct mv64460_data *d,
       port->pic |= MV64460_ETH_IC_EXTEND;
    } else {
       port->pic &= ~MV64460_ETH_IC_EXTEND;
-   }   
+   }
 
    mv64460_eth_update_pic(d,port);
 }
@@ -1419,7 +1419,7 @@ static void mv64460_eth_update_pice(struct mv64460_data *d,
 static int mv64460_eth_handle_port_txqueue(struct mv64460_data *d,
                                            struct eth_port *port,
                                            int queue)
-{   
+{
    u_char pkt[MV64460_MAX_PKT_SIZE],*pkt_ptr;
    struct sdma_desc txd0,ctxd,*ptxd;
    m_uint32_t tx_start,tx_current;
@@ -1510,7 +1510,7 @@ static int mv64460_eth_handle_port_txqueue(struct mv64460_data *d,
    physmem_copy_u32_to_vm(d->vm,tx_start+4,txd0.cmd_stat);
 
    port->tcqdp[queue] = tx_current;
-   
+
    /* Notify host about transmitted packet */
    port->pice |= MV64460_ETH_ICE_TXBUF(queue);
 
@@ -1564,7 +1564,7 @@ static void mv64460_eth_rxdesc_put_pkt(struct mv64460_data *d,
    buf_ptr = rxd->buf_ptr;
    len = rxd->buf_size & MV64460_ETH_RXDESC_BS_MASK;
    len >>= MV64460_ETH_RXDESC_BS_SHIFT;
-   
+
    /* copy packet data to the VM physical RAM */
    if (pos == 0) {
       buf_ptr += 2;
@@ -1626,10 +1626,10 @@ static int mv64460_eth_handle_rxqueue(struct mv64460_data *d,u_int port_id,
       /* Update the descriptor in host memory (but not the 1st) */
       if (i != 0)
          mv64460_sdma_desc_write(d,rx_current,rxdc);
-      
+
       /* Get address of the next descriptor */
       rx_current = rxdc->next_ptr;
-      
+
       if (tot_len == 0)
          break;
 
@@ -1646,7 +1646,7 @@ static int mv64460_eth_handle_rxqueue(struct mv64460_data *d,u_int port_id,
 
    /* Update the first RX descriptor */
    rxd0.cmd_stat |= MV64460_ETH_RXDESC_F;
-          
+
    /* Analyze Layer 2 */
    if (ctx->flags & N_PKT_CTX_FLAG_ETHV2)
       rxd0.cmd_stat |= MV64460_ETH_RXDESC_L2V2;
@@ -1657,7 +1657,7 @@ static int mv64460_eth_handle_rxqueue(struct mv64460_data *d,u_int port_id,
    /* Analyze Layer 3 */
    if (ctx->flags & N_PKT_CTX_FLAG_L3_IP) {
       rxd0.cmd_stat |= MV64460_ETH_RXDESC_L3IP;
-      
+
       if (ctx->flags & N_PKT_CTX_FLAG_IPH_OK) {
          u_int rxcs,frag;
          m_uint16_t cksum;
@@ -1893,7 +1893,7 @@ static int mv64460_eth_access(cpu_gen_t *cpu,struct vdevice *dev,
       case MV64460_REG_ETH_BA(4):
       case MV64460_REG_ETH_BA(5):
          reg = (offset - MV64460_REG_ETH_BA(0)) >> 3;
-         
+
          if (op_type == MTS_READ)
             *data = mv_data->eth_ba[reg];
          else
@@ -1907,7 +1907,7 @@ static int mv64460_eth_access(cpu_gen_t *cpu,struct vdevice *dev,
       case MV64460_REG_ETH_SR(4):
       case MV64460_REG_ETH_SR(5):
          reg = (offset - MV64460_REG_ETH_SR(0)) >> 3;
-         
+
          if (op_type == MTS_READ)
             *data = mv_data->eth_sr[reg];
          else
@@ -2013,7 +2013,7 @@ static int mv64460_eth_access(cpu_gen_t *cpu,struct vdevice *dev,
             *data = port->vlan_ether_type;
          else
             port->vlan_ether_type = *data;
-         break;   
+         break;
 
       case MV64460_REG_ETH_MACAL:
          if (op_type == MTS_READ) {
@@ -2312,7 +2312,7 @@ void *dev_mv64460_access(cpu_gen_t *cpu,struct vdevice *dev,m_uint32_t offset,
          if (op_type == MTS_READ)
             *data = mv_data->intr_lo;
          break;
-         
+
       /* Interrupt Main Cause High */
       case MV64460_REG_IHMCR:
          if (op_type == MTS_READ)
@@ -2503,7 +2503,7 @@ void *dev_mv64460_access(cpu_gen_t *cpu,struct vdevice *dev,m_uint32_t offset,
          }
          break;
 
-      /* Integrated SRAM base address */ 
+      /* Integrated SRAM base address */
       case MV64460_REG_SRAM_BASE:
          if (op_type == MTS_READ) {
             *data = mv_data->sram_dev.phys_addr << MV64460_SRAM_WIDTH;
@@ -2530,7 +2530,7 @@ void *dev_mv64460_access(cpu_gen_t *cpu,struct vdevice *dev,m_uint32_t offset,
             cpu_log(cpu,"MV64460","write to addr 0x%x, value=0x%llx, "
                     "pc=0x%llx\n",offset,*data,cpu_get_pc(cpu));
          }
-#endif        
+#endif
    }
 
  done:
@@ -2568,7 +2568,7 @@ void dev_mv64460_clear_gpp_intr(struct mv64460_data *d,u_int irq)
  */
 static m_uint32_t pci_mv64460_read(cpu_gen_t *cpu,struct pci_device *dev,
                                    int reg)
-{   
+{
    switch (reg) {
       default:
          return(0);
@@ -2578,7 +2578,7 @@ static m_uint32_t pci_mv64460_read(cpu_gen_t *cpu,struct pci_device *dev,
 /* Shutdown a MV64460 system controller */
 void dev_mv64460_shutdown(vm_instance_t *vm,struct mv64460_data *d)
 {
-   if (d != NULL) {     
+   if (d != NULL) {
       /* Stop the Ethernet TX ring scanner */
       ptask_remove(d->eth_tx_tid);
 

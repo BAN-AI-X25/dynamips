@@ -51,7 +51,7 @@ struct c2600_iofpga_data {
    vm_obj_t vm_obj;
    struct vdevice dev;
    c2600_t *router;
-   
+
    /* Network Interrupt status */
    m_uint8_t net_irq_status;
 
@@ -70,7 +70,7 @@ static const struct nmc93cX6_eeprom_def eeprom_mb_def = {
 
 /* Mainboard EEPROM */
 static const struct nmc93cX6_group eeprom_mb_group = {
-   EEPROM_TYPE_NMC93C46, 1, 0, 
+   EEPROM_TYPE_NMC93C46, 1, 0,
    EEPROM_DORD_NORMAL,
    EEPROM_DOUT_HIGH,
    EEPROM_DEBUG_DISABLED,
@@ -86,11 +86,11 @@ static const struct nmc93cX6_eeprom_def eeprom_nm_def = {
 
 /* NM EEPROM */
 static const struct nmc93cX6_group eeprom_nm_group = {
-   EEPROM_TYPE_NMC93C46, 1, 0, 
+   EEPROM_TYPE_NMC93C46, 1, 0,
    EEPROM_DORD_NORMAL,
    EEPROM_DOUT_HIGH,
    EEPROM_DEBUG_DISABLED,
-   "NM EEPROM", 
+   "NM EEPROM",
    { &eeprom_nm_def },
 };
 
@@ -166,7 +166,7 @@ static void dev_c2600_mpc860_spi_tx_callback(struct mpc860_data *mpc_data,
 
    mpc860_spi_receive(mpc_data,reply_buf,sizeof(reply_buf));
 }
-     
+
 /*
  * dev_c2600_iofpga_access()
  */
@@ -197,7 +197,7 @@ dev_c2600_iofpga_access(cpu_gen_t *cpu,struct vdevice *dev,
             *data = 0x00;
          break;
 
-      /* 
+      /*
        * Network Interrupt.
        *
        * Bit 0-3: slot 1.
@@ -223,9 +223,9 @@ dev_c2600_iofpga_access(cpu_gen_t *cpu,struct vdevice *dev,
             *data = 0; //0xFFFFFFFF;
          break;
 
-      /* 
+      /*
        * Flash Related: 0x1y
-       * 
+       *
        * Bit 1: card present in slot 0 / WIC 0.
        * Bit 2: card present in slot 0 / WIC 1.
        *
@@ -272,7 +272,7 @@ dev_c2600_iofpga_access(cpu_gen_t *cpu,struct vdevice *dev,
 }
 
 /* Shutdown the IO FPGA device */
-static void 
+static void
 dev_c2600_iofpga_shutdown(vm_instance_t *vm,struct c2600_iofpga_data *d)
 {
    if (d != NULL) {
@@ -317,7 +317,7 @@ int dev_c2600_iofpga_init(c2600_t *router,m_uint64_t paddr,m_uint32_t len)
    /* Initialize the MPC860 SPI TX callback to read mainboard WIC EEPROMs */
    mpc860_spi_set_tx_callback(router->mpc_data,
                               dev_c2600_mpc860_spi_tx_callback,d);
-                              
+
    /* Map this device to the VM */
    vm_bind_device(router->vm,&d->dev);
    vm_object_add(vm,&d->vm_obj);

@@ -23,7 +23,7 @@ int main(int argc,char *argv[])
       fprintf(stderr,"Unable to create file \"%s\"\n",argv[2]);
       exit(EXIT_FAILURE);
    }
-   
+
    while(!feof(fd_in)) {
       len = fread(buffer,1,sizeof(buffer),fd_in);
       if (len == 0) break;

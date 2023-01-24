@@ -41,7 +41,7 @@ int atm_bridge_release(char *name)
 static int atm_bridge_recv_cell(netio_desc_t *nio,
                                 u_char *atm_cell,ssize_t cell_len,
                                 atm_bridge_t *t)
-{   
+{
    m_uint32_t atm_hdr,vpi,vci;
    int status,res = 0;
 
@@ -55,20 +55,20 @@ static int atm_bridge_recv_cell(netio_desc_t *nio,
 
    vpi = (atm_hdr & ATM_HDR_VPI_MASK) >> ATM_HDR_VPI_SHIFT;
    vci = (atm_hdr & ATM_HDR_VCI_MASK) >> ATM_HDR_VCI_SHIFT;
-   
+
    if ((t->vpi != vpi) || (t->vci != vci))
       goto done;
 
    if ((status = atm_aal5_recv(&t->arc,atm_cell)) == 1) {
       /* Got AAL5 packet, check RFC1483b encapsulation */
-      if ((t->arc.len > ATM_RFC1483B_HLEN) && 
-          !memcmp(t->arc.buffer,atm_rfc1483b_header,ATM_RFC1483B_HLEN)) 
+      if ((t->arc.len > ATM_RFC1483B_HLEN) &&
+          !memcmp(t->arc.buffer,atm_rfc1483b_header,ATM_RFC1483B_HLEN))
       {
          netio_send(t->eth_nio,
                     t->arc.buffer+ATM_RFC1483B_HLEN,
                     t->arc.len-ATM_RFC1483B_HLEN);
-      }  
-       
+      }
+
       atm_aal5_recv_reset(&t->arc);
    } else {
       if (status < 0) {
@@ -225,7 +225,7 @@ int atm_bridge_cfg_create_if(atm_bridge_t *t,char **tokens,int count)
       fprintf(stderr,"atmsw_cfg_create_if: invalid interface description\n");
       return(-1);
    }
-   
+
    nio_type = netio_get_type(tokens[2]);
    switch(nio_type) {
       case NETIO_TYPE_UNIX:
@@ -301,7 +301,7 @@ int atm_bridge_cfg_setup(atm_bridge_t *t,char **tokens,int count)
 
 /* Handle an ATMSW configuration line */
 int atm_bridge_handle_cfg_line(atm_bridge_t *t,char *str)
-{  
+{
    char *tokens[ATM_BRIDGE_MAX_TOKENS];
    int count;
 
@@ -330,11 +330,11 @@ int atm_bridge_read_cfg_file(atm_bridge_t *t,char *filename)
       perror("fopen");
       return(-1);
    }
-   
+
    while(!feof(fd)) {
       if (!fgets(buffer,sizeof(buffer),fd))
          break;
-      
+
       /* skip comments and end of line */
       if ((ptr = strpbrk(buffer,"#\r\n")) != NULL)
          *ptr = 0;
@@ -343,7 +343,7 @@ int atm_bridge_read_cfg_file(atm_bridge_t *t,char *filename)
       if (strchr(buffer,':'))
          atm_bridge_handle_cfg_line(t,buffer);
    }
-   
+
    fclose(fd);
    return(0);
 }

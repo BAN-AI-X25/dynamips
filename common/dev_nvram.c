@@ -87,7 +87,7 @@ void *dev_nvram_access(cpu_gen_t *cpu,struct vdevice *dev,
 
    switch(offset) {
       case 0x03:
-         if (op_type == MTS_READ) {            
+         if (op_type == MTS_READ) {
             *data = d->cal_read & 1;
             d->cal_read >>= 1;
          } else {
@@ -120,7 +120,7 @@ static void set_config_register(struct vdevice *dev,u_int *conf_reg)
    for(i=0;i<(dev->phys_len/4);i++,ptr++)
       if (*ptr) return;
 
-   /* 
+   /*
     * nvram is empty: tells IOS to ignore its contents.
     * http://www.cisco.com/en/US/products/hw/routers/ps274/products_installation_guide_chapter09186a008007de4c.html
     */
@@ -195,7 +195,7 @@ int dev_nvram_init(vm_instance_t *vm,char *name,
 }
 
 /* Compute NVRAM checksum */
-m_uint16_t nvram_cksum_old(vm_instance_t *vm,m_uint64_t addr,size_t count) 
+m_uint16_t nvram_cksum_old(vm_instance_t *vm,m_uint64_t addr,size_t count)
 {
    m_uint32_t sum = 0;
 
@@ -205,8 +205,8 @@ m_uint16_t nvram_cksum_old(vm_instance_t *vm,m_uint64_t addr,size_t count)
       count -= sizeof(m_uint16_t);
    }
 
-   if (count > 0) 
-      sum = sum + ((physmem_copy_u16_from_vm(vm,addr) & 0xFF) << 8); 
+   if (count > 0)
+      sum = sum + ((physmem_copy_u16_from_vm(vm,addr) & 0xFF) << 8);
 
    while(sum>>16)
       sum = (sum & 0xffff) + (sum >> 16);

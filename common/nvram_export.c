@@ -232,7 +232,7 @@ int main(int argc,char *argv[])
    startup_filename = argv[2];
    if (argc > 3)
       private_filename = argv[3];
-   
+
    if (nvram_export_config(nvram_filename,startup_filename,private_filename))
       return(EXIT_FAILURE);
 

@@ -58,7 +58,7 @@ struct c2691_iofpga_data {
 
    /* Network IRQ status */
    m_uint16_t net_irq_status[2];
-   
+
    /* Interrupt mask */
    m_uint16_t intr_mask;
 
@@ -77,7 +77,7 @@ static const struct nmc93cX6_eeprom_def eeprom_mb_def = {
 
 /* Mainboard EEPROM */
 static const struct nmc93cX6_group eeprom_mb_group = {
-   EEPROM_TYPE_NMC93C46, 1, 0, 
+   EEPROM_TYPE_NMC93C46, 1, 0,
    EEPROM_DORD_NORMAL,
    EEPROM_DOUT_HIGH,
    EEPROM_DEBUG_DISABLED,
@@ -93,11 +93,11 @@ static const struct nmc93cX6_eeprom_def eeprom_nm_def = {
 
 /* NM EEPROM */
 static const struct nmc93cX6_group eeprom_nm_group = {
-   EEPROM_TYPE_NMC93C46, 1, 0, 
+   EEPROM_TYPE_NMC93C46, 1, 0,
    EEPROM_DORD_NORMAL,
    EEPROM_DOUT_HIGH,
    EEPROM_DEBUG_DISABLED,
-   "NM EEPROM", 
+   "NM EEPROM",
    { &eeprom_nm_def },
 };
 
@@ -143,7 +143,7 @@ void dev_c2691_iofpga_net_clear_irq(struct c2691_iofpga_data *d,
 
 /* Read a WIC EEPROM */
 static m_uint16_t dev_c2691_read_wic_eeprom(struct c2691_iofpga_data *d)
-{   
+{
    struct cisco_eeprom *eeprom;
    u_int wic_port;
    u_int eeprom_offset;
@@ -219,14 +219,14 @@ dev_c2691_iofpga_access(cpu_gen_t *cpu,struct vdevice *dev,
          break;
 
       case 0x12:
-         /* 
+         /*
           * Bit 0: 1=No WIC in slot 0.
           * Bit 1: 1=No WIC in slot 1.
           * Bit 2: 1=No WIC in slot 2.
           */
          if (op_type == MTS_READ) {
             *data = 0xFFFF;
-            
+
             /* check WIC 0 */
             if (vm_slot_check_eeprom(d->router->vm,0,0x10))
                *data &= ~0x01;
@@ -269,7 +269,7 @@ dev_c2691_iofpga_access(cpu_gen_t *cpu,struct vdevice *dev,
                *data = 0xFFFF;
             }
          } else {
-            /* 
+            /*
              * Store the EEPROM command (in 2 words).
              *
              * For a read, we have:
@@ -277,7 +277,7 @@ dev_c2691_iofpga_access(cpu_gen_t *cpu,struct vdevice *dev,
              *    Word 1: 0 (no data).
              */
             d->wic_cmd[d->wic_cmd_pos++] = *data;
-            
+
             if (d->wic_cmd_pos == 2) {
                d->wic_cmd_pos = 0;
                d->wic_cmd_valid = TRUE;
@@ -305,13 +305,13 @@ dev_c2691_iofpga_access(cpu_gen_t *cpu,struct vdevice *dev,
             *data = 0xFFFF;
          break;
 
-      /* 
+      /*
        * NM Presence.
-       * 
+       *
        * Bit 7: 0=NM present in slot 1.
        * Other bits unknown.
        */
-      case 0x20:       
+      case 0x20:
          if (op_type == MTS_READ) {
             *data = 0xFFFF;
 
@@ -332,7 +332,7 @@ dev_c2691_iofpga_access(cpu_gen_t *cpu,struct vdevice *dev,
             d->intr_mask = *data;
          break;
 
-      /* 
+      /*
        * Network interrupt status.
        *
        * Bit 0: 0 = GT96100 Ethernet ports.
@@ -343,7 +343,7 @@ dev_c2691_iofpga_access(cpu_gen_t *cpu,struct vdevice *dev,
             *data = d->net_irq_status[0];
          break;
 
-      /* 
+      /*
        * Network interrupt status.
        *
        * Bit 0: 0 = NM in Slot 1.
@@ -365,8 +365,8 @@ dev_c2691_iofpga_access(cpu_gen_t *cpu,struct vdevice *dev,
             *data = 0xFFFF;
          break;
 
-      /* 
-       * Environmental monitor, determined with "sh env all". 
+      /*
+       * Environmental monitor, determined with "sh env all".
        *
        * Bit 0: 1 = Fan Error
        * Bit 1: 1 = Fan Error
@@ -398,7 +398,7 @@ dev_c2691_iofpga_access(cpu_gen_t *cpu,struct vdevice *dev,
             if (cpu->vm->pcmcia_disk_size[1])
                *data &= ~0x01;
          }
-         break;           
+         break;
 
 #if DEBUG_UNKNOWN
       default:
@@ -433,7 +433,7 @@ void c2691_init_eeprom_groups(c2691_t *router)
 }
 
 /* Shutdown the IO FPGA device */
-static void 
+static void
 dev_c2691_iofpga_shutdown(vm_instance_t *vm,struct c2691_iofpga_data *d)
 {
    if (d != NULL) {

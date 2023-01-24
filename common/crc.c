@@ -30,7 +30,7 @@ static void crc12_init(void)
             crc = (crc >> 1) ^ CRC12_POLY;
          else
             crc =  crc >> 1;
-         
+
          c = c >> 1;
       }
 
@@ -53,7 +53,7 @@ static void crc16_init(void)
             crc = (crc >> 1) ^ CRC16_POLY;
          else
             crc =  crc >> 1;
-         
+
          c = c >> 1;
       }
 
@@ -66,7 +66,7 @@ static void crc32_init(void)
 {
    unsigned long c;
    int n, k;
-   
+
    for (n=0;n<256;n++) {
       c = (unsigned long) n;
       for (k = 0; k < 8; k++) {

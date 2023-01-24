@@ -1,4 +1,4 @@
-/*  
+/*
  * Cisco router simulation platform.
  * Copyright (c) 2005,2006 Christophe Fillot (cf@utc.fr)
  *
@@ -106,7 +106,7 @@ static int dev_c7200_iocard_unset_nio(vm_instance_t *vm,
 
    if (!d || (port_id > 0))
       return(-1);
-   
+
    dev_dec21140_unset_nio(d);
    return(0);
 }
@@ -139,7 +139,7 @@ static int dev_c7200_pa_fe_tx_init(vm_instance_t *vm,struct cisco_card *card)
 }
 
 /* Remove a PA-FE-TX from the specified slot */
-static int 
+static int
 dev_c7200_pa_fe_tx_shutdown(vm_instance_t *vm,struct cisco_card *card)
 {
    /* Remove the PA EEPROM */
@@ -152,7 +152,7 @@ dev_c7200_pa_fe_tx_shutdown(vm_instance_t *vm,struct cisco_card *card)
 }
 
 /* Bind a Network IO descriptor */
-static int 
+static int
 dev_c7200_pa_fe_tx_set_nio(vm_instance_t *vm,struct cisco_card *card,
                            u_int port_id,netio_desc_t *nio)
 {
@@ -165,7 +165,7 @@ dev_c7200_pa_fe_tx_set_nio(vm_instance_t *vm,struct cisco_card *card,
 }
 
 /* Unbind a Network IO descriptor */
-static int 
+static int
 dev_c7200_pa_fe_tx_unset_nio(vm_instance_t *vm,struct cisco_card *card,
                              u_int port_id)
 {
@@ -173,15 +173,15 @@ dev_c7200_pa_fe_tx_unset_nio(vm_instance_t *vm,struct cisco_card *card,
 
    if (!d || (port_id > 0))
       return(-1);
-   
+
    dev_dec21140_unset_nio(d);
    return(0);
 }
 
 /* C7200-IO-FE driver */
 struct cisco_card_driver dev_c7200_iocard_fe_driver = {
-   "C7200-IO-FE", 1, 0, 
-   dev_c7200_iocard_init, 
+   "C7200-IO-FE", 1, 0,
+   dev_c7200_iocard_init,
    dev_c7200_iocard_shutdown,
    NULL,
    dev_c7200_iocard_set_nio,
@@ -191,8 +191,8 @@ struct cisco_card_driver dev_c7200_iocard_fe_driver = {
 
 /* PA-FE-TX driver */
 struct cisco_card_driver dev_c7200_pa_fe_tx_driver = {
-   "PA-FE-TX", 1, 0, 
-   dev_c7200_pa_fe_tx_init, 
+   "PA-FE-TX", 1, 0,
+   dev_c7200_pa_fe_tx_init,
    dev_c7200_pa_fe_tx_shutdown,
    NULL,
    dev_c7200_pa_fe_tx_set_nio,
@@ -210,7 +210,7 @@ struct pa_i8254x_data {
 };
 
 /* Remove a PA-2FE-TX from the specified slot */
-static int 
+static int
 dev_c7200_pa_i8254x_shutdown(vm_instance_t *vm,struct cisco_card *card)
 {
    struct pa_i8254x_data *data = card->drv_info;
@@ -229,7 +229,7 @@ dev_c7200_pa_i8254x_shutdown(vm_instance_t *vm,struct cisco_card *card)
 }
 
 /* Bind a Network IO descriptor */
-static int 
+static int
 dev_c7200_pa_i8254x_set_nio(vm_instance_t *vm,struct cisco_card *card,
                             u_int port_id,netio_desc_t *nio)
 {
@@ -243,7 +243,7 @@ dev_c7200_pa_i8254x_set_nio(vm_instance_t *vm,struct cisco_card *card,
 }
 
 /* Unbind a Network IO descriptor */
-static int 
+static int
 dev_c7200_pa_i8254x_unset_nio(vm_instance_t *vm,struct cisco_card *card,
                               u_int port_id)
 {
@@ -303,8 +303,8 @@ static int dev_c7200_pa_2fe_tx_init(vm_instance_t *vm,struct cisco_card *card)
 /* PA-2FE-TX driver */
 struct cisco_card_driver dev_c7200_pa_2fe_tx_driver = {
    "PA-2FE-TX", 0, 0,
-   dev_c7200_pa_2fe_tx_init, 
-   dev_c7200_pa_i8254x_shutdown, 
+   dev_c7200_pa_2fe_tx_init,
+   dev_c7200_pa_i8254x_shutdown,
    NULL,
    dev_c7200_pa_i8254x_set_nio,
    dev_c7200_pa_i8254x_unset_nio,
@@ -355,8 +355,8 @@ static int dev_c7200_pa_ge_init(vm_instance_t *vm,struct cisco_card *card)
 /* PA-GE driver */
 struct cisco_card_driver dev_c7200_pa_ge_driver = {
    "PA-GE", 0, 0,
-   dev_c7200_pa_ge_init, 
-   dev_c7200_pa_i8254x_shutdown, 
+   dev_c7200_pa_ge_init,
+   dev_c7200_pa_i8254x_shutdown,
    NULL,
    dev_c7200_pa_i8254x_set_nio,
    dev_c7200_pa_i8254x_unset_nio,
@@ -436,8 +436,8 @@ static int dev_c7200_iocard_2fe_init(vm_instance_t *vm,struct cisco_card *card)
 /* C7200-IO-2FE driver */
 struct cisco_card_driver dev_c7200_iocard_2fe_driver = {
    "C7200-IO-2FE", 0, 0,
-   dev_c7200_iocard_2fe_init, 
-   dev_c7200_pa_i8254x_shutdown, 
+   dev_c7200_iocard_2fe_init,
+   dev_c7200_pa_i8254x_shutdown,
    NULL,
    dev_c7200_pa_i8254x_set_nio,
    dev_c7200_pa_i8254x_unset_nio,
@@ -448,8 +448,8 @@ struct cisco_card_driver dev_c7200_iocard_2fe_driver = {
 /* C7200-IO-GE-E                                                          */
 /* ====================================================================== */
 
-/* 
- * C7200-IO-GE+E: C7200 IOCard with 1 GigatEthernet ports 
+/*
+ * C7200-IO-GE+E: C7200 IOCard with 1 GigatEthernet ports
  * and 1 Ethernet port EEPROM.
  */
 static const m_uint16_t eeprom_c7200_io_ge_e_data[] = {
@@ -473,7 +473,7 @@ static const struct cisco_eeprom eeprom_c7200_io_ge_e = {
  *
  * Add a C7200-I/O-GE+E port adapter into specified slot.
  */
-static int 
+static int
 dev_c7200_iocard_ge_e_init(vm_instance_t *vm,struct cisco_card *card)
 {
    struct pa_i8254x_data *data;
@@ -514,8 +514,8 @@ dev_c7200_iocard_ge_e_init(vm_instance_t *vm,struct cisco_card *card)
 /* C7200-IO-GE-E driver */
 struct cisco_card_driver dev_c7200_iocard_ge_e_driver = {
    "C7200-IO-GE-E", 0, 0,
-   dev_c7200_iocard_ge_e_init, 
-   dev_c7200_pa_i8254x_shutdown, 
+   dev_c7200_iocard_ge_e_init,
+   dev_c7200_pa_i8254x_shutdown,
    NULL,
    dev_c7200_pa_i8254x_set_nio,
    dev_c7200_pa_i8254x_unset_nio,
@@ -615,7 +615,7 @@ static int dev_c7200_pa_8e_init(vm_instance_t *vm,struct cisco_card *card)
 }
 
 /* Remove a PA-4E/PA-8E from the specified slot */
-static int 
+static int
 dev_c7200_pa_4e8e_shutdown(vm_instance_t *vm,struct cisco_card *card)
 {
    struct pa_4e8e_data *data = card->drv_info;
@@ -634,7 +634,7 @@ dev_c7200_pa_4e8e_shutdown(vm_instance_t *vm,struct cisco_card *card)
 }
 
 /* Bind a Network IO descriptor */
-static int 
+static int
 dev_c7200_pa_4e8e_set_nio(vm_instance_t *vm,struct cisco_card *card,
                           u_int port_id,netio_desc_t *nio)
 {
@@ -648,7 +648,7 @@ dev_c7200_pa_4e8e_set_nio(vm_instance_t *vm,struct cisco_card *card,
 }
 
 /* Unbind a Network IO descriptor */
-static int 
+static int
 dev_c7200_pa_4e8e_unset_nio(vm_instance_t *vm,struct cisco_card *card,
                             u_int port_id)
 {
@@ -664,8 +664,8 @@ dev_c7200_pa_4e8e_unset_nio(vm_instance_t *vm,struct cisco_card *card,
 /* PA-4E driver */
 struct cisco_card_driver dev_c7200_pa_4e_driver = {
    "PA-4E", 1, 0,
-   dev_c7200_pa_4e_init, 
-   dev_c7200_pa_4e8e_shutdown, 
+   dev_c7200_pa_4e_init,
+   dev_c7200_pa_4e8e_shutdown,
    NULL,
    dev_c7200_pa_4e8e_set_nio,
    dev_c7200_pa_4e8e_unset_nio,
@@ -675,8 +675,8 @@ struct cisco_card_driver dev_c7200_pa_4e_driver = {
 /* PA-8E driver */
 struct cisco_card_driver dev_c7200_pa_8e_driver = {
    "PA-8E", 1, 0,
-   dev_c7200_pa_8e_init, 
-   dev_c7200_pa_4e8e_shutdown, 
+   dev_c7200_pa_8e_init,
+   dev_c7200_pa_4e8e_shutdown,
    NULL,
    dev_c7200_pa_4e8e_set_nio,
    dev_c7200_pa_4e8e_unset_nio,
@@ -734,8 +734,8 @@ static int dev_c7200_npeg2_unset_nio(vm_instance_t *vm,
 /* NPE-G2 driver */
 struct cisco_card_driver dev_c7200_npeg2_driver = {
    "NPE-G2", 1, 0,
-   dev_c7200_npeg2_init, 
-   dev_c7200_npeg2_shutdown, 
+   dev_c7200_npeg2_init,
+   dev_c7200_npeg2_shutdown,
    NULL,
    dev_c7200_npeg2_set_nio,
    dev_c7200_npeg2_unset_nio,

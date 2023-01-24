@@ -66,8 +66,8 @@ int rbtree_insert(rbtree_tree *tree,void *key,void *value);
 /* Removes a node out of a tree */
 void *rbtree_remove(rbtree_tree *tree,void *key);
 
-/* 
- * Lookup for a node corresponding to "key". If node does not exist, 
+/*
+ * Lookup for a node corresponding to "key". If node does not exist,
  * function returns null pointer.
  */
 void *rbtree_lookup(rbtree_tree *tree,void *key);

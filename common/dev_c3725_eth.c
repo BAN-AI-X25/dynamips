@@ -1,4 +1,4 @@
-/*  
+/*
  * Cisco C3725 simulation platform.
  * Copyright (c) 2006 Christophe Fillot (cf@utc.fr)
  *
@@ -174,7 +174,7 @@ static int dev_c3725_nm_16esw_init(vm_instance_t *vm,struct cisco_card *card)
 }
 
 /* Remove a NM-16ESW from the specified slot */
-static int 
+static int
 dev_c3725_nm_16esw_shutdown(vm_instance_t *vm,struct cisco_card *card)
 {
    struct nm_16esw_data *data = card->drv_info;
@@ -189,7 +189,7 @@ dev_c3725_nm_16esw_shutdown(vm_instance_t *vm,struct cisco_card *card)
 }
 
 /* Bind a Network IO descriptor */
-static int 
+static int
 dev_c3725_nm_16esw_set_nio(vm_instance_t *vm,struct cisco_card *card,
                            u_int port_id,netio_desc_t *nio)
 {
@@ -209,7 +209,7 @@ static int dev_c3725_nm_16esw_unset_nio(vm_instance_t *vm,
 }
 
 /* Show debug info */
-static int 
+static int
 dev_c3725_nm_16esw_show_info(vm_instance_t *vm,struct cisco_card *card)
 {
    struct nm_16esw_data *d = card->drv_info;
@@ -237,9 +237,9 @@ static int dev_c3725_gt96100_fe_init(vm_instance_t *vm,struct cisco_card *card)
 }
 
 /* Nothing to do, we never remove the system controller */
-static int 
+static int
 dev_c3725_gt96100_fe_shutdown(vm_instance_t *vm,struct cisco_card *card)
-{   
+{
    return(0);
 }
 
@@ -264,7 +264,7 @@ static int dev_c3725_gt96100_fe_unset_nio(vm_instance_t *vm,
 }
 
 /* Show debug info */
-static int 
+static int
 dev_c3725_gt96100_show_info(vm_instance_t *vm,struct cisco_card *card)
 {
    struct gt_data *d = card->drv_info;
@@ -277,7 +277,7 @@ dev_c3725_gt96100_show_info(vm_instance_t *vm,struct cisco_card *card)
 /* NM-1FE-TX driver */
 struct cisco_card_driver dev_c3725_nm_1fe_tx_driver = {
    "NM-1FE-TX", 1, 0,
-   dev_c3725_nm_1fe_tx_init, 
+   dev_c3725_nm_1fe_tx_init,
    dev_c3725_nm_eth_shutdown,
    NULL,
    dev_c3725_nm_eth_set_nio,
@@ -288,7 +288,7 @@ struct cisco_card_driver dev_c3725_nm_1fe_tx_driver = {
 /* NM-16ESW driver */
 struct cisco_card_driver dev_c3725_nm_16esw_driver = {
    "NM-16ESW", 1, 0,
-   dev_c3725_nm_16esw_init, 
+   dev_c3725_nm_16esw_init,
    dev_c3725_nm_16esw_shutdown,
    NULL,
    dev_c3725_nm_16esw_set_nio,
@@ -299,7 +299,7 @@ struct cisco_card_driver dev_c3725_nm_16esw_driver = {
 /* GT96100 FastEthernet integrated ports */
 struct cisco_card_driver dev_c3725_gt96100_fe_driver = {
    "GT96100-FE", 1, 2,
-   dev_c3725_gt96100_fe_init, 
+   dev_c3725_gt96100_fe_init,
    dev_c3725_gt96100_fe_shutdown,
    dev_c3725_mb_get_sub_info,
    dev_c3725_gt96100_fe_set_nio,

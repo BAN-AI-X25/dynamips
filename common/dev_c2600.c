@@ -168,7 +168,7 @@ static int c2600_delete_instance(vm_instance_t *vm)
    /* Stop all CPUs */
    if (vm->cpu_group != NULL) {
       vm_stop(vm);
-      
+
       if (cpu_group_sync_state(vm->cpu_group) == -1) {
          vm_error(vm,"unable to sync with system CPUs.\n");
          return(FALSE);
@@ -181,7 +181,7 @@ static int c2600_delete_instance(vm_instance_t *vm)
 
    /* Shutdown all Network Modules */
    vm_slot_shutdown_all(vm);
-   
+
    /* Free mainboard EEPROM */
    cisco_eeprom_free(&router->mb_eeprom);
 
@@ -225,7 +225,7 @@ int c2600_set_slot_eeprom(c2600_t *router,u_int slot,
 }
 
 /* Get slot/port corresponding to specified network IRQ */
-static inline void 
+static inline void
 c2600_net_irq_get_slot_port(u_int irq,u_int *slot,u_int *port)
 {
    irq -= C2600_NETIO_IRQ_BASE;
@@ -246,7 +246,7 @@ u_int c2600_net_irq_for_slot_port(u_int slot,u_int port)
 
 /* Find Cisco 2600 Mainboard info */
 static struct c2600_mb_id *c2600_get_mb_info(char *mainboard_type)
-{   
+{
    int i;
 
    for(i=0;c2600_mainboard_id[i].name;i++)
@@ -283,7 +283,7 @@ void c2600_nm_show_drivers(void)
              nm_drivers[i]->dev_type,
              !nm_drivers[i]->supported ? "(NOT WORKING)" : "");
    }
-   
+
    printf("\n");
 }
 
@@ -379,7 +379,7 @@ int c2600_chassis_set_mac_addr(c2600_t *router,char *mac_addr)
 
 /* Initialize a Cisco 2600 */
 static int c2600_init(c2600_t *router)
-{   
+{
    vm_instance_t *vm = router->vm;
 
    /* Create the PCI bus */
@@ -387,7 +387,7 @@ static int c2600_init(c2600_t *router)
       vm_error(vm,"unable to create PCI data.\n");
       return(-1);
    }
-   
+
    /* Create the PCI controller */
    if (dev_c2600_pci_init(vm,"c2600_pci",C2600_PCICTRL_ADDR,0x10000,
                           vm->pci_bus[0]) == -1)
@@ -423,8 +423,8 @@ void c2600_show_hardware(c2600_t *router)
 
 /* Initialize default parameters for a C2600 */
 static void c2600_init_defaults(c2600_t *router)
-{   
-   vm_instance_t *vm = router->vm;   
+{
+   vm_instance_t *vm = router->vm;
    n_eth_addr_t *m;
    m_uint16_t pid;
 
@@ -561,7 +561,7 @@ static int c2600_init_platform(c2600_t *router)
 
    /* Set processor ID */
    ppc32_set_pvr(cpu,0x00500202);
-   
+
    /* Mark the Network IO interrupt as high priority */
    vm->irq_idle_preempt[C2600_NETIO_IRQ] = TRUE;
    vm->irq_idle_preempt[C2600_DUART_IRQ] = TRUE;
@@ -654,7 +654,7 @@ static struct ppc32_bat_prog bat_array[] = {
 
 /* Boot the IOS image */
 int c2600_boot_ios(c2600_t *router)
-{   
+{
    vm_instance_t *vm = router->vm;
    cpu_ppc_t *cpu;
 
@@ -689,7 +689,7 @@ int c2600_boot_ios(c2600_t *router)
    /* Load IOS image */
    if (ppc32_load_elf_image(cpu,vm->ios_image,
                             (vm->ghost_status == VM_GHOST_RAM_USE),
-                            &vm->ios_entry_point) < 0) 
+                            &vm->ios_entry_point) < 0)
    {
       vm_error(vm,"failed to load Cisco IOS image '%s'.\n",vm->ios_image);
       return(-1);
@@ -716,7 +716,7 @@ int c2600_boot_ios(c2600_t *router)
 
 /* Initialize a Cisco 2600 instance */
 static int c2600_init_instance(vm_instance_t *vm)
-{   
+{
    c2600_t *router = VM_C2600(vm);
    m_uint32_t rom_entry_point;
    cpu_ppc_t *cpu0;
@@ -762,7 +762,7 @@ int c2600_stop_instance(vm_instance_t *vm)
    /* Stop all CPUs */
    if (vm->cpu_group != NULL) {
       vm_stop(vm);
-      
+
       if (cpu_group_sync_state(vm->cpu_group) == -1) {
          vm_error(vm,"unable to sync with system CPUs.\n");
          return(-1);
@@ -773,7 +773,7 @@ int c2600_stop_instance(vm_instance_t *vm)
    vm_slot_shutdown_all(vm);
    vm_hardware_shutdown(vm);
 
-   /* Cleanup */   
+   /* Cleanup */
    VM_C2600(vm)->iofpga_data = NULL;
    VM_C2600(vm)->mpc_data = NULL;
    return(0);

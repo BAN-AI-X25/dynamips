@@ -43,7 +43,7 @@ typedef int (*cisco_card_shutdown_fn)(vm_instance_t *vm,
                                       struct cisco_card *card);
 
 /* Prototype of card NIO get sub-slot info function */
-typedef int 
+typedef int
 (*cisco_card_get_sub_info_fn)(vm_instance_t *vm,struct cisco_card *card,
                               u_int port_id,
                               struct cisco_card_driver ***drv_array,

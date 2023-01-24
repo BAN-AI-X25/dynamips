@@ -45,7 +45,7 @@ int cisco_card_set_eeprom(vm_instance_t *vm,struct cisco_card *card,
       vm_error(vm,"cisco_card_set_eeprom: no memory (eeprom=%p).\n",eeprom);
       return(-1);
    }
-   
+
    return(0);
 }
 
@@ -71,14 +71,14 @@ static inline struct cisco_card *cisco_card_create(u_int card_type)
       memset(card,0,sizeof(*card));
       card->card_type = card_type;
    }
-   
+
    return card;
 }
 
 /* Find a NIO binding */
 static struct cisco_nio_binding *
 cisco_card_find_nio_binding(struct cisco_card *card,u_int port_id)
-{   
+{
    struct cisco_nio_binding *nb;
 
    if (!card)
@@ -92,7 +92,7 @@ cisco_card_find_nio_binding(struct cisco_card *card,u_int port_id)
 }
 
 /* Remove all NIO bindings */
-static void 
+static void
 cisco_card_remove_all_nio_bindings(vm_instance_t *vm,struct cisco_card *card)
 {
    struct cisco_nio_binding *nb,*next;
@@ -118,7 +118,7 @@ void cisco_card_enable_all_nio(vm_instance_t *vm,struct cisco_card *card)
 {
    struct cisco_nio_binding *nb;
 
-   if (card && card->driver && card->drv_info)      
+   if (card && card->driver && card->drv_info)
       for(nb=card->nio_list;nb;nb=nb->next)
          card->driver->card_set_nio(vm,card,nb->port_id,nb->nio);
 }
@@ -137,7 +137,7 @@ void cisco_card_disable_all_nio(vm_instance_t *vm,struct cisco_card *card)
 /* Initialize a card */
 static inline
 int cisco_card_init(vm_instance_t *vm,struct cisco_card *card,u_int id)
-{  
+{
    size_t len;
 
    /* Check that a device type is defined for this card */
@@ -257,7 +257,7 @@ static int vm_slot_get_info(vm_instance_t *vm,u_int slot_id,u_int port_id,
    card_type = (card != NULL) ? card->card_type : CISCO_CARD_TYPE_UNDEF;
 
    switch(card_type) {
-      /* 
+      /*
        * Handle WICs which are sub-slots for Network Modules (NM).
        * Numbering: wic #0 => port_id = 0x10
        *            wic #1 => port_id = 0x20
@@ -298,7 +298,7 @@ static int vm_slot_get_info(vm_instance_t *vm,u_int slot_id,u_int port_id,
 }
 
 /* Translate a port ID (for sub-cards) */
-static u_int 
+static u_int
 vm_slot_translate_port_id(vm_instance_t *vm,u_int slot_id,u_int port_id,
                           struct cisco_card **rc)
 {
@@ -344,7 +344,7 @@ int vm_slot_set_flag(vm_instance_t *vm,u_int slot_id,u_int port_id,u_int flag)
 /* Add a slot binding */
 int vm_slot_add_binding(vm_instance_t *vm,char *dev_type,
                         u_int slot_id,u_int port_id)
-{     
+{
    struct cisco_card_driver *driver,**drv_array;
    struct cisco_card **rc,*card,*nc,*parent;
    u_int real_port_id,card_type,card_id;
@@ -409,7 +409,7 @@ int vm_slot_add_binding(vm_instance_t *vm,char *dev_type,
    nc->driver     = driver;
    nc->parent     = parent;
    *rc = nc;
-   return(0);  
+   return(0);
 }
 
 /* Remove a slot binding */
@@ -437,7 +437,7 @@ int vm_slot_remove_binding(vm_instance_t *vm,u_int slot_id,u_int port_id)
       }
    }
 
-   /* Remove all NIOs bindings */ 
+   /* Remove all NIOs bindings */
    vm_slot_remove_all_nio_bindings(vm,slot_id);
 
    /* Free the card info structure */
@@ -719,7 +719,7 @@ int vm_slot_shutdown_all(vm_instance_t *vm)
 
 /* Show info about the specified slot (sub-slots included) */
 int vm_slot_show_info(vm_instance_t *vm,u_int slot_id)
-{   
+{
    struct cisco_card *card;
 
    if (!(card = vm_slot_get_card_ptr(vm,slot_id)))
@@ -750,7 +750,7 @@ int vm_slot_check_eeprom(vm_instance_t *vm,u_int slot_id,u_int port_id)
 
    /* Get the real card (in case this is a sub-slot) */
    vm_slot_translate_port_id(vm,slot_id,port_id,&rc);
-   
+
    if (rc == NULL)
       return(FALSE);
 
@@ -823,7 +823,7 @@ int vm_slot_show_drivers(vm_instance_t *vm)
              vm->slots_drivers[i]->dev_type,
              !vm->slots_drivers[i]->supported ? "(NOT WORKING)" : "");
    }
-   
+
    printf("\n");
    return(0);
 }
@@ -963,7 +963,7 @@ int vm_slot_cmd_add_nio(vm_instance_t *vm,char *str)
                      str);
             goto done;
          }
-         
+
          nio = netio_desc_create_lnxeth(nio_name,tokens[3]);
          break;
 #endif
@@ -976,7 +976,7 @@ int vm_slot_cmd_add_nio(vm_instance_t *vm,char *str)
                      str);
             goto done;
          }
-         
+
          nio = netio_desc_create_geneth(nio_name,tokens[3]);
          break;
 #endif
@@ -997,7 +997,7 @@ int vm_slot_cmd_add_nio(vm_instance_t *vm,char *str)
       netio_delete(nio_name);
       goto done;
    }
-   
+
    netio_release(nio_name);
    res = 0;
 

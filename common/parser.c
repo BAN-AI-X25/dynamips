@@ -204,7 +204,7 @@ int parser_scan_buffer(parser_context_t *ctx,char *buf,size_t buf_size)
    {
       ctx->consumed_len++;
       c = buf[i];
-      
+
       /* Determine character type */
       type = parser_get_char_type(c);
 
@@ -234,7 +234,7 @@ int parser_scan_buffer(parser_context_t *ctx,char *buf,size_t buf_size)
                case PARSER_CHAR_QUOTE:
                   ctx->state = PARSER_STATE_QUOTED_STRING;
                   break;
-                  
+
                default:
                   /* Begin a new string */
                   if (!tmp_token_add_char(ctx,c)) {
@@ -341,7 +341,7 @@ void parser_run_tests(void)
 
       printf("\n%d: Test string: [%s] => res=%d, state=%d\n",
              i,parser_test_str[i],res,ctx.state);
-      
+
       if ((res != 0) && (ctx.error == 0)) {
          if (ctx.tok_head) {
             printf("Tokens: ");

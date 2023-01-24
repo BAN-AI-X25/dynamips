@@ -19,7 +19,7 @@ struct ds1620_data {
    /* command input */
    m_uint8_t cmd;
    u_int cmd_pos;
-   
+
    /* data input/output */
    m_uint16_t data;
    u_int data_pos;

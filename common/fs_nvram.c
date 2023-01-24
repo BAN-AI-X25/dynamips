@@ -417,7 +417,7 @@ static void fs_nvram_update_checksum(fs_nvram_t *fs)
       count -= sizeof(m_uint16_t);
    }
 
-   if (count > 0) 
+   if (count > 0)
       sum = sum + ((fs->read_byte(fs, offset)) << 8);
 
    while (sum >> 16)
@@ -437,7 +437,7 @@ static inline u_char *fs_nvram_read_data(fs_nvram_t *fs, u_int offset, u_int len
    data = (u_char *)malloc(len + 1);
    if (data == NULL)
       return NULL; // out of memory
- 
+
    fs_nvram_memcpy_from(fs, offset, data, len);
    data[len] = 0;
 
@@ -780,7 +780,7 @@ int fs_nvram_write_config(fs_nvram_t *fs, const u_char *startup_config, size_t s
 
    // write data
    off = sizeof(struct fs_nvram_header);
-   
+
    fs_nvram_memcpy_to(fs, off, (const u_char *)&startup_head, sizeof(struct fs_nvram_header_startup_config));
    off += sizeof(struct fs_nvram_header_startup_config);
    fs_nvram_memcpy_to(fs, off, startup_config, startup_len);

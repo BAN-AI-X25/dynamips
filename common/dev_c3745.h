@@ -103,7 +103,7 @@ struct c3745_router {
    /* OIR status */
    m_uint8_t oir_status;
 
-   /* 
+   /*
     * System EEPROMs.
     * It can be modified to change the chassis MAC address.
     */

@@ -71,7 +71,7 @@ struct ns16552_data {
    struct vdevice dev;
    vm_instance_t *vm;
    u_int irq;
-   
+
    /* Register offset divisor */
    u_int reg_div;
 
@@ -80,7 +80,7 @@ struct ns16552_data {
 
    struct ns16552_channel channel[2];
    u_int duart_irq_seq;
-   
+
    u_int line_control_reg;
    u_int div_latch;
    u_int baud_divisor;
@@ -108,7 +108,7 @@ static void tty_aux_input(vtty_t *vtty)
 static int tty_trigger_dummy_irq(struct ns16552_data *d,void *arg)
 {
    d->duart_irq_seq++;
-   
+
    if (d->duart_irq_seq == 2) {
       if (d->channel[0].ier & IER_ETXRDY) {
          d->channel[0].output = TRUE;
@@ -172,7 +172,7 @@ void *dev_ns16552_access(cpu_gen_t *cpu,struct vdevice *dev,m_uint32_t offset,
 // Value 5 Line status
 // Value 6 Modem Status
 // Value 7 Scratch
-	  
+
    switch(offset) {
       /* Receiver Buffer Reg. (RBR) / Transmitting Holding Reg. (THR) */
       case 0x00:
@@ -180,10 +180,10 @@ void *dev_ns16552_access(cpu_gen_t *cpu,struct vdevice *dev,m_uint32_t offset,
          if (d->div_latch == 0) {
            if (op_type == MTS_WRITE) {
               vtty_put_char(d->channel[channel].vtty,(char)*data);
-  
+
               if (d->channel[channel].ier & IER_ETXRDY)
                  vm_set_irq(d->vm,d->irq);
-  
+
               d->channel[channel].output = TRUE;
            } else
               *data = vtty_get_char(d->channel[channel].vtty);
@@ -204,7 +204,7 @@ void *dev_ns16552_access(cpu_gen_t *cpu,struct vdevice *dev,m_uint32_t offset,
 
               if ((*data & 0x02) == 0) {   /* transmit holding register */
                  d->channel[channel].vtty->managed_flush = TRUE;
-                 vtty_flush(d->channel[channel].vtty);               
+                 vtty_flush(d->channel[channel].vtty);
               }
            }
          } else {
@@ -248,7 +248,7 @@ void *dev_ns16552_access(cpu_gen_t *cpu,struct vdevice *dev,m_uint32_t offset,
            _maybe_used char *parityeven = "odd";
            if (*data & LCR_WRL0) bits+=1;
            if (*data & LCR_WRL1) bits+=2;
-         
+
            if (*data & LCR_NUMSTOP) {
              if ( bits >= 6) {
                stop = "2";
@@ -359,7 +359,7 @@ void dev_ns16552_shutdown(vm_instance_t *vm,struct ns16552_data *d)
 /* Create a NS16552 device */
 int dev_ns16552_init(vm_instance_t *vm,m_uint64_t paddr,m_uint32_t len,
                      u_int reg_div,u_int irq,vtty_t *vtty_A,vtty_t *vtty_B)
-{  
+{
    struct ns16552_data *d;
 
    /* Allocate private data structure */
@@ -377,7 +377,7 @@ int dev_ns16552_init(vm_instance_t *vm,m_uint64_t paddr,m_uint32_t len,
    d->line_control_reg = 0;
    d->div_latch = 0;
    d->baud_divisor=0;
-   
+
    vm_object_init(&d->vm_obj);
    d->vm_obj.name = "ns16552";
    d->vm_obj.data = d;
@@ -400,7 +400,7 @@ int dev_ns16552_init(vm_instance_t *vm,m_uint64_t paddr,m_uint32_t len,
    d->tid = ptask_add((ptask_callback)tty_trigger_dummy_irq,d,NULL);
 
    /* Map this device to the VM */
-   vm_bind_device(vm,&d->dev);   
+   vm_bind_device(vm,&d->dev);
    vm_object_add(vm,&d->vm_obj);
    return(0);
 }

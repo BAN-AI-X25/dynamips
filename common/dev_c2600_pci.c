@@ -144,7 +144,7 @@ static void dev_c2600_pci_bridge_write(cpu_gen_t *cpu,struct pci_device *dev,
          if (value != 0x00000000) {
             vm_error(d->vm,"C2600_PCI",
                      "Trying to set bridge BAR0 at 0x%8.8x!\n",
-                     value);                     
+                     value);
          }
          d->bridge_bar0 = value;
          break;
@@ -152,7 +152,7 @@ static void dev_c2600_pci_bridge_write(cpu_gen_t *cpu,struct pci_device *dev,
          /* BAR1 = byte swapped zone */
          if (!d->bridge_bar1) {
             d->bridge_bar1 = value;
-            
+
             /* XXX */
             dev_bswap_init(d->vm,"pci_bswap",d->bridge_bar1,0x10000000,
                            0x00000000);

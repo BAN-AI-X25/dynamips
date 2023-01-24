@@ -425,7 +425,7 @@ static inline m_uint8_t dpram_r8(struct mpc860_data *d,m_uint16_t offset)
 
 _Unused static inline void dpram_w8(struct mpc860_data *d,m_uint16_t offset,
                             m_uint8_t val)
-{   
+{
    d->dpram[offset] = val;
 }
 
@@ -440,7 +440,7 @@ static inline m_uint16_t dpram_r16(struct mpc860_data *d,m_uint16_t offset)
 
 static inline void dpram_w16(struct mpc860_data *d,m_uint16_t offset,
                              m_uint16_t val)
-{  
+{
    d->dpram[offset]   = val >> 8;
    d->dpram[offset+1] = val & 0xFF;
 }
@@ -621,7 +621,7 @@ static int mpc860_idma_start_channel(struct mpc860_data *d,u_int id)
 
 /* Initialize SPI RX parameters */
 static void mpc860_spi_init_rx_params(struct mpc860_data *d)
-{ 
+{
    m_uint16_t spi_base,rbase;
 
    spi_base = dpram_r16(d,MPC860_SPI_BASE_ADDR);
@@ -815,11 +815,11 @@ static scc_chan_info_t scc_chan_info[MPC860_SCC_NR_CHAN] = {
 
 /* Initialize SCC RX parameters */
 static void mpc860_scc_init_rx_params(struct mpc860_data *d,u_int scc_chan)
-{ 
+{
    m_uint16_t scc_base,rbase;
 
    scc_base = scc_chan_info[scc_chan].dpram_base;
-   
+
    /* Get the RBASE (offset 0) and store it in RBPTR */
    rbase = dpram_r16(d,scc_base+0x00);
    dpram_w16(d,scc_base+0x10,rbase);
@@ -885,7 +885,7 @@ static int mpc860_scc_fetch_bd(struct mpc860_data *d,m_uint16_t bd_addr,
 /* Handle the TX ring of an SCC channel (transmit a single packet) */
 static int mpc860_scc_handle_tx_ring_single(struct mpc860_data *d,
                                             u_int scc_chan)
-{   
+{
    struct mpc860_scc_bd txd0,ctxd,*ptxd;
    struct mpc860_scc_chan *chan;
    scc_chan_info_t *scc_info;
@@ -894,10 +894,10 @@ static int mpc860_scc_handle_tx_ring_single(struct mpc860_data *d,
    u_char *pkt_ptr;
    int done = FALSE;
    int irq = FALSE;
-   
+
    scc_info = &scc_chan_info[scc_chan];
    chan = &d->scc_chan[scc_chan];
-   
+
    /* Get the TBPTR (offset 0x20) register */
    bd_offset = dpram_r16(d,scc_info->dpram_base+0x20);
 
@@ -924,8 +924,8 @@ static int mpc860_scc_handle_tx_ring_single(struct mpc860_data *d,
       if (ptxd->ctrl & MPC860_SCC_TXBD_CTRL_I)
          irq = TRUE;
 
-      /* 
-       * Clear the ready bit (except for the first descriptor, 
+      /*
+       * Clear the ready bit (except for the first descriptor,
        * which is cleared when the full packet has been sent).
        */
       if (ptxd != &txd0) {
@@ -968,7 +968,7 @@ static int mpc860_scc_handle_tx_ring_single(struct mpc860_data *d,
       chan->scce |= MPC860_SCCE_TXB;
       mpc860_scc_update_irq(d,scc_chan);
    }
-   
+
    return(TRUE);
 }
 
@@ -988,7 +988,7 @@ static int mpc860_scc_handle_tx_ring(struct mpc860_data *d,u_int scc_chan)
 static int mpc860_scc_handle_rx_pkt(netio_desc_t *nio,
                                     u_char *pkt,ssize_t pkt_len,
                                     struct mpc860_data *d,void *arg)
-{       
+{
    struct mpc860_scc_bd rxd0,crxd,*prxd;
    struct mpc860_scc_chan *chan;
    u_int scc_chan = (u_int)(u_long)arg;
@@ -998,7 +998,7 @@ static int mpc860_scc_handle_rx_pkt(netio_desc_t *nio,
    u_char *pkt_ptr;
    u_int mrblr;
    int irq = FALSE;
-   
+
    scc_info = &scc_chan_info[scc_chan];
    chan = &d->scc_chan[scc_chan];
 
@@ -1049,8 +1049,8 @@ static int mpc860_scc_handle_rx_pkt(netio_desc_t *nio,
          dpram_w16(d,prxd->offset+0x02,clen);
       }
 
-      /* 
-       * Clear the empty bit (except for the first descriptor, 
+      /*
+       * Clear the empty bit (except for the first descriptor,
        * which is cleared when the full packet has been stored).
        */
       if (prxd != &rxd0) {
@@ -1115,7 +1115,7 @@ int mpc860_scc_unset_nio(struct mpc860_data *d,u_int scc_chan)
    if (!d || (scc_chan >= MPC860_SCC_NR_CHAN))
       return(-1);
 
-   chan = &d->scc_chan[scc_chan]; 
+   chan = &d->scc_chan[scc_chan];
 
    if (chan->nio != NULL) {
       netio_rxl_remove(chan->nio);
@@ -1125,7 +1125,7 @@ int mpc860_scc_unset_nio(struct mpc860_data *d,u_int scc_chan)
    return(0);
 }
 
-/* 
+/*
  * SCC register access.
  *
  * SCC1: 0x0a00 to 0x0a1f
@@ -1250,7 +1250,7 @@ static int mpc860_fec_fetch_bd(struct mpc860_data *d,m_uint32_t bd_addr,
 
 /* Handle the TX ring of the FEC (transmit a single packet) */
 static int mpc860_fec_handle_tx_ring_single(struct mpc860_data *d)
-{  
+{
    u_char tx_pkt[MPC860_FEC_MAX_PKT_SIZE];
    struct mpc860_fec_bd txd0,ctxd,*ptxd;
    m_uint32_t clen,tot_len;
@@ -1279,8 +1279,8 @@ static int mpc860_fec_handle_tx_ring_single(struct mpc860_data *d)
       pkt_ptr += clen;
       tot_len += clen;
 
-      /* 
-       * Clear the ready bit (except for the first descriptor, 
+      /*
+       * Clear the ready bit (except for the first descriptor,
        * which is cleared when the full packet has been sent).
        */
       if (ptxd != &txd0) {
@@ -1380,7 +1380,7 @@ static int mpc860_fec_handle_rx_pkt(netio_desc_t *nio,
          /* Set the full length */
          physmem_copy_u16_to_vm(d->vm,prxd->bd_addr+0x02,pkt_len+4);
          prxd->ctrl |= MPC860_FEC_RXBD_CTRL_L;
-         
+
          if (eth_addr_is_bcast(&hdr->daddr))
             prxd->ctrl |= MPC860_FEC_RXBD_CTRL_BC;
          else if (eth_addr_is_mcast(&hdr->daddr))
@@ -1390,8 +1390,8 @@ static int mpc860_fec_handle_rx_pkt(netio_desc_t *nio,
          physmem_copy_u16_to_vm(d->vm,prxd->bd_addr+0x02,clen);
       }
 
-      /* 
-       * Clear the empty bit (except for the first descriptor, 
+      /*
+       * Clear the empty bit (except for the first descriptor,
        * which is cleared when the full packet has been stored).
        */
       if (prxd != &rxd0) {
@@ -1600,7 +1600,7 @@ static void mpc860_fec_mii_access(struct mpc860_data *d)
 
    switch(op) {
       /* MII write */
-      case 0x01:   
+      case 0x01:
          mpc860_fec_mii_write_access(d,phy,reg);
          break;
 
@@ -1618,12 +1618,12 @@ static void mpc860_fec_mii_access(struct mpc860_data *d)
    mpc860_fec_update_irq_status(d);
 }
 
-/* 
+/*
  * FEC register access (0xE00 to 0xF84).
  */
 static int dev_mpc860_fec_access(struct mpc860_data *d,m_uint32_t offset,
                                  u_int op_size,u_int op_type,m_uint64_t *data)
-{   
+{
    switch(offset) {
       /* R_DES_START: Beginning of RxBD ring */
       case 0xE10:
@@ -1763,7 +1763,7 @@ static void mpc860_exec_cpcr(struct mpc860_data *d,m_uint32_t cpcr)
    opcode  = (cpcr >> 8) & 0x0F;
 
    fop = MPC860_CP_FOP(channel,opcode);
-   
+
    switch(fop) {
       /* SPI - Init RX and TX params */
       case MPC860_CP_FOP(MPC860_CHAN_SPI_IDMA2_RT,0):
@@ -1875,12 +1875,12 @@ void *dev_mpc860_access(cpu_gen_t *cpu,struct vdevice *dev,m_uint32_t offset,
 
    /* Handle SCC channels */
    if ((offset >= MPC860_REG_SCC_BASE) &&
-       (offset < (MPC860_REG_SCC_BASE + (4 * 0x20)))) 
+       (offset < (MPC860_REG_SCC_BASE + (4 * 0x20))))
    {
       dev_mpc860_scc_access(d,offset,op_size,op_type,data);
       return NULL;
    }
-         
+
    /* Handle Fast Ethernet Controller (FEC) registers */
    if ((offset >= MPC860_REG_FEC_BASE) && (offset <= MPC860_REG_FEC_END))
    {
@@ -1909,7 +1909,7 @@ void *dev_mpc860_access(cpu_gen_t *cpu,struct vdevice *dev,m_uint32_t offset,
          }
          break;
 
-      /* 
+      /*
        * Cisco 2600:
        *   Bit 30: 0=NM in slot 1
        */
@@ -1969,7 +1969,7 @@ void *dev_mpc860_access(cpu_gen_t *cpu,struct vdevice *dev,m_uint32_t offset,
          if (op_type == MTS_READ)
             *data = d->cicr;
          else
-            d->cicr = *data;         
+            d->cicr = *data;
          break;
 
       /* CIPR - CPM Interrupt Pending Register */

@@ -49,7 +49,7 @@ struct vdevice *dev_get_by_name(vm_instance_t *vm,char *name)
 struct vdevice *dev_lookup(vm_instance_t *vm,m_uint64_t phys_addr,int cached)
 {
    struct vdevice *dev;
-   
+
    if (!vm)
       return NULL;
 
@@ -57,7 +57,7 @@ struct vdevice *dev_lookup(vm_instance_t *vm,m_uint64_t phys_addr,int cached)
       if (cached && !(dev->flags & VDEVICE_FLAG_CACHING))
          continue;
 
-      if ((phys_addr >= dev->phys_addr) && 
+      if ((phys_addr >= dev->phys_addr) &&
           ((phys_addr - dev->phys_addr) < dev->phys_len))
          return dev;
    }
@@ -70,7 +70,7 @@ struct vdevice *dev_lookup_next(vm_instance_t *vm,m_uint64_t phys_addr,
                                 struct vdevice *dev_start,int cached)
 {
    struct vdevice *dev;
-   
+
    if (!vm)
       return NULL;
 
@@ -103,7 +103,7 @@ struct vdevice *dev_create(char *name)
               "create device '%s'.\n",name);
       return NULL;
    }
-   
+
    dev_init(dev);
    dev->name = name;
    return dev;
@@ -116,7 +116,7 @@ void dev_remove(vm_instance_t *vm,struct vdevice *dev)
       return;
 
    vm_unbind_device(vm,dev);
-      
+
    vm_log(vm,"DEVICE",
           "Removal of device %s, fd=%d, host_addr=0x%llx, flags=%d\n",
           dev->name,dev->fd,(m_uint64_t)dev->host_addr,dev->flags);
@@ -142,13 +142,13 @@ void dev_remove(vm_instance_t *vm,struct vdevice *dev)
          if (dev->flags & VDEVICE_FLAG_SYNC) {
             memzone_sync_all((void *)dev->host_addr,dev->phys_len);
          }
-         
+
          vm_log(vm,"MMAP","unmapping of device '%s', "
                 "fd=%d, host_addr=0x%llx, len=0x%x\n",
                 dev->name,dev->fd,(m_uint64_t)dev->host_addr,dev->phys_len);
          memzone_unmap((void *)dev->host_addr,dev->phys_len);
       }
-      
+
       if (dev->flags & VDEVICE_FLAG_SYNC)
          fsync(dev->fd);
 
@@ -177,7 +177,7 @@ void dev_show(struct vdevice *dev)
 void dev_show_list(vm_instance_t *vm)
 {
    struct vdevice *dev;
-   
+
    printf("\nVM \"%s\" (%u) Device list:\n",vm->name,vm->instance_id);
 
    for(dev=vm->dev_list;dev;dev=dev->next)
@@ -252,12 +252,12 @@ struct vdevice *dev_create_ram(vm_instance_t *vm,char *name,
             free(dev);
             return NULL;
          }
-      
+
          dev->host_addr = (m_iptr_t)ram_ptr;
       } else {
          dev->host_addr = (m_iptr_t)m_memalign(4096,dev->phys_len);
       }
-   
+
       if (!dev->host_addr) {
          free(dev);
          return NULL;
@@ -292,7 +292,7 @@ dev_create_ghost_ram(vm_instance_t *vm,char *name,int sparse,char *filename,
          free(dev);
          return NULL;
       }
-      
+
       if (!(dev->host_addr = (m_iptr_t)ram_ptr)) {
          free(dev);
          return NULL;
@@ -388,7 +388,7 @@ int dev_sparse_show_info(struct vdevice *dev)
 
    nr_pages = normalize_size(dev->phys_len,VM_PAGE_SIZE,VM_PAGE_SHIFT);
    dirty_pages = 0;
-  
+
    for(i=0;i<nr_pages;i++)
       if (dev->sparse_map[i] & VDEVICE_PTE_DIRTY)
          dirty_pages++;
@@ -408,7 +408,7 @@ m_iptr_t dev_sparse_get_host_addr(vm_instance_t *vm,struct vdevice *dev,
    ptr = dev->sparse_map[offset];
    *cow = 0;
 
-   /* 
+   /*
     * If the device is not in COW mode, allocate a host page if the physical
     * page is requested for the first time.
     */
@@ -419,14 +419,14 @@ m_iptr_t dev_sparse_get_host_addr(vm_instance_t *vm,struct vdevice *dev,
 
          dev->sparse_map[offset] = ptr | VDEVICE_PTE_DIRTY;
          return(ptr);
-      } 
+      }
 
       return(ptr & VM_PAGE_MASK);
    }
 
-   /* 
-    * We have a "ghost" base. We apply the copy-on-write (COW) mechanism 
-    * ourselves. 
+   /*
+    * We have a "ghost" base. We apply the copy-on-write (COW) mechanism
+    * ourselves.
     */
    if (ptr & VDEVICE_PTE_DIRTY)
       return(ptr & VM_PAGE_MASK);

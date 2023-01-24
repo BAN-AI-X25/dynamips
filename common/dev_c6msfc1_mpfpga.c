@@ -1,4 +1,4 @@
-/* 
+/*
  * Cisco router simulation platform.
  * Copyright (c) 2007 Christophe Fillot (cf@utc.fr)
  *
@@ -32,7 +32,7 @@ struct c6msfc1_mpfpga_data {
 };
 
 /* Update network interrupt status */
-static inline 
+static inline
 void dev_c6msfc1_mpfpga_net_update_irq(struct c6msfc1_mpfpga_data *d)
 {
    if (d->irq_status) {
@@ -90,7 +90,7 @@ void *dev_c6msfc1_mpfpga_access(cpu_gen_t *cpu,struct vdevice *dev,
 #endif
 
    switch(offset) {
-      /* 
+      /*
        * Revision + Slot: just tell we're in slot 1 (and chip rev 2)
        * Other bits are unknown.
        */
@@ -112,8 +112,8 @@ void *dev_c6msfc1_mpfpga_access(cpu_gen_t *cpu,struct vdevice *dev,
          else
             d->intr_enable = *data;
          break;
-         
-      /* 
+
+      /*
        * Read when a Network Interrupt is triggered.
        *   Bit 0: EOBC
        *   Bit 1: IBC
@@ -135,28 +135,28 @@ void *dev_c6msfc1_mpfpga_access(cpu_gen_t *cpu,struct vdevice *dev,
          }
 #endif
    }
-	
+
    return NULL;
 }
 
 /* Shutdown the MP FPGA device */
-static void 
+static void
 dev_c6msfc1_mpfpga_shutdown(vm_instance_t *vm,struct c6msfc1_mpfpga_data *d)
 {
    if (d != NULL) {
       /* Remove the device */
       dev_remove(vm,&d->dev);
-      
+
       /* Free the structure itself */
       free(d);
    }
 }
 
-/* 
+/*
  * dev_c6msfc1_mpfpga_init()
  */
 int dev_c6msfc1_mpfpga_init(c6msfc1_t *router,m_uint64_t paddr,m_uint32_t len)
-{   
+{
    struct c6msfc1_mpfpga_data *d;
 
    /* Allocate private data structure */
@@ -167,7 +167,7 @@ int dev_c6msfc1_mpfpga_init(c6msfc1_t *router,m_uint64_t paddr,m_uint32_t len)
 
    memset(d,0,sizeof(*d));
    d->router = router;
-   
+
    vm_object_init(&d->vm_obj);
    d->vm_obj.name = "mp_fpga";
    d->vm_obj.data = d;

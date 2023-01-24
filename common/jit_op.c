@@ -54,7 +54,7 @@ jit_op_t *jit_op_get(cpu_gen_t *cpu,int size_index,u_int opcode)
 
 /* Release a JIT op */
 void jit_op_free(cpu_gen_t *cpu,jit_op_t *op)
-{  
+{
    assert(op->ob_size_index < JIT_OP_POOL_NR);
    op->next = cpu->jit_op_pool[op->ob_size_index];
    cpu->jit_op_pool[op->ob_size_index] = op;
@@ -64,7 +64,7 @@ void jit_op_free(cpu_gen_t *cpu,jit_op_t *op)
 void jit_op_free_list(cpu_gen_t *cpu,jit_op_t *op_list)
 {
    jit_op_t *op,*opn;
-   
+
    for(op=op_list;op;op=opn) {
       opn = op->next;
       jit_op_free(cpu,op);
@@ -94,7 +94,7 @@ void jit_op_free_pools(cpu_gen_t *cpu)
          opn = op->next;
          free(op);
       }
-      
+
       cpu->jit_op_pool[i] = NULL;
    }
 }

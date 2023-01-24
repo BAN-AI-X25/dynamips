@@ -43,11 +43,11 @@ static inline int cbm_cmp_f(void *b1,void *b2)
    cbm_array_t *cbm1 = (cbm_array_t *)b1;
    cbm_array_t *cbm2 = (cbm_array_t *)b2;
    int i;
-   
+
    for(i=0;i<cbm1->nr_entries;i++)
       if (cbm1->tab[i] != cbm2->tab[i])
          return(FALSE);
-   
+
    return(TRUE);
 }
 
@@ -66,12 +66,12 @@ static inline void cbm_unset_rule(cbm_array_t *cbm,int rule_id)
 /* Returns TRUE if  bit corresponding to a rule number in a CBM is set */
 static inline int cbm_check_rule(cbm_array_t *cbm,int rule_id)
 {
-   return(CBM_ARRAY(cbm,(rule_id >> CBM_SHIFT)) & 
+   return(CBM_ARRAY(cbm,(rule_id >> CBM_SHIFT)) &
 	  (1 << (rule_id & (CBM_SIZE-1))));
 }
 
 /* Compute bitwise ANDing of two CBM */
-static inline void 
+static inline void
 cbm_bitwise_and(cbm_array_t *result,cbm_array_t *a1,cbm_array_t *a2)
 {
    int i;
@@ -87,9 +87,9 @@ static inline int cbm_first_match(insn_lookup_t *ilt,cbm_array_t *cbm)
    int i;
 
    for(i=0;i<ilt->nr_insn;i++)
-      if (cbm_check_rule(cbm,i)) 
+      if (cbm_check_rule(cbm,i))
          return(i);
-   
+
    return(-1);
 }
 
@@ -122,8 +122,8 @@ static cbm_array_t *cbm_duplicate(cbm_array_t *cbm)
    return array;
 }
 
-/* 
- * Get equivalent class corresponding to a class bitmap. Create eqclass 
+/*
+ * Get equivalent class corresponding to a class bitmap. Create eqclass
  * structure if needed (CBM not previously seen).
  */
 static rfc_eqclass_t *cbm_get_eqclass(rfc_array_t *rfct,cbm_array_t *cbm)
@@ -169,7 +169,7 @@ static rfc_array_t *rfc_alloc_array(int nr_elements)
    assert(array);
    memset(array,0,total_size);
    array->nr_elements = nr_elements;
-   
+
    /* Initialize hash table for Class Bitmaps */
    array->cbm_hash = hash_table_create(cbm_hash_f,cbm_cmp_f,CBM_HASH_SIZE);
    assert(array->cbm_hash);
@@ -225,7 +225,7 @@ static void rfc_check_insn(insn_lookup_t *ilt,cbm_array_t *cbm,
    for(i=0;i<ilt->nr_insn;i++) {
       p = ilt->get_insn(i);
 
-      if (pcheck(p,value)) 
+      if (pcheck(p,value))
          cbm_set_rule(cbm,i);
       else
          cbm_unset_rule(cbm,i);
@@ -340,7 +340,7 @@ static void ilt_postprocessing(insn_lookup_t *ilt)
 
 /* Instruction lookup table compilation */
 static void ilt_compile(insn_lookup_t *ilt)
-{  
+{
    ilt_phase_0(ilt,0,ilt->chk_hi);
    ilt_phase_0(ilt,1,ilt->chk_lo);
    ilt_phase_j(ilt,0,1,2);
@@ -354,26 +354,26 @@ _Unused static int ilt_dump(char *table_name,insn_lookup_t *ilt)
    char *filename;
    FILE *fd;
    int i,j;
-   
+
    filename = dyn_sprintf("ilt_dump_%s_%s.txt",sw_version_tag,table_name);
    assert(filename != NULL);
 
    fd = fopen(filename,"w");
    assert(fd != NULL);
-   
+
    fprintf(fd,"ILT %p: nr_insn=%d, cbm_size=%d\n",
          ilt,ilt->nr_insn,ilt->cbm_size);
 
    for(i=0;i<RFC_ARRAY_NUMBER;i++) {
       rfct = ilt->rfct[i];
-      
+
       fprintf(fd,"RFCT %d: nr_elements=%d, nr_eqid=%d\n",
               i,rfct->nr_elements,rfct->nr_eqid);
-      
+
       for(j=0;j<rfct->nr_elements;j++)
          fprintf(fd,"  (0x%4.4x,0x%4.4x) = 0x%4.4x\n",i,j,rfct->eqID[j]);
    }
-   
+
    fclose(fd);
    free(filename);
    return(0);
@@ -412,7 +412,7 @@ static int ilt_load_rfct(FILE *fd,insn_lookup_t *ilt)
        (fread(&nr_elements,sizeof(nr_elements),1,fd) != 1) ||
        (fread(&nr_eqid,sizeof(nr_eqid),1,fd) != 1))
       return(-1);
-      
+
    if ((id >= RFC_ARRAY_NUMBER) || (nr_elements > RFC_ARRAY_MAXSIZE))
       return(-1);
 
@@ -425,7 +425,7 @@ static int ilt_load_rfct(FILE *fd,insn_lookup_t *ilt)
    memset(rfct,0,sizeof(*rfct));
    rfct->nr_elements = nr_elements;
    rfct->nr_eqid = nr_eqid;
-   
+
    /* Read the equivalent ID array */
    if (fread(rfct->eqID,sizeof(int),nr_elements,fd) != nr_elements) {
       free(rfct);
@@ -454,7 +454,7 @@ static insn_lookup_t *ilt_load_table(FILE *fd)
 {
    insn_lookup_t *ilt;
    int i;
-   
+
    if (!(ilt = malloc(sizeof(*ilt))))
       return NULL;
 
@@ -525,7 +525,7 @@ insn_lookup_t *ilt_create(char *table_name,
                           ilt_check_cbk_t chk_lo,ilt_check_cbk_t chk_hi)
 {
    insn_lookup_t *ilt;
-   
+
    /* Try to load a cached table from disk */
    if ((ilt = ilt_cache_load(table_name))) {
       printf("ILT: loaded table \"%s\" from cache.\n",table_name);
@@ -545,7 +545,7 @@ insn_lookup_t *ilt_create(char *table_name,
 
    /* Compile the instruction opcodes */
    ilt_compile(ilt);
-   
+
    /* Store the result on disk for future exec */
    ilt_cache_store(table_name,ilt);
    return(ilt);

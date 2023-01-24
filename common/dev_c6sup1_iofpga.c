@@ -73,7 +73,7 @@ struct iofpga_data {
 
    /* DUART & Console Management */
    u_int duart_isr,duart_imr,duart_irq_seq;
-   
+
    /* IO control register */
    u_int io_ctrl_reg;
 
@@ -128,7 +128,7 @@ static int tty_trigger_dummy_irq(struct iofpga_data *d,void *arg)
 
    IOFPGA_LOCK(d);
    d->duart_irq_seq++;
-   
+
    if (d->duart_irq_seq == 2) {
       mask = DUART_TXRDYA|DUART_TXRDYB;
       if (d->duart_imr & mask) {
@@ -138,7 +138,7 @@ static int tty_trigger_dummy_irq(struct iofpga_data *d,void *arg)
 
       d->duart_irq_seq = 0;
    }
-   
+
    IOFPGA_UNLOCK(d);
    return(0);
 }
@@ -183,12 +183,12 @@ void *dev_c6sup1_iofpga_access(cpu_gen_t *cpu,struct vdevice *dev,
             *data |= NVRAM_PACKED;              /* Packed NVRAM */
          }
          break;
-         
+
       /* Watchdog */
       case 0x234:
          break;
 
-      /* 
+      /*
        * FPGA release/presence ? Flash SIMM size:
        *   0x0001: 2048K  Flash (2 banks)
        *   0x0504: 8192K  Flash (2 banks)
@@ -231,7 +231,7 @@ void *dev_c6sup1_iofpga_access(cpu_gen_t *cpu,struct vdevice *dev,
                odata |= DUART_RX_READY;
 
             odata |= DUART_TX_READY;
-         
+
             vm_clear_irq(vm,C6SUP1_DUART_IRQ);
             *data = odata;
          }
@@ -240,7 +240,7 @@ void *dev_c6sup1_iofpga_access(cpu_gen_t *cpu,struct vdevice *dev,
       case 0x414:   /* Command Register A (CRA) */
          /* Disable TX = High */
          if ((op_type == MTS_WRITE) && (*data & 0x8)) {
-            vm->vtty_con->managed_flush = TRUE;          
+            vm->vtty_con->managed_flush = TRUE;
             vtty_flush(vm->vtty_con);
          }
          break;
@@ -278,7 +278,7 @@ void *dev_c6sup1_iofpga_access(cpu_gen_t *cpu,struct vdevice *dev,
                odata |= DUART_RX_READY;
 
             odata |= DUART_TX_READY;
-         
+
             //vm_clear_irq(vm,C6SUP1_DUART_IRQ);
             *data = odata;
          }

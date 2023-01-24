@@ -45,7 +45,7 @@ struct c1700_iofpga_data {
    vm_obj_t vm_obj;
    struct vdevice dev;
    c1700_t *router;
-   
+
    /* Network Interrupt status */
    m_uint8_t net_irq_status;
 
@@ -64,11 +64,11 @@ static const struct nmc93cX6_eeprom_def eeprom_mb_def = {
 
 /* Mainboard EEPROM */
 static const struct nmc93cX6_group eeprom_mb_group = {
-   EEPROM_TYPE_NMC93C46, 1, 0, 
+   EEPROM_TYPE_NMC93C46, 1, 0,
    EEPROM_DORD_NORMAL,
    EEPROM_DOUT_HIGH,
    EEPROM_DEBUG_DISABLED,
-   "Mainboard EEPROM", 
+   "Mainboard EEPROM",
    { &eeprom_mb_def },
 };
 
@@ -146,7 +146,7 @@ static void dev_c1700_mpc860_spi_tx_callback(struct mpc860_data *mpc_data,
 
    mpc860_spi_receive(mpc_data,reply_buf,sizeof(reply_buf));
 }
-     
+
 /*
  * dev_c1700_iofpga_access()
  */
@@ -172,7 +172,7 @@ dev_c1700_iofpga_access(cpu_gen_t *cpu,struct vdevice *dev,
 #endif
 
    switch(offset) {
-      /* 
+      /*
        * Bits 0-2: motherboard model (change with caution, different log patterns)
        *  0=MPC860T
        *  1=MPC860T
@@ -200,7 +200,7 @@ dev_c1700_iofpga_access(cpu_gen_t *cpu,struct vdevice *dev,
       case 0x0A:
       */
 
-      /* 
+      /*
        * Bit 0: ???
        * Bit 1: card present in slot 0 / WIC 0.
        * Bit 2: card present in slot 0 / WIC 1.
@@ -221,7 +221,7 @@ dev_c1700_iofpga_access(cpu_gen_t *cpu,struct vdevice *dev,
          }
          break;
 
-      /* 
+      /*
        * Bit 0: ??? NVRAM write protection?
        * Bit 1: ???
        * Bit 2: ??? related to syscalls?
@@ -244,12 +244,12 @@ dev_c1700_iofpga_access(cpu_gen_t *cpu,struct vdevice *dev,
          }
          break;
 
-      /* 
+      /*
        * Bit 0-7: ???
       case 0x20:
       */
 
-      /* Unknown, read on 1760. Considering the activity pattern, 
+      /* Unknown, read on 1760. Considering the activity pattern,
        * it's probably used to update the fpga.
        */
       case 0x4c:
@@ -276,7 +276,7 @@ dev_c1700_iofpga_access(cpu_gen_t *cpu,struct vdevice *dev,
 }
 
 /* Shutdown the IO FPGA device */
-static void 
+static void
 dev_c1700_iofpga_shutdown(vm_instance_t *vm,struct c1700_iofpga_data *d)
 {
    if (d != NULL) {
@@ -321,7 +321,7 @@ int dev_c1700_iofpga_init(c1700_t *router,m_uint64_t paddr,m_uint32_t len)
    /* Initialize the MPC860 SPI TX callback to read mainboard WIC EEPROMs */
    mpc860_spi_set_tx_callback(router->mpc_data,
                               dev_c1700_mpc860_spi_tx_callback,d);
-                              
+
    /* Map this device to the VM */
    vm_bind_device(router->vm,&d->dev);
    vm_object_add(vm,&d->vm_obj);

@@ -1,4 +1,4 @@
-/* 
+/*
  * Cisco router simulation platform.
  * Copyright (c) 2005,2006 Christophe Fillot (cf@utc.fr)
  *
@@ -26,7 +26,7 @@ int dev_ti2050b_init(struct pci_bus *pci_bus,int pci_device,
                      struct pci_bus *sec_bus)
 {
    struct pci_device *dev;
-   
+
    dev = pci_bridge_create_dev(pci_bus,"ti2050b",
                                PCI_VENDOR_TI,PCI_PRODUCT_PCI2050B,
                                pci_device,0,sec_bus,NULL,NULL);

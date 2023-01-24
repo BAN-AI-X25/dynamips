@@ -107,7 +107,7 @@ static int cmd_delete(hypervisor_conn_t *conn,int argc,char *argv[])
    return(res);
 }
 
-/* 
+/*
  * Add a NIO to a bridge
  *
  * Parameters: <bridge_name> <nio_name>
@@ -118,7 +118,7 @@ static int cmd_add_nio(hypervisor_conn_t *conn,int argc,char *argv[])
 
    if (!(t = hypervisor_find_object(conn,argv[0],OBJ_TYPE_NIO_BRIDGE)))
       return(-1);
-   
+
    if (netio_bridge_add_netio(t,argv[1]) == -1) {
       netio_bridge_release(argv[0]);
       hypervisor_send_reply(conn,HSC_ERR_BINDING,1,
@@ -132,7 +132,7 @@ static int cmd_add_nio(hypervisor_conn_t *conn,int argc,char *argv[])
    return(0);
 }
 
-/* 
+/*
  * Remove a NIO from a bridge
  *
  * Parameters: <bridge_name> <nio_name>
@@ -143,7 +143,7 @@ static int cmd_remove_nio(hypervisor_conn_t *conn,int argc,char *argv[])
 
    if (!(t = hypervisor_find_object(conn,argv[0],OBJ_TYPE_NIO_BRIDGE)))
       return(-1);
-   
+
    if (netio_bridge_remove_netio(t,argv[1]) == -1) {
       netio_bridge_release(argv[0]);
       hypervisor_send_reply(conn,HSC_ERR_BINDING,1,

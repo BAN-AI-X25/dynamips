@@ -78,7 +78,7 @@ static int cmd_set_cpu_reg(hypervisor_conn_t *conn,int argc,char *argv[])
 
    cpu = cpu_group_find_id(vm->cpu_group,atoi(argv[1]));
    reg_index = atoi(argv[2]);
-                           
+
    if (!cpu || (reg_index < 1)) {
       vm_release(vm);
       hypervisor_send_reply(conn,HSC_ERR_BAD_OBJ,1,"Bad CPU or register");

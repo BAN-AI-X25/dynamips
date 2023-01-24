@@ -45,7 +45,7 @@ static void *dev_wic1t_access(cpu_gen_t *cpu,struct vdevice *dev,
    struct wic_serial_data *d = dev->priv_data;
 
    switch(offset) {
-      case 0x04: 
+      case 0x04:
          if (op_type == MTS_READ)
             *data = 0xFF;
          break;
@@ -84,7 +84,7 @@ static void *dev_wic2t_access(cpu_gen_t *cpu,struct vdevice *dev,
 
    switch(offset) {
       /* Port 0 */
-      case 0x04: 
+      case 0x04:
          if (op_type == MTS_READ)
             *data = 0xFF;
          break;
@@ -95,7 +95,7 @@ static void *dev_wic2t_access(cpu_gen_t *cpu,struct vdevice *dev,
          break;
 
       /* Port 1 */
-      case 0x14: 
+      case 0x14:
          if (op_type == MTS_READ)
             *data = 0xFF;
          break;
@@ -123,7 +123,7 @@ static void *dev_wic2t_access(cpu_gen_t *cpu,struct vdevice *dev,
    return NULL;
 }
 
-/* 
+/*
  * dev_wic_serial_init()
  *
  * Generic WIC Serial initialization code.

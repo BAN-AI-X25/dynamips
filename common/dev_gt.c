@@ -8,7 +8,7 @@
  * (source and destination addresses incrementing).
  *
  * Also, these transfers are "instantaneous" from a CPU point-of-view: when
- * a channel is enabled, the transfer is immediately done. So, this is not 
+ * a channel is enabled, the transfer is immediately done. So, this is not
  * very realistic.
  */
 
@@ -63,7 +63,7 @@
 /* === DMA definitions ==================================================== */
 #define GT_DMA_CHANNELS   4
 
-#define GT_DMA_FLYBY_ENABLE  0x00000001  /* FlyBy Enable */  
+#define GT_DMA_FLYBY_ENABLE  0x00000001  /* FlyBy Enable */
 #define GT_DMA_FLYBY_RDWR    0x00000002  /* SDRAM Read/Write (FlyBy) */
 #define GT_DMA_SRC_DIR       0x0000000c  /* Source Direction */
 #define GT_DMA_DST_DIR       0x00000030  /* Destination Direction */
@@ -104,7 +104,7 @@ struct dma_channel {
 /* SDMA channel */
 struct sdma_channel {
    u_int id;
-   
+
    m_uint32_t sdc;
    m_uint32_t sdcm;
    m_uint32_t rx_desc;
@@ -356,7 +356,7 @@ struct eth_port {
 
    /* Port registers */
    m_uint32_t pcr,pcxr,pcmr,psr;
-   
+
    /* SDMA registers */
    m_uint32_t sdcr,sdcmr;
 
@@ -403,7 +403,7 @@ struct gt_data {
 
    /* MPSC - MultiProtocol Serial Controller (GT96100) */
    struct mpsc_channel mpsc[GT_MPSC_CHANNELS];
-   
+
    /* Ethernet ports (GT96100) */
    u_int eth_irq;
    ptask_id_t eth_tx_tid;
@@ -436,7 +436,7 @@ static void gt64k_update_irq_status(struct gt_data *gt_data)
 static void gt_dma_fetch_rec(vm_instance_t *vm,struct dma_channel *channel)
 {
    m_uint32_t ptr;
- 
+
 #if DEBUG_DMA
    vm_log(vm,"GT_DMA","fetching record at address 0x%x\n",channel->nrptr);
 #endif
@@ -447,7 +447,7 @@ static void gt_dma_fetch_rec(vm_instance_t *vm,struct dma_channel *channel)
    channel->src_addr   = swap32(physmem_copy_u32_from_vm(vm,ptr+0x04));
    channel->dst_addr   = swap32(physmem_copy_u32_from_vm(vm,ptr+0x08));
    channel->nrptr      = swap32(physmem_copy_u32_from_vm(vm,ptr+0x0c));
-   
+
    /* clear the "fetch next record bit" */
    channel->ctrl &= ~GT_DMA_FETCH_NEXT;
 }
@@ -468,7 +468,7 @@ static void gt_dma_handle_ctrl(struct gt_data *gt_data,int chan_id)
       gt_dma_fetch_rec(vm,channel);
    }
 
-   if (channel->ctrl & GT_DMA_CHAN_ENABLE) 
+   if (channel->ctrl & GT_DMA_CHAN_ENABLE)
    {
       do {
          done = TRUE;
@@ -541,8 +541,8 @@ static int gt_dma_access(cpu_gen_t *cpu,struct vdevice *dev,
          gt_data->dma[2].cdptr = *data;
          DMA_REG(2,nrptr);
          return(1);
-   
-      case 0x83c: 
+
+      case 0x83c:
          gt_data->dma[3].cdptr = *data;
          DMA_REG(3,nrptr);
          return(1);
@@ -550,25 +550,25 @@ static int gt_dma_access(cpu_gen_t *cpu,struct vdevice *dev,
       /* DMA Channel Control */
       case 0x840:
          DMA_REG(0,ctrl);
-         if (op_type == MTS_WRITE) 
+         if (op_type == MTS_WRITE)
             gt_dma_handle_ctrl(gt_data,0);
          return(1);
 
       case 0x844:
          DMA_REG(1,ctrl);
-         if (op_type == MTS_WRITE) 
+         if (op_type == MTS_WRITE)
             gt_dma_handle_ctrl(gt_data,1);
          return(1);
 
       case 0x848:
          DMA_REG(2,ctrl);
-         if (op_type == MTS_WRITE) 
+         if (op_type == MTS_WRITE)
             gt_dma_handle_ctrl(gt_data,2);
          return(1);
 
       case 0x84c:
          DMA_REG(3,ctrl);
-         if (op_type == MTS_WRITE) 
+         if (op_type == MTS_WRITE)
             gt_dma_handle_ctrl(gt_data,3);
          return(1);
    }
@@ -583,7 +583,7 @@ void *dev_gt64010_access(cpu_gen_t *cpu,struct vdevice *dev,m_uint32_t offset,
                          u_int op_size,u_int op_type,m_uint64_t *data)
 {
    struct gt_data *gt_data = dev->priv_data;
-	
+
    if (op_type == MTS_READ) {
       *data = 0;
    } else {
@@ -711,7 +711,7 @@ void *dev_gt64120_access(cpu_gen_t *cpu,struct vdevice *dev,m_uint32_t offset,
                          u_int op_size,u_int op_type,m_uint64_t *data)
 {
    struct gt_data *gt_data = dev->priv_data;
-   
+
    if (op_type == MTS_READ) {
       *data = 0;
    } else {
@@ -812,7 +812,7 @@ void *dev_gt64120_access(cpu_gen_t *cpu,struct vdevice *dev,m_uint32_t offset,
       case 0xcf4:
          pci_dev_data_handler(cpu,gt_data->bus[1],op_type,FALSE,data);
          break;
-         
+
       /* ===== PCI Bus 0 ===== */
       case PCI_BUS_ADDR:    /* pci configuration address (0xcf8) */
          pci_dev_addr_handler(cpu,gt_data->bus[0],op_type,FALSE,data);
@@ -846,8 +846,8 @@ void *dev_gt64120_access(cpu_gen_t *cpu,struct vdevice *dev,m_uint32_t offset,
 static void gt96k_update_irq_status(struct gt_data *d)
 {
    /* Interrupt0* active ? */
-   if ((d->int_cause_reg & d->int0_main_mask_reg) || 
-       (d->int_high_cause_reg & d->int0_high_mask_reg)) 
+   if ((d->int_cause_reg & d->int0_main_mask_reg) ||
+       (d->int_high_cause_reg & d->int0_high_mask_reg))
    {
       d->int_cause_reg |= 1 << 30;
       vm_set_irq(d->vm,d->int0_irq);
@@ -859,8 +859,8 @@ static void gt96k_update_irq_status(struct gt_data *d)
    }
 
    /* Interrupt1* active ? */
-   if ((d->int_cause_reg & d->int1_main_mask_reg) || 
-       (d->int_high_cause_reg & d->int1_high_mask_reg)) 
+   if ((d->int_cause_reg & d->int1_main_mask_reg) ||
+       (d->int_high_cause_reg & d->int1_high_mask_reg))
    {
       d->int_cause_reg |= 1 << 31;
       vm_set_irq(d->vm,d->int1_irq);
@@ -946,7 +946,7 @@ static void gt_sdma_desc_write(struct gt_data *d,m_uint32_t addr,
                                struct sdma_desc *desc)
 {
    struct sdma_desc tmp;
-   
+
    /* byte-swapping */
    tmp.cmd_stat = vmtoh32(desc->cmd_stat);
    tmp.buf_size = vmtoh32(desc->buf_size);
@@ -981,7 +981,7 @@ static void gt_sdma_send_buffer(struct gt_data *d,u_int chan_id,
 
 /* Start TX DMA process */
 static int gt_sdma_tx_start(struct gt_data *d,struct sdma_channel *chan)
-{   
+{
    u_char pkt[GT_MAX_PKT_SIZE],*pkt_ptr;
    struct sdma_desc txd0,ctxd,*ptxd;
    m_uint32_t tx_start,tx_current;
@@ -1070,13 +1070,13 @@ static void gt_sdma_rxdesc_put_pkt(struct gt_data *d,struct sdma_desc *rxd,
    ssize_t len,cp_len;
 
    len = (rxd->buf_size & GT_RXDESC_BS_MASK) >> GT_RXDESC_BS_SHIFT;
-   
+
    /* compute the data length to copy */
    cp_len = m_min(len,*pkt_len);
-   
+
    /* copy packet data to the VM physical RAM */
    physmem_copy_to_vm(d->vm,*pkt,rxd->buf_ptr,cp_len);
-      
+
    /* set the byte count in descriptor */
    rxd->buf_size |= cp_len;
 
@@ -1151,7 +1151,7 @@ static int gt_sdma_handle_rxqueue(struct gt_data *d,
 
    /* Update the RX pointers */
    channel->scrdp = rx_current;
-       
+
    /* Update the first RX descriptor */
    rxd0.cmd_stat |= GT_RXDESC_F;
    gt_sdma_desc_write(d,rx_start,&rxd0);
@@ -1181,7 +1181,7 @@ static int gt_sdma_handle_rx_pkt(netio_desc_t *nio,
    /* Find the SDMA group associated to the MPSC channel for receiving */
    group_id = (d->sgcr >> chan_id) & 0x01;
    channel  = &d->sdma[group_id][chan_id];
-   
+
    gt_sdma_handle_rxqueue(d,channel,pkt,pkt_len);
    GT_UNLOCK(d);
    return(TRUE);
@@ -1214,7 +1214,7 @@ static int gt_sdma_access(cpu_gen_t *cpu,struct vdevice *dev,
 #if 0
    printf("SDMA: access to reg 0x%6.6x (group=%u, channel=%u)\n",
           offset, group, chan_id);
-#endif   
+#endif
 
    switch(reg) {
       /* Configuration Register */
@@ -1222,7 +1222,7 @@ static int gt_sdma_access(cpu_gen_t *cpu,struct vdevice *dev,
          break;
 
       /* Command Register */
-      case GT_SDMA_SDCM:   
+      case GT_SDMA_SDCM:
          if (op_type == MTS_WRITE) {
             channel->sdcm = *data;
 
@@ -1302,7 +1302,7 @@ static int gt_mpsc_access(cpu_gen_t *cpu,struct vdevice *dev,
          if (op_type == MTS_READ) {
             *data = channel->mmcrl;
          } else {
-#if DEBUG_MPSC            
+#if DEBUG_MPSC
             GT_LOG(gt_data,"MPSC channel %u set in mode %llu\n",
                    chan_id,*data & 0x07);
 #endif
@@ -1327,14 +1327,14 @@ static int gt_mpsc_access(cpu_gen_t *cpu,struct vdevice *dev,
          break;
 
       /* Channel registers */
-      case GT_MPSC_CHR1: 
-      case GT_MPSC_CHR2: 
+      case GT_MPSC_CHR1:
+      case GT_MPSC_CHR2:
       case GT_MPSC_CHR3:
-      case GT_MPSC_CHR4: 
-      case GT_MPSC_CHR5: 
+      case GT_MPSC_CHR4:
+      case GT_MPSC_CHR5:
       case GT_MPSC_CHR6:
-      case GT_MPSC_CHR7: 
-      case GT_MPSC_CHR8: 
+      case GT_MPSC_CHR7:
+      case GT_MPSC_CHR8:
       case GT_MPSC_CHR9:
          //case GT_MPSC_CHR10:
          reg2 = (reg - GT_MPSC_CHR1) >> 2;
@@ -1381,7 +1381,7 @@ int dev_gt96100_mpsc_set_nio(struct gt_data *d,u_int chan_id,
 
 /* Unset NIO for a MPSC channel */
 int dev_gt96100_mpsc_unset_nio(struct gt_data *d,u_int chan_id)
-{   
+{
    struct mpsc_channel *channel;
 
    if (chan_id >= GT_MPSC_CHANNELS)
@@ -1419,7 +1419,7 @@ int dev_gt96100_mpsc_set_vtty(struct gt_data *d,u_int chan_id,vtty_t *vtty)
 
 /* Unset a VTTY for a MPSC channel */
 int dev_gt96100_mpsc_unset_vtty(struct gt_data *d,u_int chan_id)
-{   
+{
    struct mpsc_channel *channel;
 
    if (chan_id >= GT_MPSC_CHANNELS)
@@ -1651,7 +1651,7 @@ static int gt_eth_access(cpu_gen_t *cpu,struct vdevice *dev,
          } else
             port->pcxr = *data;
          break;
-         
+
       /* PCMR: Port Command Register */
       case 0x84810:
       case 0x88810:
@@ -1912,7 +1912,7 @@ void *dev_gt96100_access(cpu_gen_t *cpu,struct vdevice *dev,m_uint32_t offset,
       /* Watchdog configuration register */
       case 0x101a80:
          break;
-         
+
       /* Watchdog value register */
       case 0x101a84:
          break;
@@ -2124,7 +2124,7 @@ void *dev_gt96100_access(cpu_gen_t *cpu,struct vdevice *dev,m_uint32_t offset,
       case 0xcf4:
          pci_dev_data_handler(cpu,gt_data->bus[1],op_type,FALSE,data);
          break;
-         
+
       /* ===== PCI Bus 0 ===== */
       case PCI_BUS_ADDR:    /* pci configuration address (0xcf8) */
          pci_dev_addr_handler(cpu,gt_data->bus[0],op_type,FALSE,data);
@@ -2156,7 +2156,7 @@ void *dev_gt96100_access(cpu_gen_t *cpu,struct vdevice *dev,m_uint32_t offset,
 /* Handle a TX queue (single packet) */
 static int gt_eth_handle_port_txqueue(struct gt_data *d,struct eth_port *port,
                                       int queue)
-{   
+{
    u_char pkt[GT_MAX_PKT_SIZE],*pkt_ptr;
    struct sdma_desc ctxd;
    m_uint32_t tx_current;
@@ -2184,7 +2184,7 @@ static int gt_eth_handle_port_txqueue(struct gt_data *d,struct eth_port *port,
          port->icr |= GT_ICR_TXENDL;
          port->sdcmr |= GT_SDCMR_STDL;
          port->sdcmr &= ~GT_SDCMR_TXDL;
-         
+
       } else {
          port->icr |= GT_ICR_TXENDH;
          port->sdcmr |= GT_SDCMR_STDH;
@@ -2262,7 +2262,7 @@ static int gt_eth_handle_port_txqueue(struct gt_data *d,struct eth_port *port,
    physmem_copy_u32_to_vm(d->vm,tx_current+GT_SDMA_CMD_OFFSET,ctxd.cmd_stat);
 
    port->tx_current[queue] = tx_current = ctxd.next_ptr;
-   
+
    /* Notify host about transmitted packet */
    if (queue == 0)
       port->icr |= GT_ICR_TXBUFL;
@@ -2288,7 +2288,7 @@ static int gt_eth_handle_port_txqueue(struct gt_data *d,struct eth_port *port,
    }
 
    /* Update the interrupt status */
-   gt_eth_update_int_status(d,port); 
+   gt_eth_update_int_status(d,port);
    return(TRUE);
 }
 
@@ -2314,9 +2314,9 @@ static int gt_eth_handle_txqueues(struct gt_data *d)
 }
 
 /* Inverse a nibble */
-static const int inv_nibble[16] = { 
-   0x0, 0x8, 0x4, 0xC, 0x2, 0xA, 0x6, 0xE, 
-   0x1, 0x9, 0x5, 0xD, 0x3, 0xB, 0x7, 0xF 
+static const int inv_nibble[16] = {
+   0x0, 0x8, 0x4, 0xC, 0x2, 0xA, 0x6, 0xE,
+   0x1, 0x9, 0x5, 0xD, 0x3, 0xB, 0x7, 0xF
 };
 
 /* Inverse a 9-bit value */
@@ -2330,7 +2330,7 @@ static inline u_int gt_hash_inv_9bit(u_int val)
    return(res);
 }
 
-/* 
+/*
  * Compute hash value for Ethernet address filtering.
  * Two modes are available (p.271 of the GT96100 doc).
  */
@@ -2388,7 +2388,7 @@ static int gt_eth_hash_lookup(struct gt_data *d,struct eth_port *port,
 
    /* Compute hash value for Ethernet address filtering */
    hash_val = gt_eth_hash_value(addr,port->pcr & GT_PCR_HM);
-   
+
    if (port->pcr & GT_PCR_HS) {
       /* 1/2K address filtering */
       hte_addr = port->ht_addr + ((hash_val & 0x7ff) << 3);
@@ -2425,8 +2425,8 @@ static int gt_eth_hash_lookup(struct gt_data *d,struct eth_port *port,
    return(GT_HTLOOKUP_HOP_EXCEEDED);
 }
 
-/* 
- * Check if a packet (given its destination address) must be handled 
+/*
+ * Check if a packet (given its destination address) must be handled
  * at RX path.
  *
  * Return values:
@@ -2575,12 +2575,12 @@ static int gt_eth_handle_rxqueue(struct gt_data *d,u_int port_id,u_int queue,
 
    /* Indicate that we have a frame ready */
    port->icr |= (GT_ICR_RXBUFQ0 << queue) | GT_ICR_RXBUF;
-   gt_eth_update_int_status(d,port); 
+   gt_eth_update_int_status(d,port);
    return(TRUE);
 
  dma_error:
    port->icr |= (GT_ICR_RXERRQ0 << queue) | GT_ICR_RXERR;
-   gt_eth_update_int_status(d,port); 
+   gt_eth_update_int_status(d,port);
    return(FALSE);
 }
 
@@ -2639,7 +2639,7 @@ int dev_gt64010_init(vm_instance_t *vm,char *name,
 
    memset(d,0,sizeof(*d));
    pthread_mutex_init(&d->lock,NULL);
-   d->vm = vm;   
+   d->vm = vm;
    d->bus[0] = vm->pci_bus[0];
    d->gt_update_irq_status = gt64k_update_irq_status;
 
@@ -2680,7 +2680,7 @@ int dev_gt64010_init(vm_instance_t *vm,char *name,
  */
 static m_uint32_t pci_gt64120_read(cpu_gen_t *cpu,struct pci_device *dev,
                                    int reg)
-{   
+{
    switch (reg) {
       case 0x08:
          return(0x03008005);
@@ -2743,7 +2743,7 @@ int dev_gt64120_init(vm_instance_t *vm,char *name,
  */
 static m_uint32_t pci_gt96100_read(cpu_gen_t *cpu,struct pci_device *dev,
                                    int reg)
-{   
+{
    switch (reg) {
       case 0x08:
          return(0x03008005);
@@ -2876,7 +2876,7 @@ static void dev_gt96100_show_eth_info(struct gt_data *d,u_int port_id)
 
 /* Show debugging information */
 int dev_gt96100_show_info(struct gt_data *d)
-{   
+{
    GT_LOCK(d);
    dev_gt96100_show_eth_info(d,0);
    dev_gt96100_show_eth_info(d,1);

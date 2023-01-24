@@ -87,7 +87,7 @@ void dev_sb1_shutdown(vm_instance_t *vm,struct sb1_data *d)
 
 /* Create SB-1 system control devices */
 int dev_sb1_init(vm_instance_t *vm)
-{   
+{
    struct sb1_data *d;
 
    /* allocate private data structure */
@@ -111,7 +111,7 @@ int dev_sb1_init(vm_instance_t *vm)
    d->dev.handler   = dev_sb1_access;
 
    /* Map this device to the VM */
-   vm_bind_device(vm,&d->dev);  
+   vm_bind_device(vm,&d->dev);
    vm_object_add(vm,&d->vm_obj);
    return(0);
 }

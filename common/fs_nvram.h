@@ -71,10 +71,10 @@
 /** Scale byte offsets by 4. */
 #define FS_NVRAM_FLAG_SCALE_4           0x0020
 
-/** Align the private-config header to 4 bytes with a padding of 7/6/5/0 bytes. (default, ignored) */ 
+/** Align the private-config header to 4 bytes with a padding of 7/6/5/0 bytes. (default, ignored) */
 #define FS_NVRAM_FLAG_ALIGN_4_PAD_8     0x0040
 
-/** Align the private-config header to 4 bytes with a padding of 3/2/1/0 bytes. */ 
+/** Align the private-config header to 4 bytes with a padding of 3/2/1/0 bytes. */
 #define FS_NVRAM_FLAG_ALIGN_4_PAD_4     0x0080
 
 /** Has a backup filesystem.

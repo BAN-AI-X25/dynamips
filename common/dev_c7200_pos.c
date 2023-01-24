@@ -1,4 +1,4 @@
-/*  
+/*
  * Cisco router Simulation Platform.
  * Copyright (c) 2005-2007 Christophe Fillot.  All rights reserved.
  *
@@ -78,7 +78,7 @@ struct pos_oc3_data {
 
    /* physical addresses for start and end of RX/TX rings */
    m_uint32_t rx_start,rx_end,tx_start,tx_end;
-  
+
    /* physical addresses of current RX and TX descriptors */
    m_uint32_t rx_current,tx_current;
 
@@ -303,12 +303,12 @@ static void *dev_pos_cs_access(cpu_gen_t *cpu,struct vdevice *dev,
                pci_dev_clear_irq(d->vm,d->pci_dev);
                d->irq_clearing_count = 0;
             }
-         }     
+         }
          break;
 
       case 0x300008:
          if (op_type == MTS_READ)
-            *data = 0x000007F;      
+            *data = 0x000007F;
          break;
 
       case 0x300028:
@@ -384,7 +384,7 @@ static void rxdesc_read(struct pos_oc3_data *d,m_uint32_t rxd_addr,
    rxd->rdes[1] = vmtoh32(rxd->rdes[1]);
 }
 
-/* 
+/*
  * Try to acquire the specified RX descriptor. Returns TRUE if we have it.
  * It assumes that the byte-swapping is done.
  */
@@ -407,10 +407,10 @@ static ssize_t rxdesc_put_pkt(struct pos_oc3_data *d,struct rx_desc *rxd,
 #if DEBUG_RECEIVE
    POS_LOG(d,"copying %d bytes at 0x%x\n",cp_len,rxd->rdes[1]);
 #endif
-      
+
    /* copy packet data to the VM physical RAM */
    physmem_copy_to_vm(d->vm,*pkt,rxd->rdes[1],cp_len);
-      
+
    *pkt += cp_len;
    *pkt_len -= cp_len;
    return(cp_len);
@@ -436,7 +436,7 @@ static void dev_pos_oc3_receive_pkt(struct pos_oc3_data *d,
 
    /* Copy the current rxring descriptor */
    rxdesc_read(d,d->rx_current,&rxd0);
-   
+
    /* We must have the first descriptor... */
    if (!rxdesc_acquire(rxd0.rdes[0]))
       return;
@@ -546,7 +546,7 @@ static int dev_pos_oc3_handle_txring(struct pos_oc3_data *d)
       return(FALSE);
 
    /* Copy the current txring descriptor */
-   tx_start = d->tx_current;   
+   tx_start = d->tx_current;
    ptxd = &txd0;
    txdesc_read(d,d->tx_current,ptxd);
 
@@ -609,7 +609,7 @@ static int dev_pos_oc3_handle_txring(struct pos_oc3_data *d)
       POS_LOG(d,"sending packet of %u bytes (flags=0x%4.4x)\n",
               tot_len,txd0.tdes[0]);
       mem_dump(log_file,pkt,tot_len);
-#endif   
+#endif
       /* send it on wire */
       netio_send(d->nio,pkt,tot_len);
    }

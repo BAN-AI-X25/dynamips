@@ -1,47 +1,47 @@
 /*------------------------------------------------------------------
  * gdbproto.c  --  GDB protocol handling
- *  
+ *
  *------------------------------------------------------------------
  */
 /*
  *
  *    The following gdb commands are supported:
- * 
+ *
  * command          function                               Return value
- * 
+ *
  *    g             return the value of the CPU registers  hex data or ENN
  *    G             set the value of the CPU registers     OK or ENN
- * 
+ *
  *    mAA..AA,LLLL  Read LLLL bytes at address AA..AA      hex data or ENN
  *    MAA..AA,LLLL: Write LLLL bytes at address AA.AA      OK or ENN
- * 
+ *
  *    c             Resume at current address              SNN   ( signal NN)
  *    cAA..AA       Continue at address AA..AA             SNN
- * 
+ *
  *    s             Step one instruction                   SNN
  *    sAA..AA       Step one instruction from AA..AA       SNN
- * 
+ *
  *    k             kill
  *
  *    ?             What was the last sigval ?             SNN   (signal NN)
- * 
- * All commands and responses are sent with a packet which includes a 
- * checksum.  A packet consists of 
- * 
+ *
+ * All commands and responses are sent with a packet which includes a
+ * checksum.  A packet consists of
+ *
  * $<packet info>#<checksum>.
- * 
+ *
  * where
  * <packet info> :: <characters representing the command or response>
  * <checksum>    :: < two hex digits computed as modulo 256 sum of <packetinfo>>
- * 
+ *
  * When a packet is received, it is first acknowledged with either '+' or '-'.
  * '+' indicates a successful transfer.  '-' indicates a failed transfer.
- * 
+ *
  * Example:
- * 
+ *
  * Host:                  Reply:
  * $m0,10#2a               +$00010203040506070809101112131415#42
- * 
+ *
  ****************************************************************************/
 
 #include "gdb_proto.h"
@@ -60,7 +60,7 @@ void gdb_init_debug_context(vm_instance_t *vm)
 
     // Set the GDB context for the current VM
     vm->gdb_ctx = ctx;
-    
+
     // Initialize GDB context structure members
     memset(ctx, 0, sizeof(gdb_debug_context_t));
 
@@ -80,7 +80,7 @@ void gdb_init_debug_context(vm_instance_t *vm)
  * is used by the 'parse' routines to actually perform the conversion.
  *
  * Entry : srcstr	- Pointer to string to convert
- *	   retstr	- Pointer to cell which will contain the address 
+ *	   retstr	- Pointer to cell which will contain the address
  *			  of the first byte not converted
  *			- Pointer to cell to return value
  */
@@ -152,7 +152,7 @@ boolean parse2hexnum (char *srcstr, int *retvalue1, int *retvalue2)
   return (TRUE);
 }
 
-/* 
+/*
  * scan for the sequence $<data>#<checksum>
  */
 boolean getpacket (gdb_debug_context_t * ctx)
@@ -233,12 +233,12 @@ boolean getpacket (gdb_debug_context_t * ctx)
 
   if (gdb_debug)
      gdb_printf("-> %s\n", ctx->inbuf);
-         
+
   return (TRUE);
 }
 
-/* 
- * send the packet in buffer.  The host get's one chance to read it.  
+/*
+ * send the packet in buffer.  The host get's one chance to read it.
  * This routine does not wait for a positive acknowledge.
  */
 
@@ -267,14 +267,14 @@ putpacket (gdb_debug_context_t * ctx)
   PUTCHAR (ctx, '#');
   PUTCHAR (ctx, tohexchar (checksum >> 4));
   PUTCHAR (ctx, tohexchar (checksum));
-  
+
   //if (gdb_debug)
      //gdb_printf("<- %s\n", ctx->outbuf);
-         
+
   FLUSH (ctx);
 }
 
-/* 
+/*
  * convert the memory pointed to by mem into hex, placing result in buf
  * return a pointer to the last char put in buf (null)
  */
@@ -325,7 +325,7 @@ int gdb_interface (gdb_debug_context_t * ctx)
     gdb_printf ("GDB debug information not implemented!\n");
          //gdb_show_exception_info(ctx);
 
-  /* 
+  /*
    * Indicate that we've gone back to debug mode
    */
   snprintf(ctx->outbuf, sizeof(ctx->outbuf), "T%02xthread:%02x;", ctx->signal, 1);
@@ -334,9 +334,9 @@ int gdb_interface (gdb_debug_context_t * ctx)
   while (getpacket (ctx))
   {
       ctx->outbuf[0] = 0;
-         
+
       switch (ctx->inbuf[0])
-	{          
+	{
 	  /* Tell the gdb client our signal number */
 	case '?':
 
@@ -355,29 +355,29 @@ int gdb_interface (gdb_debug_context_t * ctx)
 	case 'c':
         {
           m_int32_t address = 0;
-          
+
           parsehexnum(&ctx->inbuf[1], &address);
-    
+
 	  gdb_cmd_proc_continue (ctx, (m_uint64_t)address, 0);	/* continue instruction execution */
-          
+
 	  return (GDB_CONT_RESUME_VM);
-        } 
+        }
 	  /* toggle debug flag */
 	case 'd':
 	  gdb_debug = !(gdb_debug);
 	  break;
-          
+
         case 'D':
           /* Detach packet */
           //gdb_breakpoint_remove_all(); // TODO: implement this command.
           gdb_cmd_proc_continue(ctx, 0, 0);
-          
+
           strcpy(ctx->outbuf, "OK");
           putpacket(ctx);
-          
+
           if (gdb_debug)
              gdb_printf("Dynamips: Detached GDBstub.\n");
-             
+
           return (GDB_EXIT_DONT_STOP_VM);
 
 	  /* Return the value of the CPU registers */
@@ -413,7 +413,7 @@ int gdb_interface (gdb_debug_context_t * ctx)
 	case 'M':
 	  gdb_cmd_write_mem (ctx);
 	  break;
-          
+
           /* pAA: return the content of register number AA */
         case 'p':
 	  switch(ctx->vm->boot_cpu->type)
@@ -426,7 +426,7 @@ int gdb_interface (gdb_debug_context_t * ctx)
                break;
           }
           break;
-        
+
 	  /* PAA..AA=LLLL: Set register AA..AA to value LLLL */
 	case 'P':
 	  switch(ctx->vm->boot_cpu->type)
@@ -440,7 +440,7 @@ int gdb_interface (gdb_debug_context_t * ctx)
           }
 	  break;
 
-          
+
         case 'q':
         case 'Q':
         {
@@ -451,18 +451,18 @@ int gdb_interface (gdb_debug_context_t * ctx)
                 strcpy(ctx->outbuf, "QC1");
                 //putpacket(ctx);
                 break;
-                
+
             } else if (strcmp(ctx->inbuf + 1, "fThreadInfo") == 0) {
                 //s->query_cpu = first_cpu;
                 query_cpu = 1;
                 goto report_cpuinfo;
-                
+
             } else if (strcmp(ctx->inbuf + 1, "sThreadInfo") == 0) {
-                    
+
             report_cpuinfo:
-            
+
                 if (query_cpu) {
-                    snprintf(ctx->outbuf, sizeof(ctx->outbuf), "m%x", 
+                    snprintf(ctx->outbuf, sizeof(ctx->outbuf), "m%x",
                                 query_cpu/*gdb_id(s->query_cpu)*/);
                     //putpacket(ctx);
                     //s->query_cpu = s->query_cpu->next_cpu;
@@ -471,14 +471,14 @@ int gdb_interface (gdb_debug_context_t * ctx)
                     //putpacket(ctx);
                 }
                 break;
-                
+
             } else if (strncmp(ctx->inbuf + 1, "ThreadExtraInfo,", 16) == 0) {
                 unsigned long long thread;
                 unsigned int len;
                 char mem_buf[BUFMAX];
-                
+
                 thread = strtoull(ctx->inbuf + 1 +16, (char **)&ctx->inbuf + 1, 16);
-                
+
                 //cpu_synchronize_state(env, 0);
                 len = snprintf((char *)mem_buf, sizeof(mem_buf),
                            "CPU#%d [%s]", ctx->vm->instance_id,
@@ -516,11 +516,11 @@ int gdb_interface (gdb_debug_context_t * ctx)
 	case 's':
         {
           m_int32_t address = 0;
-          
+
           parsehexnum(&ctx->inbuf[1], &address);
-          
+
 	  gdb_cmd_proc_continue (ctx, (m_uint64_t)address, 1);	/* step one instruction */
-          
+
           return (GDB_CONT_DONT_RESUME_VM);
         }
 
@@ -529,24 +529,24 @@ int gdb_interface (gdb_debug_context_t * ctx)
                 m_int32_t  res = 1,
                            thread = 0,
                            stepping = 0;
-                           
+
                 int action, signal;
-                    
+
                 char* pInbuf = ctx->inbuf;
-                
+
                 pInbuf += 5;
-                
+
                 if (*pInbuf == '?') {
                     strcpy(ctx->outbuf,  "vCont;c;C;s;S");
                     break;
                 }
-                
+
                 if (*pInbuf++ != ';') {
                     break;
                 }
                 action = *pInbuf++;
                 signal = 0;
-                    
+
                 switch(action)
                 {
                 case 'C':
@@ -575,9 +575,9 @@ int gdb_interface (gdb_debug_context_t * ctx)
                     res = 0;
                     break;
                 } // end switch
-                
+
                 thread = 0;
-                
+
                 if (*pInbuf == ':') {
                     thread = strtoull(pInbuf + 1, (char**)pInbuf, 16);
                 }
@@ -595,13 +595,13 @@ int gdb_interface (gdb_debug_context_t * ctx)
             }
             break;
 
-	  /* ZT,AA..AA,LLLL: Insert a type T breakpoint or watchpoint 
+	  /* ZT,AA..AA,LLLL: Insert a type T breakpoint or watchpoint
 	     starting at address AA..AA and covering the next LL bytes */
 	case 'Z':
            gdb_cmd_insert_breakpoint(ctx);
            break;
-           
-	  /* zT,AA..AA,LLLL: Remove a type T breakpoint or watchpoint 
+
+	  /* zT,AA..AA,LLLL: Remove a type T breakpoint or watchpoint
 	     starting at address AA..AA and covering the next LL bytes */
 	case 'z':
            gdb_cmd_remove_breakpoint(ctx);
@@ -612,7 +612,7 @@ int gdb_interface (gdb_debug_context_t * ctx)
       /* reply to the request and flush the caches */
       putpacket (ctx);
     }
-    
+
     return (GDB_EXIT_STOP_VM);
 }
 

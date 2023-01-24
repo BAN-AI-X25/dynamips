@@ -4,7 +4,7 @@
  *
  * Cirrus Logic PD6729 PCI-to-PCMCIA host adapter.
  *
- * TODO: finish the code! (especially extended registers) 
+ * TODO: finish the code! (especially extended registers)
  */
 
 #include <stdio.h>
@@ -55,7 +55,7 @@ static void clpd6729_base_reg_access(cpu_gen_t *cpu,struct clpd6729_data *d,
                                      u_int op_type,m_uint64_t *data)
 {
    u_int slot_id,reg;
-   
+
 #if DEBUG_ACCESS
    if (op_type == MTS_READ) {
       cpu_log(cpu,"CLPD6729","reading reg 0x%2.2x at pc=0x%llx\n",
@@ -73,7 +73,7 @@ static void clpd6729_base_reg_access(cpu_gen_t *cpu,struct clpd6729_data *d,
    if (d->base_index >= 0x80)
       return;
 
-   /* 
+   /*
     * Socket A regs: 0x00 to 0x3f
     * Socket B regs: 0x40 to 0x7f
     */

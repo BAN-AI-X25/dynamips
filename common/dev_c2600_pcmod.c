@@ -1,4 +1,4 @@
-/*  
+/*
  * Cisco router simulation platform.
  * Copyright (c) 2007 Christophe Fillot (cf@utc.fr)
  *
@@ -25,11 +25,11 @@
 /* Initialize a NM-NAM in the specified slot */
 static int dev_c2600_pcmod_init(vm_instance_t *vm,struct cisco_card *card)
 {
- 
+
    struct i8255x_data *data;
    u_int slot = card->slot_id;
 
-   /* 
+   /*
     * Non-XM models don't have the capability to byte-swap through their
     * PCI host bridge (required for i82559 data transfers).
     */
@@ -38,7 +38,7 @@ static int dev_c2600_pcmod_init(vm_instance_t *vm,struct cisco_card *card)
                card->driver->dev_type);
       return(-1);
    }
- 
+
    /* Set the PCI bus */
    card->pci_bus = vm->slots_pci_bus[slot];
 
@@ -99,8 +99,8 @@ static int dev_c2600_pcmod_unset_nio(vm_instance_t *vm,struct cisco_card *card,
 /* NM-NAM driver */
 struct cisco_card_driver dev_c2600_nm_nam_driver = {
    "NM-NAM", 0, 0,
-   dev_c2600_pcmod_init, 
-   dev_c2600_pcmod_shutdown, 
+   dev_c2600_pcmod_init,
+   dev_c2600_pcmod_shutdown,
    NULL,
    dev_c2600_pcmod_set_nio,
    dev_c2600_pcmod_unset_nio,
@@ -110,8 +110,8 @@ struct cisco_card_driver dev_c2600_nm_nam_driver = {
 /* NM-CIDS driver */
 struct cisco_card_driver dev_c2600_nm_cids_driver = {
    "NM-CIDS", 0, 0,
-   dev_c2600_pcmod_init, 
-   dev_c2600_pcmod_shutdown, 
+   dev_c2600_pcmod_init,
+   dev_c2600_pcmod_shutdown,
    NULL,
    dev_c2600_pcmod_set_nio,
    dev_c2600_pcmod_unset_nio,

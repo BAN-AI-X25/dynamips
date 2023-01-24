@@ -1,4 +1,4 @@
-/*  
+/*
  * Cisco router simulation platform.
  * Copyright (C) 2005,2006 Christophe Fillot.  All rights reserved.
  *
@@ -10,7 +10,7 @@
  *   - 0x2D: PA-A1-OC3UTP
  *
  * IOS command: "sh controller atm2/0"
- * 
+ *
  * Manuals:
  *
  * Texas Instruments TNETA1570 ATM segmentation and reassembly device
@@ -20,7 +20,7 @@
  * PLX 9060-ES
  * http://www.plxtech.com/products/io_accelerators/PCI9060/default.htm
  *
- * TODO: 
+ * TODO:
  *   - RX error handling and RX AAL5-related stuff
  *   - HEC and AAL5 CRC fields.
  *
@@ -293,7 +293,7 @@ struct pa_a1_data {
 
    /* TI1570 internal registers */
    m_uint32_t *iregs;
-   
+
    /* TX FIFO cell */
    m_uint8_t txfifo_cell[ATM_CELL_SIZE];
    m_uint32_t txfifo_avail,txfifo_pos;
@@ -344,7 +344,7 @@ static inline void dev_pa_a1_update_irq_status(struct pa_a1_data *d)
 {
    if (d->iregs[TI1570_REG_STATUS] & d->iregs[TI1570_REG_IMASK]) {
       pci_dev_trigger_irq(d->vm,d->pci_dev_ti);
-   } else {     
+   } else {
       pci_dev_clear_irq(d->vm,d->pci_dev_ti);
    }
 }
@@ -368,7 +368,7 @@ void *dev_pa_a1_access(cpu_gen_t *cpu,struct vdevice *dev,m_uint32_t offset,
       cpu_log(cpu,"TI1570","write access to vaddr = 0x%x, pc = 0x%llx, "
               "val = 0x%llx\n",offset,cpu_get_pc(cpu),*data);
    }
-#endif   
+#endif
 
    /* Specific cases */
    switch(offset) {
@@ -436,7 +436,7 @@ static void ti1570_read_tx_buffer(struct pa_a1_data *d,m_uint32_t addr,
 }
 
 /* Acquire a TX buffer */
-static int ti1570_acquire_tx_buffer(struct pa_a1_data *d,   
+static int ti1570_acquire_tx_buffer(struct pa_a1_data *d,
                                     ti1570_tx_dma_entry_t *tde,
                                     m_uint32_t buf_addr)
 {
@@ -494,7 +494,7 @@ static void ti1570_update_aal5_crc(struct pa_a1_data *d,
                                  ATM_PAYLOAD_SIZE);
 }
 
-/* 
+/*
  * Update the TX DMA entry buffer offset and count when "data_len" bytes
  * have been transmitted.
  */
@@ -506,7 +506,7 @@ static void ti1570_update_tx_dma_bufinfo(ti1570_tx_dma_entry_t *tde,
 
    /* update the current buffer address */
    tde->cb_addr += data_len;
-   
+
    /* set the remaining byte count */
    tmp = tde->ctrl_buf & ~TI1570_TX_BUFFER_DCOUNT_MASK;
    tde->ctrl_buf = tmp + (buf_size - data_len);
@@ -529,8 +529,8 @@ static void ti1570_clear_tx_fifo(struct pa_a1_data *d)
    memset(d->txfifo_cell,0,ATM_CELL_SIZE);
 }
 
-/* 
- * Transmit the TX FIFO cell through the NETIO infrastructure if 
+/*
+ * Transmit the TX FIFO cell through the NETIO infrastructure if
  * it is full.
  */
 static void ti1570_send_tx_fifo(struct pa_a1_data *d,
@@ -606,7 +606,7 @@ static m_uint32_t ti1570_init_tx_atm_cell(struct pa_a1_data *d,
    return(len);
 }
 
-/* 
+/*
  * Transmit an Transparent-AAL ATM cell through the NETIO infrastructure.
  */
 static int ti1570_transmit_transp_cell(struct pa_a1_data *d,
@@ -624,7 +624,7 @@ static int ti1570_transmit_transp_cell(struct pa_a1_data *d,
       len = ti1570_init_tx_atm_cell(d,tde,FALSE);
       ti1570_send_tx_fifo(d,tde,FALSE);
 
-      if ((buf_size - len) == 0) 
+      if ((buf_size - len) == 0)
          *buf_end = TRUE;
 
       return(FALSE);
@@ -693,7 +693,7 @@ static int ti1570_transmit_aal5_cell(struct pa_a1_data *d,
       return(FALSE);
    }
 
-   /* 
+   /*
     * This is the end of packet, check if we need to emit a special cell
     * for the AAL5 trailer.
     */
@@ -847,7 +847,7 @@ static int ti1570_scan_tx_dma_entry_single(struct pa_a1_data *d,
               tde->nb_addr, tde->sb_addr, tde->aal5_crc, tde->aal5_ctrl);
 #endif
 
-   /* 
+   /*
     * If the current buffer is now empty and if this is not the last
     * buffer in the current packet, try to fetch a new buffer.
     * If the next buffer is not yet ready, we have finished.
@@ -878,8 +878,8 @@ static int ti1570_scan_tx_dma_entry_single(struct pa_a1_data *d,
 
    /* Put the buffer address in the transmit completion ring */
    if (buf_end) ti1570_update_tx_cring(d,tde);
-   
-   /* 
+
+   /*
     * If we have reached end of packet (EOP): clear the ACT bit,
     * give back the packet-segmentation ring entry to the host,
     * and increment the PSR index.
@@ -895,7 +895,7 @@ static int ti1570_scan_tx_dma_entry_single(struct pa_a1_data *d,
       psr_entry = physmem_copy_u32_from_vm(d->vm,psr_addr);
       psr_entry &= ~TI1570_TX_RING_OWN;
       physmem_copy_u32_to_vm(d->vm,psr_addr,psr_entry);
-      
+
       /* Increment the packet-segmentation ring index */
       psr_index++;
       psr_end = d->iregs[TI1570_REG_TX_PSR_SIZE] >> 16;
@@ -915,7 +915,7 @@ static int ti1570_scan_tx_dma_entry_single(struct pa_a1_data *d,
    }
 
    /* Generate an interrupt if required */
-   if (tde->ctrl_buf & TI1570_TX_DMA_TCR_SELECT) 
+   if (tde->ctrl_buf & TI1570_TX_DMA_TCR_SELECT)
    {
       if (((d->iregs[TI1570_REG_CONFIG] & TI1570_CFG_BP_SEL) && buf_end) ||
           pkt_end)
@@ -1012,7 +1012,7 @@ static void ti1570_update_rx_cring(struct pa_a1_data *d,
 
    /* fill the RX completion ring entry and write it back to the host */
    memset(&rcre,0,sizeof(rcre));
-   
+
    /* word 0: atm header from last cell received */
    rcre.atm_hdr = atm_hdr;
 
@@ -1020,16 +1020,16 @@ static void ti1570_update_rx_cring(struct pa_a1_data *d,
    aal_type = rde->ctrl & TI1570_RX_DMA_AAL_TYPE_MASK;
    if (aal_type == TI1570_RX_DMA_AAL_AAL5)
       rcre.error |= TI1570_RCR_AAL5;
-   
+
    rcre.error |= err_ind;
 
    /* word 2: Start of packet */
    if (fbuf_valid)
       rcre.sp_addr = TI1570_RCR_VALID | rde->sp_ptr;
- 
+
    /* word 3: AAL5 trailer */
    rcre.aal5_trailer = aal5_trailer;
-   
+
    /* word 4: OWN + error entry + free-buffer ring pointer */
    rcre.fbr_entry = rde->fbr_entry & TI1570_RX_DMA_FB_PTR_MASK;
    if (err_ind) rcre.fbr_entry |= TI1570_RCR_ERROR;
@@ -1064,7 +1064,7 @@ static void ti1570_update_rx_cring(struct pa_a1_data *d,
    }
 }
 
-/* 
+/*
  * Acquire a free RX buffer.
  *
  * Returns FALSE if no buffer is available (buffer starvation).
@@ -1073,7 +1073,7 @@ static int ti1570_acquire_rx_buffer(struct pa_a1_data *d,
                                     ti1570_rx_dma_entry_t *rde,
                                     ti1570_rx_buf_holder_t *rbh,
                                     m_uint32_t atm_hdr)
-{  
+{
    ti1570_rx_fbr_entry_t *fbr_entry = NULL;
    m_uint32_t bp_addr,buf_addr,buf_size,buf_idx;
    m_uint32_t ring_index,ring_size;
@@ -1084,7 +1084,7 @@ static int ti1570_acquire_rx_buffer(struct pa_a1_data *d,
    ring_size = 0;
    buf_idx = 0;
 
-   if (rde->ctrl & TI1570_RX_DMA_FIFO) { 
+   if (rde->ctrl & TI1570_RX_DMA_FIFO) {
       bp_addr  = (rde->fbr_entry & TI1570_RX_DMA_FB_PTR_MASK) << 2;
       buf_ptr  = physmem_copy_u32_from_vm(d->vm,bp_addr);
       buf_size = d->iregs[TI1570_REG_TX_PSR_SIZE] & 0xFFFF;
@@ -1093,8 +1093,8 @@ static int ti1570_acquire_rx_buffer(struct pa_a1_data *d,
 #if DEBUG_RECEIVE
       TI1570_LOG(d,"ti1570_acquire_rx_buffer: acquiring FIFO buffer\n");
 #endif
-   } 
-   else 
+   }
+   else
    {
       ring_index = rde->fbr_entry & TI1570_RX_DMA_FB_INDEX_MASK;
       fbr_entry = &d->rx_fbr_table[ring_index];
@@ -1138,7 +1138,7 @@ static int ti1570_acquire_rx_buffer(struct pa_a1_data *d,
       return(FALSE);
    }
 
-   /* 
+   /*
     * If we are using a ring, we have to clear the OWN bit and increment
     * the index field.
     */
@@ -1193,7 +1193,7 @@ static void ti1570_insert_rx_free_buf(struct pa_a1_data *d,
    /* Set current and start of buffer addresses */
    rde->cb_addr = rbh->buf_addr + sizeof(ti1570_rx_buffer_t);
    rde->sb_addr = rbh->buf_addr >> 2;
-   
+
    /* Set the buffer length */
    val = rbh->buf_size;
 
@@ -1211,10 +1211,10 @@ static int ti1570_store_rx_cell(struct pa_a1_data *d,
    m_uint32_t aal_type,atm_hdr,aal5_trailer,pti,real_eop,pti_eop;
    m_uint32_t prev_buf_addr,buf_len,val,ptr,cnt;
    ti1570_rx_buf_holder_t rbh;
-   
+
    real_eop = pti_eop = FALSE;
    aal_type = rde->ctrl & TI1570_RX_DMA_AAL_TYPE_MASK;
-      
+
    /* Extract PTI from the ATM header */
    atm_hdr = ntohl(*(m_uint32_t *)&atm_cell[0]);
    pti = (atm_hdr & ATM_HDR_PTI_MASK) >> ATM_HDR_PTI_SHIFT;
@@ -1222,7 +1222,7 @@ static int ti1570_store_rx_cell(struct pa_a1_data *d,
    /* PTI == 0x1 => EOP */
    if ((pti == 0x01) || (pti == 0x03))
       pti_eop = TRUE;
-   
+
    if (rde->ctrl & TI1570_RX_DMA_WAIT_EOP) {
       TI1570_LOG(d,"ti1570_store_rx_cell: EOP processing, not handled yet.\n");
       return(FALSE);
@@ -1233,7 +1233,7 @@ static int ti1570_store_rx_cell(struct pa_a1_data *d,
    {
       /* Check that we don't exceed 1366 cells for AAL5 */
       /* XXX TODO */
-   } 
+   }
    else
    {
       /* EOP processing for non counter-based transparent-AAL packets */
@@ -1289,8 +1289,8 @@ static int ti1570_store_rx_cell(struct pa_a1_data *d,
 #endif
 
    /* determine if this is the end of the packet (EOP) */
-   if (aal_type == TI1570_RX_DMA_AAL_CNT) 
-   {   
+   if (aal_type == TI1570_RX_DMA_AAL_CNT)
+   {
       /* counter-based tranparent-AAL packets */
       cnt = rde->cb_len & TI1570_RX_DMA_TR_CNT_MASK;
       cnt >>= TI1570_RX_DMA_TR_CNT_SHIFT;
@@ -1353,14 +1353,14 @@ static int ti1570_handle_rx_cell(netio_desc_t *nio,
 
    /* Get the entry corresponding to this VPI in RX VPI/VCI dma ptr table */
    rvd_entry = d->rx_vpi_vci_dma_table[vpi];
-  
+
    if (!(rvd_entry & TI1570_RX_VPI_ENABLE)) {
       TI1570_LOG(d,"ti1570_handle_rx_cell: received cell with "
                  "unknown VPI %u (VCI=%u)\n",vpi,vci);
       return(FALSE);
    }
 
-   /* 
+   /*
     * Special routing for OAM F4 cells:
     *   - VCI 3 : OAM F4 segment cell
     *   - VCI 4 : OAM F4 end-to-end cell
@@ -1368,7 +1368,7 @@ static int ti1570_handle_rx_cell(netio_desc_t *nio,
    if ((vci == 3) || (vci == 4))
       rde = &d->rx_dma_table[2];
    else {
-      if ((atm_hdr & ATM_PTI_NETWORK) != 0) {      
+      if ((atm_hdr & ATM_PTI_NETWORK) != 0) {
          switch(pti) {
             case 0x04:   /* OAM F5-segment cell */
             case 0x05:   /* OAM F5 end-to-end cell */
@@ -1381,7 +1381,7 @@ static int ti1570_handle_rx_cell(netio_desc_t *nio,
                break;
          }
       } else {
-         /* 
+         /*
           * Standard VPI/VCI.
           * Apply the VCI mask if we don't have an OAM cell.
           */
@@ -1414,7 +1414,7 @@ static int ti1570_handle_rx_cell(netio_desc_t *nio,
                return(FALSE);
             }
 
-            bptr -= TI1570_RX_DMA_TABLE_OFFSET;      
+            bptr -= TI1570_RX_DMA_TABLE_OFFSET;
             rde = &d->rx_dma_table[bptr / sizeof(ti1570_rx_dma_entry_t)];
          }
       }
@@ -1430,7 +1430,7 @@ static int ti1570_handle_rx_cell(netio_desc_t *nio,
       return(FALSE);
 
    /* Is this the start of a new packet ? */
-   if (!(rde->ctrl & TI1570_RX_DMA_ACT)) 
+   if (!(rde->ctrl & TI1570_RX_DMA_ACT))
    {
       /* Try to acquire a free buffer */
       if (!ti1570_acquire_rx_buffer(d,rde,&rbh,atm_hdr)) {
@@ -1546,7 +1546,7 @@ static void ti1570_reset(struct pa_a1_data *d,int clear_ctrl_mem)
  * Add a PA-A1 port adapter into specified slot.
  */
 int dev_c7200_pa_a1_init(vm_instance_t *vm,struct cisco_card *card)
-{   
+{
    u_int slot = card->slot_id;
    struct pci_device *pci_dev_ti,*pci_dev_plx;
    struct pa_a1_data *d;
@@ -1630,7 +1630,7 @@ int dev_c7200_pa_a1_init(vm_instance_t *vm,struct cisco_card *card)
    /* Store device info */
    dev->priv_data = d;
    d->dev = dev;
-   
+
    /* Store device info into the router structure */
    card->drv_info = d;
    return(0);

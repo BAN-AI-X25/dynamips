@@ -87,7 +87,7 @@ struct debug_context
     char scratchbuf[BUFMAX];                    /* Scratch buffer for compression */
     int savelevel;                              /* Saved interrupt level of GDB */
     int signal;                                 /* Signal number of exception */
-                             
+
     FILE *in,*out;                              /* I/O buffered streams */
     vm_instance_t *vm;                          /* Current VM for this debuggin session */
 };

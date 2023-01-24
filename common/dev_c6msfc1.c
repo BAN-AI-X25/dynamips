@@ -100,10 +100,10 @@ static int dev_c6msfc1_eobc_unset_nio(vm_instance_t *vm,
                                       u_int port_id)
 {
    struct dec21140_data *d = card->drv_info;
-   
+
    if (!d || (port_id != 0))
       return(-1);
-   
+
    dev_dec21140_unset_nio(d);
    return(0);
 }
@@ -218,7 +218,7 @@ static int c6msfc1_nvram_push_config(vm_instance_t *vm,u_char *startup_config,si
 }
 
 /* Get slot/port corresponding to specified network IRQ */
-static inline void 
+static inline void
 c6msfc1_net_irq_get_slot_port(u_int irq,u_int *slot,u_int *port)
 {
    *slot = irq - C6MSFC1_NETIO_IRQ_BASE;
@@ -229,7 +229,7 @@ c6msfc1_net_irq_get_slot_port(u_int irq,u_int *slot,u_int *port)
 u_int c6msfc1_net_irq_for_slot_port(u_int slot,u_int port)
 {
    u_int irq;
-   
+
    irq = C6MSFC1_NETIO_IRQ_BASE + slot;
    return(irq);
 }
@@ -319,14 +319,14 @@ static int c6msfc1_delete_instance(vm_instance_t *vm)
 
 /* Create the main PCI bus for a GT64010 based system */
 static int c6msfc1_init_gt64010(c6msfc1_t *router)
-{   
+{
    vm_instance_t *vm = router->vm;
 
    if (!(vm->pci_bus[0] = pci_bus_create("PCI Bus 0",0))) {
       vm_error(vm,"unable to create PCI data.\n");
       return(-1);
    }
-   
+
    return(dev_gt64010_init(vm,"gt64010",C6MSFC1_GT64K_ADDR,0x1000,
                            C6MSFC1_GT64K_IRQ));
 }
@@ -393,7 +393,7 @@ static void c6msfc1_init_defaults(c6msfc1_t *router)
    vm->nr_slots   = C6MSFC1_MAX_PA_BAYS;
    vm->slots_type = CISCO_CARD_TYPE_PA;
    vm->slots_drivers = pa_drivers;
-      
+
    pid = (m_uint16_t)getpid();
 
    /* Generate a chassis MAC address based on the instance ID */
@@ -410,7 +410,7 @@ static void c6msfc1_init_defaults(c6msfc1_t *router)
 
    c6msfc1_set_eeprom(router);
    c6msfc1_init_eeprom_groups(router);
-   
+
    /* Create EOBC and IBC interfaces */
    vm_slot_add_binding(vm,"C6MSFC1_EOBC",0,0);
    vm_slot_add_binding(vm,"C6MSFC1_IBC",1,0);
@@ -452,7 +452,7 @@ static int c6msfc1_init_platform_pa(c6msfc1_t *router)
 static int c6msfc1_init_platform(c6msfc1_t *router)
 {
    struct vm_instance *vm = router->vm;
-   cpu_mips_t *cpu0; 
+   cpu_mips_t *cpu0;
    cpu_gen_t *gen0;
    vm_obj_t *obj;
 
@@ -550,9 +550,9 @@ static int c6msfc1_init_platform(c6msfc1_t *router)
 
    if (!(obj = vm_object_find(router->vm,"mp_fpga")))
       return(-1);
-   
+
    router->mpfpga_data = obj->data;
-   
+
    /* IO FPGA */
    if (dev_c6msfc1_iofpga_init(router,C6MSFC1_IOFPGA_ADDR,0x1000) == -1)
       return(-1);
@@ -564,7 +564,7 @@ static int c6msfc1_init_platform(c6msfc1_t *router)
 
 /* Boot the IOS image */
 static int c6msfc1_boot_ios(c6msfc1_t *router)
-{   
+{
    vm_instance_t *vm = router->vm;
    cpu_mips_t *cpu;
 
@@ -601,7 +601,7 @@ static int c6msfc1_boot_ios(c6msfc1_t *router)
    vm_log(vm,"C6MSFC1_BOOT",
           "starting instance (CPU0 PC=0x%llx,idle_pc=0x%llx,JIT %s)\n",
           cpu->pc,cpu->idle_pc,vm->jit_use ? "on":"off");
-   
+
    /* Start main CPU */
    if (vm->ghost_status != VM_GHOST_RAM_GENERATE) {
       vm->status = VM_STATUS_RUNNING;
@@ -618,15 +618,15 @@ static void c6msfc1_set_irq(vm_instance_t *vm,u_int irq)
    c6msfc1_t *router = VM_C6MSFC1(vm);
    cpu_mips_t *cpu0 = CPU_MIPS64(vm->boot_cpu);
    u_int slot,port;
-   
+
    switch(irq) {
       case 0 ... 7:
          mips64_set_irq(cpu0,irq);
-         
+
          if (cpu0->irq_idle_preempt[irq])
             cpu_idle_break_wait(cpu0->gen);
          break;
-         
+
       case C6MSFC1_NETIO_IRQ_BASE ... C6MSFC1_NETIO_IRQ_END:
          c6msfc1_net_irq_get_slot_port(irq,&slot,&port);
          dev_c6msfc1_mpfpga_net_set_irq(router->mpfpga_data,slot,port);
@@ -640,12 +640,12 @@ static void c6msfc1_clear_irq(vm_instance_t *vm,u_int irq)
    c6msfc1_t *router = VM_C6MSFC1(vm);
    cpu_mips_t *cpu0 = CPU_MIPS64(vm->boot_cpu);
    u_int slot,port;
-   
+
    switch(irq) {
       case 0 ... 7:
          mips64_clear_irq(cpu0,irq);
          break;
-         
+
       case C6MSFC1_NETIO_IRQ_BASE ... C6MSFC1_NETIO_IRQ_END:
          c6msfc1_net_irq_get_slot_port(irq,&slot,&port);
          dev_c6msfc1_mpfpga_net_clear_irq(router->mpfpga_data,slot,port);
@@ -668,8 +668,8 @@ static int c6msfc1_init_instance(vm_instance_t *vm)
 
    /* IRQ routing */
    vm->set_irq = c6msfc1_set_irq;
-   vm->clear_irq = c6msfc1_clear_irq;   
-   
+   vm->clear_irq = c6msfc1_clear_irq;
+
    /* Load IOS configuration files */
    if (vm->ios_startup_config != NULL || vm->ios_private_config != NULL) {
       vm_nvram_push_config(vm,vm->ios_startup_config,vm->ios_private_config);
@@ -679,7 +679,7 @@ static int c6msfc1_init_instance(vm_instance_t *vm)
    /* Load ROM (ELF image or embedded) */
    cpu0 = CPU_MIPS64(vm->boot_cpu);
    rom_entry_point = (m_uint32_t)MIPS_ROM_PC;
-   
+
    if ((vm->rom_filename != NULL) &&
        (mips64_load_elf_image(cpu0,vm->rom_filename,0,&rom_entry_point) < 0))
    {
@@ -706,7 +706,7 @@ static int c6msfc1_stop_instance(vm_instance_t *vm)
    /* Stop all CPUs */
    if (vm->cpu_group != NULL) {
       vm_stop(vm);
-      
+
       if (cpu_group_sync_state(vm->cpu_group) == -1) {
          vm_error(vm,"unable to sync with system CPUs.\n");
          return(-1);

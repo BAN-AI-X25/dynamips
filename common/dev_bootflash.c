@@ -74,7 +74,7 @@ struct flash_data {
    u_int mode,offset_shift,state,blk_size;
    m_uint8_t id_manufacturer,id_device;
    m_uint8_t status_reg;
-   
+
    struct flashset_data *flash_set;
    u_int flash_pos;
 
@@ -89,7 +89,7 @@ struct flashset_data {
    vm_obj_t vm_obj;
    struct vdevice dev;
    char *filename;
-   
+
    u_int mode;
    u_int nr_flash_bits;
    u_int nr_flash_count;
@@ -121,7 +121,7 @@ static struct flash_model flash_models[] = {
    { "c7200-bootflash-8mb",8 * 1048576,FLASH_MODE_BYTE,2,0x10000,0x89,0xA0 },
 
    /*
-    * C7200 64 Mb bootflash: 4x128 Mb Intel flash in byte mode 
+    * C7200 64 Mb bootflash: 4x128 Mb Intel flash in byte mode
     * (for NPE-G2 but doesn't work now).
     */
    { "c7200-bootflash-64mb",64 * 1048576,FLASH_MODE_BYTE,2,0x10000,0x89,0x18 },
@@ -151,7 +151,7 @@ static int flashset_init(struct flashset_data *d,
 {
    struct flash_data *flash;
    u_int i,offset_shift;
-   
+
    d->mode = mode;
    d->nr_flash_bits  = nr_flash_bits;
    d->nr_flash_count = 1 << d->nr_flash_bits;
@@ -222,7 +222,7 @@ static int flash_write(struct flash_data *d,u_int offset,u_int data)
 static void flash_cmd(struct flash_data *d,u_int offset,u_int cmd)
 {
    cmd = cmd & 0xFF;
-   
+
    switch(cmd) {
       case 0x40:
       case 0x10:
@@ -318,8 +318,8 @@ static void flash_access(struct flash_data *d,m_uint32_t offset,u_int op_type,
 
       /* Write buffer (data) */
       case FLASH_CMD_WRITE_BUF_DATA:
-         if (op_type == MTS_WRITE) {            
-            if ((offset >= d->wb_offset) && 
+         if (op_type == MTS_WRITE) {
+            if ((offset >= d->wb_offset) &&
                 (offset < (d->wb_offset + d->wb_count)))
             {
                d->wbuf[offset - d->wb_offset] = *data;
@@ -448,7 +448,7 @@ void *dev_bootflash_access(cpu_gen_t *cpu,struct vdevice *dev,
                       &flash_data[i]);
       }
    }
-   
+
    return NULL;
 }
 
@@ -471,7 +471,7 @@ void dev_bootflash_shutdown(vm_instance_t *vm,struct flashset_data *d)
 /* Create a 8 Mb bootflash */
 int dev_bootflash_init(vm_instance_t *vm,char *name,char *model,
                        m_uint64_t paddr)
-{  
+{
    struct flash_model *fm;
    struct flashset_data *d;
    u_char *ptr;

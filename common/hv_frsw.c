@@ -106,7 +106,7 @@ static int cmd_delete(hypervisor_conn_t *conn,int argc,char *argv[])
    return(res);
 }
 
-/* 
+/*
  * Create a Virtual Circuit
  *
  * Parameters: <frsw_name> <input_nio> <input_dlci> <output_nio> <output_dlci>
@@ -117,7 +117,7 @@ static int cmd_create_vc(hypervisor_conn_t *conn,int argc,char *argv[])
 
    if (!(t = hypervisor_find_object(conn,argv[0],OBJ_TYPE_FRSW)))
       return(-1);
-   
+
    /* create the connection */
    if (frsw_create_vc(t,argv[1],atoi(argv[2]),argv[3],atoi(argv[4])) == -1) {
       frsw_release(argv[0]);
@@ -125,7 +125,7 @@ static int cmd_create_vc(hypervisor_conn_t *conn,int argc,char *argv[])
       return(-1);
    }
 
-   frsw_release(argv[0]);   
+   frsw_release(argv[0]);
    hypervisor_send_reply(conn,HSC_INFO_OK,1,"VC created");
    return(0);
 }
@@ -141,7 +141,7 @@ static int cmd_delete_vc(hypervisor_conn_t *conn,int argc,char *argv[])
 
    if (!(t = hypervisor_find_object(conn,argv[0],OBJ_TYPE_FRSW)))
       return(-1);
-   
+
    /* delete the connection */
    if (frsw_delete_vc(t,argv[1],atoi(argv[2]),argv[3],atoi(argv[4])) == -1) {
       frsw_release(argv[0]);

@@ -155,7 +155,7 @@ void ds1620_write_data_bit(struct ds1620_data *d,u_int data_bit)
       case DS1620_STATE_CMD_IN:
          if (data_bit)
             d->cmd |= 1 << d->cmd_pos;
-         
+
          if (++d->cmd_pos == DS1620_CMD_SIZE)
             ds1620_cmd_set_state(d);
          break;
@@ -168,7 +168,7 @@ void ds1620_write_data_bit(struct ds1620_data *d,u_int data_bit)
          if (data_bit)
             d->data |= 1 << d->data_pos;
 
-         if (++d->data_pos == d->data_len) 
+         if (++d->data_pos == d->data_len)
             ds1620_exec_cmd(d);
          break;
    }
@@ -204,5 +204,5 @@ void ds1620_init(struct ds1620_data *d,int temp)
    ds1620_set_temp(d,temp);
 
    /* chip in CPU mode (3-wire communications) */
-   d->reg_config = DS1620_CONFIG_STATUS_CPU;   
+   d->reg_config = DS1620_CONFIG_STATUS_CPU;
 }

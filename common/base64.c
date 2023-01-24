@@ -55,7 +55,7 @@ void base64_encode(unsigned char *out,const unsigned char *in,int inlen)
    *out = '\0';
 }
 
-/* 
+/*
  * Decode from base64.
  *
  * base 64 to raw bytes in quasi-big-endian order, returning count of bytes
@@ -80,7 +80,7 @@ int base64_decode(unsigned char *out,const unsigned char *in,int maxlen)
          return(-1);
       digit3 = in[2];
       if (digit3 != '=' && DECODE64(digit3) == BAD)
-         return(-1); 
+         return(-1);
       digit4 = in[3];
       if (digit4 != '=' && DECODE64(digit4) == BAD)
          return(-1);

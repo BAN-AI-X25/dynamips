@@ -124,7 +124,7 @@ int atm_aal5_send(netio_desc_t *nio,u_int vpi,u_int vci,
 {
    struct atm_seg_context asc;
    int i;
-   
+
    asc.nio = nio;
    asc.aal5_len = 0;
    asc.aal5_crc = 0;  /* will be inverted by first CRC update */
@@ -143,7 +143,7 @@ int atm_aal5_send(netio_desc_t *nio,u_int vpi,u_int vci,
          atm_store_fifo(&asc);
    }
 
-   /* 
+   /*
     * Add the PDU trailer. If we have enough room, add it in the last cell,
     * otherwise create a new one.
     */
@@ -151,10 +151,10 @@ int atm_aal5_send(netio_desc_t *nio,u_int vpi,u_int vci,
       atm_add_tx_padding(&asc,asc.txfifo_avail);
       atm_send_fifo(&asc);
    }
-   
+
    /* Set AAL5 end of packet in ATM header (PTI field) */
    asc.atm_hdr |= ATM_PTI_EOP;
-   
+
    atm_add_tx_padding(&asc,asc.txfifo_avail - ATM_AAL5_TRAILER_SIZE);
    atm_aal5_add_trailer(&asc);
    atm_send_cell(&asc);
@@ -184,12 +184,12 @@ int atm_aal5_recv(struct atm_reas_context *arc,m_uint8_t *cell)
 
    if (atm_hdr & ATM_PTI_NETWORK)
       return(2);
-   
+
    /* Copy the payload */
    memcpy(&arc->buffer[arc->buf_pos],&cell[ATM_HDR_SIZE],ATM_PAYLOAD_SIZE);
    arc->buf_pos += ATM_PAYLOAD_SIZE;
 
-   /* 
+   /*
     * If this is the last cell of the packet, get the real length (the
     * trailer is at the end).
     */

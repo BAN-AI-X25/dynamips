@@ -36,13 +36,13 @@
 #include "registry.h"
 #include "hypervisor.h"
 
-/* 
+/*
  * Create a UDP NIO
  *
  * Parameters: <nio_name> <local_port> <remote_host> <remote_port>
  */
 static int cmd_create_udp(hypervisor_conn_t *conn,int argc,char *argv[])
-{   
+{
    netio_desc_t *nio;
 
    nio = netio_desc_create_udp(argv[0],atoi(argv[1]),argv[2],atoi(argv[3]));
@@ -58,26 +58,26 @@ static int cmd_create_udp(hypervisor_conn_t *conn,int argc,char *argv[])
    return(0);
 }
 
-/* 
+/*
  * Create a Auto UDP NIO
  *
  * Parameters: <nio_name> <local_addr> <local_port_start> <local_port_end>
  */
 static int cmd_create_udp_auto(hypervisor_conn_t *conn,int argc,char *argv[])
-{   
+{
    netio_desc_t *nio;
    int local_port;
-   
+
    nio = netio_desc_create_udp_auto(argv[0],argv[1],atoi(argv[2]),atoi(argv[3]));
-   
+
    if (!nio) {
       hypervisor_send_reply(conn,HSC_ERR_CREATE,1,
                             "unable to create UDP Auto NIO");
       return(-1);
    }
-   
+
    local_port = netio_udp_auto_get_local_port(nio);
-   
+
    netio_release(argv[0]);
    hypervisor_send_reply(conn,HSC_INFO_OK,1,"%d",local_port);
    return(0);
@@ -89,16 +89,16 @@ static int cmd_create_udp_auto(hypervisor_conn_t *conn,int argc,char *argv[])
  * Parameters: <nio_name> <remote_host> <remote_port>
  */
 static int cmd_connect_udp_auto(hypervisor_conn_t *conn,int argc,char *argv[])
-{   
+{
    netio_desc_t *nio;
    int res;
-   
+
    if (!(nio = hypervisor_find_object(conn,argv[0],OBJ_TYPE_NIO)))
       return(-1);
-   
+
    res = netio_udp_auto_connect(nio,argv[1],atoi(argv[2]));
    netio_release(argv[0]);
-   
+
    if (res == 0) {
       hypervisor_send_reply(conn,HSC_INFO_OK,1,"NIO '%s' connected",argv[0]);
       return(0);
@@ -108,7 +108,7 @@ static int cmd_connect_udp_auto(hypervisor_conn_t *conn,int argc,char *argv[])
    }
 }
 
-/* 
+/*
  * Create a UNIX NIO
  *
  * Parameters: <nio_name> <local_file> <remote_file>
@@ -129,7 +129,7 @@ static int cmd_create_unix(hypervisor_conn_t *conn,int argc,char *argv[])
    return(0);
 }
 
-/* 
+/*
  * Create a VDE NIO
  *
  * Parameters: <nio_name> <control_file> <local_file>
@@ -150,7 +150,7 @@ static int cmd_create_vde(hypervisor_conn_t *conn,int argc,char *argv[])
    return(0);
 }
 
-/* 
+/*
  * Create a TAP NIO
  *
  * Parameters: <nio_name> <tap_device>
@@ -171,7 +171,7 @@ static int cmd_create_tap(hypervisor_conn_t *conn,int argc,char *argv[])
    return(0);
 }
 
-/* 
+/*
  * Create a generic ethernet PCAP NIO
  *
  * Parameters: <nio_name> <eth_device>
@@ -195,7 +195,7 @@ static int cmd_create_gen_eth(hypervisor_conn_t *conn,int argc,char *argv[])
 }
 #endif
 
-/* 
+/*
  * Create a linux raw ethernet NIO
  *
  * Parameters: <nio_name> <eth_device>
@@ -219,7 +219,7 @@ static int cmd_create_linux_eth(hypervisor_conn_t *conn,int argc,char *argv[])
 }
 #endif
 
-/* 
+/*
  * Create a Null NIO
  *
  * Parameters: <nio_name>
@@ -241,7 +241,7 @@ static int cmd_create_null(hypervisor_conn_t *conn,int argc,char *argv[])
    return(0);
 }
 
-/* 
+/*
  * Create a FIFO NIO
  *
  * Parameters: <nio_name>
@@ -263,7 +263,7 @@ static int cmd_create_fifo(hypervisor_conn_t *conn,int argc,char *argv[])
    return(0);
 }
 
-/* 
+/*
  * Establish a cross-connect between 2 FIFO NIO
  *
  * Parameters: <nio_A_name> <nio_B_name>
@@ -348,7 +348,7 @@ static int cmd_delete(hypervisor_conn_t *conn,int argc,char *argv[])
    return(res);
 }
 
-/* 
+/*
  * Enable/Disable debugging for an NIO
  *
  * Parameters: <nio_name> <debug_level>
@@ -375,7 +375,7 @@ static int cmd_bind_filter(hypervisor_conn_t *conn,int argc,char *argv[])
 
    if (!(nio = hypervisor_find_object(conn,argv[0],OBJ_TYPE_NIO)))
       return(-1);
-   
+
    res = netio_filter_bind(nio,atoi(argv[1]),argv[2]);
    netio_release(argv[0]);
 
@@ -396,7 +396,7 @@ static int cmd_unbind_filter(hypervisor_conn_t *conn,int argc,char *argv[])
 
    if (!(nio = hypervisor_find_object(conn,argv[0],OBJ_TYPE_NIO)))
       return(-1);
-   
+
    res = netio_filter_unbind(nio,atoi(argv[1]));
    netio_release(argv[0]);
 
@@ -458,7 +458,7 @@ static int cmd_reset_stats(hypervisor_conn_t *conn,int argc,char *argv[])
 
    if (!(nio = hypervisor_find_object(conn,argv[0],OBJ_TYPE_NIO)))
       return(-1);
-   
+
    netio_reset_stats(nio);
    netio_release(argv[0]);
 
@@ -473,7 +473,7 @@ static int cmd_set_bandwidth(hypervisor_conn_t *conn,int argc,char *argv[])
 
    if (!(nio = hypervisor_find_object(conn,argv[0],OBJ_TYPE_NIO)))
       return(-1);
-   
+
    netio_set_bandwidth(nio,atoi(argv[1]));
    netio_release(argv[0]);
 

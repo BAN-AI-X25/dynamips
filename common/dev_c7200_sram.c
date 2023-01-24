@@ -24,7 +24,7 @@
 struct sram_data {
    /* VM object info */
    vm_obj_t vm_obj;
-   
+
    /* SRAM main device */
    struct vdevice *dev;
 
@@ -60,7 +60,7 @@ void dev_c7200_sram_shutdown(vm_instance_t *vm,struct sram_data *d)
       /* Free devices */
       free(d->alias_dev);
       free(d->dev);
-      
+
       /* Free device names */
       free(d->alias_dev_name);
       free(d->bs_dev_name);
@@ -106,7 +106,7 @@ int dev_c7200_sram_init(vm_instance_t *vm,char *name,
                                   pci_device,0);
 
    alias_paddr = 0x100000000ULL + paddr;
-   
+
    /* create the standard RAM zone */
    if (!(d->dev = dev_create_ram(vm,name,FALSE,d->filename,paddr,len))) {
       fprintf(stderr,"dev_c7200_sram_init: unable to create '%s' file.\n",
@@ -138,7 +138,7 @@ int dev_c7200_sram_init(vm_instance_t *vm,char *name,
       fprintf(stderr,"dev_c7200_sram_init: unable to create BS device.\n");
       return(-1);
    }
-   
+
    d->bs_obj = vm_object_find(vm,d->bs_dev_name);
    return(0);
-}    
+}

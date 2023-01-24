@@ -175,7 +175,7 @@ void *dev_plx9054_access(cpu_gen_t *cpu,struct vdevice *dev,
  * pci_plx_read() - Common PCI read.
  */
 static m_uint32_t pci_plx_read(cpu_gen_t *cpu,struct pci_device *dev,int reg)
-{   
+{
    struct plx_data *d = dev->priv_data;
 
 #if DEBUG_ACCESS
@@ -227,7 +227,7 @@ static void pci_plx_write(cpu_gen_t *cpu,struct pci_device *dev,
  */
 static m_uint32_t pci_plx9054_read(cpu_gen_t *cpu,struct pci_device *dev,
                                    int reg)
-{   
+{
    struct plx_data *d = dev->priv_data;
 
 #if DEBUG_ACCESS

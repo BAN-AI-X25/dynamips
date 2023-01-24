@@ -18,7 +18,7 @@
 
 /* Extract ROM code+data from an ELF file and convert it into a C array */
 int main(int argc,char *argv[])
-{   
+{
    unsigned char buffer[8];
    m_uint32_t vaddr,start;
    Elf32_Ehdr *ehdr;

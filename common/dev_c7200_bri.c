@@ -1,4 +1,4 @@
-/*  
+/*
  * Cisco router Simulation Platform.
  * Copyright (C) 2005-2006 Christophe Fillot.  All rights reserved.
  *
@@ -10,7 +10,7 @@
  *
  * It is based on the Munich32 chip:
  *   http://www.infineon.com//upload/Document/cmc_upload/migrated_files/document_files/Datasheet/m32_34m.pdf
- * 
+ *
  * There is also one TP3420A per BRI port.
  */
 
@@ -132,7 +132,7 @@ struct m32_tx_desc {
 #define M32_RXDESC_LOSS      0x00002000   /* Error in sync pattern */
 #define M32_RXDESC_CRCO      0x00001000   /* CRC error */
 #define M32_RXDESC_NOB       0x00000800   /* Bit content not divisible by 8 */
-#define M32_RXDESC_LFD       0x00000400   /* Long Frame Detected */ 
+#define M32_RXDESC_LFD       0x00000400   /* Long Frame Detected */
 #define M32_RXDESC_RA        0x00000200   /* Receive Abort */
 #define M32_RXDESC_ROF       0x00000100   /* Overflow of internal buffer */
 
@@ -176,7 +176,7 @@ struct m32_data {
 
    /* Channels */
    struct m32_channel channels[M32_NR_CHANNELS];
-   
+
    /* Embedded config memory */
    m_uint32_t cfg_mem[MUNICH32_MEM_SIZE/4];
 };
@@ -307,7 +307,7 @@ static int m32_post_interrupt(struct m32_data *d,m_uint32_t iq_value)
 {
    if (!d->iq_base_addr)
       return(-1);
-   
+
    /* The INT bit is mandatory */
    iq_value |= M32_II_INT;
 
@@ -474,7 +474,7 @@ static inline int m32_tx_scan(struct m32_data *d,u_int chan_id)
       return(FALSE);
 
    switch(chan->poll_mode) {
-      case 0:        
+      case 0:
          m32_set_cfgw(d,M32_OFFSET_CTDA+(chan_id*4),chan->tx_current);
 
          /* Try to transmit data */
@@ -494,7 +494,7 @@ static inline int m32_tx_scan(struct m32_data *d,u_int chan_id)
          mem_dump(stdout,pkt,pkt_len);
 
          /* Poll the next descriptor (wait for HOLD bit to be reset) */
-         chan->poll_mode = 1;  
+         chan->poll_mode = 1;
 
          if (txd.params & M32_TXDESC_FE) {
             m32_post_interrupt(d,M32_II_FI | chan_id);
@@ -524,7 +524,7 @@ static void m32_tx_scan_all_channels(struct m32_data *d)
       m32_tx_scan(d,i);
 }
 
-/* 
+/*
  * Handle an action request.
  *
  * IN, ICO and RES bits are mutually exclusive.
@@ -571,7 +571,7 @@ static int m32_action_req(struct m32_data *d,m_uint32_t action)
 
       /* Fetch all channel specifications */
       m32_fetch_all_chan_spec(d);
-      
+
       /* Generate acknowledge */
       if (!(action & M32_AS_IM))
          m32_post_interrupt(d,M32_II_ARACK);
@@ -745,7 +745,7 @@ void *pa_4b_access(cpu_gen_t *cpu,struct vdevice *dev,m_uint32_t offset,
  */
 static m_uint32_t pci_munich32_read(cpu_gen_t *cpu,struct pci_device *dev,
                                     int reg)
-{   
+{
    struct pa_4b_data *d = dev->priv_data;
 
 #if DEBUG_ACCESS

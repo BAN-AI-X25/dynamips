@@ -1,4 +1,4 @@
-/*  
+/*
  * Cisco router simulation platform.
  * Copyright (C) 2005,2006 Christophe Fillot.  All rights reserved.
  *
@@ -12,7 +12,7 @@
  *  Chip mode 0 => 3600
  *  Chip mode 1 => 7200
  *
- * 2 points noticed until now: 
+ * 2 points noticed until now:
  *    - RX/TX ring wrapping checks are done differently,
  *    - TX packet sizes are not specified in the same way.
  *
@@ -162,7 +162,7 @@ struct mueslix_channel {
 
    /* physical addresses for start and end of RX/TX rings */
    m_uint32_t rx_start,rx_end,tx_start,tx_end;
-  
+
    /* physical addresses of current RX and TX descriptors */
    m_uint32_t rx_current,tx_current;
 
@@ -193,7 +193,7 @@ struct mueslix_data {
    /* PCI device information */
    struct pci_device *pci_dev;
 
-   /* Chip mode: 
+   /* Chip mode:
     *
     * 0=increment ring pointers before check + direct TX size,
     * 1=increment ring pointers after check  + "complex" TX size.
@@ -249,10 +249,10 @@ static inline void dev_mueslix_update_irq_status(struct mueslix_data *d)
 static void dev_mueslix_update_clk_rate(struct mueslix_channel *channel)
 {
    u_int clk_shift = channel->clk_shift;
-   
+
    if (clk_shift == 8)
       clk_shift = 0;
-      
+
    channel->clk_rate = (8064000 >> clk_shift) / (channel->clk_div + 1);
    MUESLIX_LOG(channel->parent,"channel %u: clock rate set to %u\n",
                channel->id,channel->clk_rate);
@@ -275,7 +275,7 @@ void dev_mueslix_chan_access(cpu_gen_t *cpu,struct mueslix_channel *channel,
             *data = channel->crc_ctrl_reg;
          } else {
             channel->crc_ctrl_reg = *data;
-            
+
             switch(channel->crc_ctrl_reg) {
                case 0x08:
                case 0x0a:
@@ -300,7 +300,7 @@ void dev_mueslix_chan_access(cpu_gen_t *cpu,struct mueslix_channel *channel,
             *data = channel->clk_shift;
          else
             channel->clk_shift = *data;
-            
+
          /* Recompute clock rate */
          dev_mueslix_update_clk_rate(channel);
          break;
@@ -368,7 +368,7 @@ void dev_mueslix_chan_access(cpu_gen_t *cpu,struct mueslix_channel *channel,
 
 /* Handle TPU commands for chip mode 0 (3600) */
 static void tpu_cm0_handle_cmd(struct mueslix_data *d,u_int cmd)
-{   
+{
    struct mueslix_channel *channel;
    u_int opcode,channel_id;
 
@@ -392,7 +392,7 @@ static void tpu_cm0_handle_cmd(struct mueslix_data *d,u_int cmd)
 
 /* Handle TPU commands for chip mode 1 (7200) */
 static void tpu_cm1_handle_cmd(struct mueslix_data *d,u_int cmd)
-{   
+{
    struct mueslix_channel *channel;
    u_int opcode,channel_id;
 
@@ -402,7 +402,7 @@ static void tpu_cm1_handle_cmd(struct mueslix_data *d,u_int cmd)
 
    switch(opcode) {
       case 0x50:
-      case 0x30: 
+      case 0x30:
          MUESLIX_LOG(d,"channel %u disabled\n",channel_id);
          channel->status = 0;
          break;
@@ -439,23 +439,23 @@ void *dev_mueslix_access(cpu_gen_t *cpu,struct vdevice *dev,m_uint32_t offset,
       *data = 0x00000000;
 
    /* Handle microcode access */
-   if ((offset >= MUESLIX_UCODE_OFFSET) && 
+   if ((offset >= MUESLIX_UCODE_OFFSET) &&
        (offset < (MUESLIX_UCODE_OFFSET + MUESLIX_UCODE_LEN)))
       return(d->ucode + offset - MUESLIX_UCODE_OFFSET);
 
    /* Handle TPU XMem access */
-   if ((offset >= MUESLIX_XMEM_OFFSET) && 
+   if ((offset >= MUESLIX_XMEM_OFFSET) &&
        (offset < (MUESLIX_XMEM_OFFSET + MUESLIX_XYMEM_LEN)))
       return(d->xmem + offset - MUESLIX_XMEM_OFFSET);
-  
+
    /* Handle TPU YMem access */
-   if ((offset >= MUESLIX_YMEM_OFFSET) && 
+   if ((offset >= MUESLIX_YMEM_OFFSET) &&
        (offset < (MUESLIX_YMEM_OFFSET + MUESLIX_XYMEM_LEN)))
       return(d->ymem + offset - MUESLIX_YMEM_OFFSET);
-  
+
    /* Handle channel access */
    for(i=0;i<MUESLIX_NR_CHANNELS;i++)
-      if ((offset >= channel_offset[i]) && 
+      if ((offset >= channel_offset[i]) &&
           (offset < (channel_offset[i] + MUESLIX_CHANNEL_LEN)))
    {
       MUESLIX_LOCK(d);
@@ -543,7 +543,7 @@ void *dev_mueslix_access(cpu_gen_t *cpu,struct vdevice *dev,m_uint32_t offset,
          }
          break;
 
-      /* 
+      /*
        * cmd_rsp reg, it seems that 0xFFFF means OK
        * (seen on a "sh contr se1/0" with "debug serial mueslix" enabled).
        */
@@ -592,7 +592,7 @@ static m_uint32_t rxdesc_get_next(struct mueslix_channel *channel,
             nrxd_addr = channel->rx_start;
          else
             nrxd_addr = rxd_addr + sizeof(struct rx_desc);
-         break;         
+         break;
    }
 
    return(nrxd_addr);
@@ -614,7 +614,7 @@ static void rxdesc_read(struct mueslix_data *d,m_uint32_t rxd_addr,
    rxd->rdes[1] = vmtoh32(rxd->rdes[1]);
 }
 
-/* 
+/*
  * Try to acquire the specified RX descriptor. Returns TRUE if we have it.
  * It assumes that the byte-swapping is done.
  */
@@ -637,10 +637,10 @@ static ssize_t rxdesc_put_pkt(struct mueslix_data *d,struct rx_desc *rxd,
 #if DEBUG_RECEIVE
    MUESLIX_LOG(d,"copying %d bytes at 0x%x\n",cp_len,rxd->rdes[1]);
 #endif
-      
+
    /* copy packet data to the VM physical RAM */
    physmem_copy_to_vm(d->vm,*pkt,rxd->rdes[1],cp_len);
-      
+
    *pkt += cp_len;
    *pkt_len -= cp_len;
    return(cp_len);
@@ -672,7 +672,7 @@ static void dev_mueslix_receive_pkt(struct mueslix_channel *channel,
 
    /* Copy the current rxring descriptor */
    rxdesc_read(d,channel->rx_current,&rxd0);
-   
+
    /* We must have the first descriptor... */
    if (!rxdesc_acquire(rxd0.rdes[0]))
       return;
@@ -744,7 +744,7 @@ static void dev_mueslix_receive_pkt(struct mueslix_channel *channel,
 static int dev_mueslix_handle_rxring(netio_desc_t *nio,
                                      u_char *pkt,ssize_t pkt_len,
                                      struct mueslix_channel *channel)
-{  
+{
    struct mueslix_data *d = channel->parent;
 
 #if DEBUG_RECEIVE
@@ -809,7 +809,7 @@ static int dev_mueslix_handle_txring_single(struct mueslix_channel *channel)
       return(FALSE);
 
    /* Copy the current txring descriptor */
-   tx_start = channel->tx_current;   
+   tx_start = channel->tx_current;
    ptxd = &txd0;
    txdesc_read(d,channel->tx_current,ptxd);
 
@@ -853,7 +853,7 @@ static int dev_mueslix_handle_txring_single(struct mueslix_channel *channel)
                clen -= sub_len;
             }
       }
-      
+
       /* Be sure that we have length not null */
       if (clen != 0) {
          //printf("pkt_ptr = %p, ptxd->tdes[1] = 0x%x, clen = %d\n",
@@ -916,7 +916,7 @@ static int dev_mueslix_handle_txring(struct mueslix_channel *channel)
       MUESLIX_LOCK(d);
       res = dev_mueslix_handle_txring_single(channel);
       MUESLIX_UNLOCK(d);
-     
+
       if (!res)
          break;
    }
@@ -928,7 +928,7 @@ static int dev_mueslix_handle_txring(struct mueslix_channel *channel)
 /* pci_mueslix_read() */
 static m_uint32_t pci_mueslix_read(cpu_gen_t *cpu,struct pci_device *dev,
                                    int reg)
-{   
+{
    struct mueslix_data *d = dev->priv_data;
 
    switch(reg) {
@@ -944,7 +944,7 @@ static m_uint32_t pci_mueslix_read(cpu_gen_t *cpu,struct pci_device *dev,
 /* pci_mueslix_write() */
 static void pci_mueslix_write(cpu_gen_t *cpu,struct pci_device *dev,
                               int reg,m_uint32_t value)
-{   
+{
    struct mueslix_data *d = dev->priv_data;
 
    switch(reg) {

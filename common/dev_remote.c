@@ -83,13 +83,13 @@ void *dev_remote_control_access(cpu_gen_t *cpu,struct vdevice *dev,
 
    switch(offset) {
       /* ROM Identification tag */
-      case 0x000: 
+      case 0x000:
          if (op_type == MTS_READ)
             *data = ROM_ID;
          break;
 
       /* CPU ID */
-      case 0x004: 
+      case 0x004:
          if (op_type == MTS_READ)
             *data = cpu->id;
          break;
@@ -111,22 +111,22 @@ void *dev_remote_control_access(cpu_gen_t *cpu,struct vdevice *dev,
          break;
 
       /* RAM size */
-      case 0x014: 
+      case 0x014:
          if (op_type == MTS_READ)
             *data = vm->ram_size - vm->ram_res_size;
          break;
 
       /* ROM size */
-      case 0x018: 
+      case 0x018:
          if (op_type == MTS_READ)
             *data = vm->rom_size;
          break;
 
       /* NVRAM size */
-      case 0x01c: 
+      case 0x01c:
          if (op_type == MTS_READ)
             *data = vm->nvram_size;
-         break;             
+         break;
 
       /* IOMEM size */
       case 0x020:
@@ -141,10 +141,10 @@ void *dev_remote_control_access(cpu_gen_t *cpu,struct vdevice *dev,
          break;
 
       /* ELF entry point */
-      case 0x028: 
+      case 0x028:
          if (op_type == MTS_READ)
             *data = vm->ios_entry_point;
-         break;      
+         break;
 
       /* ELF machine id */
       case 0x02c:
@@ -223,7 +223,7 @@ void *dev_remote_control_access(cpu_gen_t *cpu,struct vdevice *dev,
          else
             d->cookie_pos = *data;
          break;
-         
+
       /* Cookie data */
       case 0x050:
          if ((op_type == MTS_READ) && (d->cookie_pos < 64))

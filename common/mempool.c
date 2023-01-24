@@ -23,7 +23,7 @@
 #include "utils.h"
 #include "mempool.h"
 
-/* 
+/*
  * Internal function used to allocate a memory block, and do basic operations
  * on it. It does not manipulate pools, so no mutex is needed.
  */
@@ -36,12 +36,12 @@ static inline memblock_t *memblock_alloc(size_t size,int zeroed)
    if (!(block = malloc(total_size)))
       return NULL;
 
-   if (zeroed) 
+   if (zeroed)
       memset(block,0,total_size);
 
    block->tag = MEMBLOCK_TAG;
    block->block_size = size;
-   block->prev = block->next = NULL;   
+   block->prev = block->next = NULL;
    return block;
 }
 

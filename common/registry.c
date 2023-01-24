@@ -96,7 +96,7 @@ int registry_init(void)
 
 /* Insert a new entry */
 static void registry_insert_entry(registry_entry_t *entry)
-{      
+{
    registry_entry_t *bucket;
    u_int h_index;
 
@@ -157,7 +157,7 @@ int registry_add(char *name,int object_type,void *data)
 {
    registry_entry_t *entry;
 
-   if (!name) 
+   if (!name)
       return(-1);
 
    REGISTRY_LOCK();
@@ -274,13 +274,13 @@ void *registry_exists(char *name,int object_type)
 {
    registry_entry_t *entry;
    void *data = NULL;
-   
-   if (!name) 
+
+   if (!name)
       return NULL;
 
    REGISTRY_LOCK();
    entry = registry_find_entry(name,object_type);
-   if (entry) 
+   if (entry)
       data = entry->data;
    REGISTRY_UNLOCK();
    return data;
@@ -316,7 +316,7 @@ int registry_unref(char *name,int object_type)
    return(res);
 }
 
-/* 
+/*
  * Execute action on an object if its reference count is less or equal to
  * the specified count.
  */
@@ -333,7 +333,7 @@ int registry_exec_refcount(char *name,int object_type,int max_ref,int reg_del,
 
    entry = registry_find_entry(name,object_type);
 
-   if (entry) 
+   if (entry)
    {
       if (entry->ref_count <= max_ref)
       {
@@ -399,8 +399,8 @@ int registry_delete_type(int object_type,registry_exec cb,void *opt)
 
       if (p->ref_count == 0) {
          status = TRUE;
-         
-         if (cb != NULL) 
+
+         if (cb != NULL)
             status = cb(p->data,opt);
 
          if (status) {
@@ -443,13 +443,13 @@ void registry_dump(void)
 
    /* dump hash table of types */
    for(i=0;i<registry->ht_type_entries;i++)
-   {         
+   {
       printf("     Type %d: ",i);
 
       bucket = &registry->ht_types[i];
       for(p=bucket->htype_next;p!=bucket;p=p->htype_next)
          printf("%s(%d) ",p->name,p->ref_count);
-         
+
       printf("\n");
    }
 

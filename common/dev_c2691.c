@@ -45,7 +45,7 @@ static m_uint16_t eeprom_c2691_mainboard_data[] = {
 };
 
 struct cisco_eeprom eeprom_c2691_mainboard = {
-   "C2691 Backplane", 
+   "C2691 Backplane",
    eeprom_c2691_mainboard_data,
    sizeof(eeprom_c2691_mainboard_data)/2,
 };
@@ -144,7 +144,7 @@ static int c2691_delete_instance(vm_instance_t *vm)
    /* Stop all CPUs */
    if (vm->cpu_group != NULL) {
       vm_stop(vm);
-      
+
       if (cpu_group_sync_state(vm->cpu_group) == -1) {
          vm_error(vm,"unable to sync with system CPUs.\n");
          return(FALSE);
@@ -191,7 +191,7 @@ int c2691_set_slot_eeprom(c2691_t *router,u_int slot,
 }
 
 /* Get slot/port corresponding to specified network IRQ */
-static inline void 
+static inline void
 c2691_net_irq_get_slot_port(u_int irq,u_int *slot,u_int *port)
 {
    irq -= C2691_NETIO_IRQ_BASE;
@@ -287,7 +287,7 @@ static int c2691_init_gt96100(c2691_t *router)
       vm_error(router->vm,"unable to create PCI data.\n");
       return(-1);
    }
-   
+
    if (dev_gt96100_init(vm,"gt96100",C2691_GT96K_ADDR,0x200000,
                         C2691_GT96K_IRQ,
                         C2691_EXT_IRQ,
@@ -304,7 +304,7 @@ static int c2691_init_gt96100(c2691_t *router)
 
 /* Initialize a Cisco 2691 */
 static int c2691_init(c2691_t *router)
-{   
+{
    vm_instance_t *vm = router->vm;
 
    /* Set the processor type: R7000 */
@@ -343,8 +343,8 @@ void c2691_show_hardware(c2691_t *router)
 
 /* Initialize default parameters for a C2691 */
 static void c2691_init_defaults(c2691_t *router)
-{   
-   vm_instance_t *vm = router->vm;   
+{
+   vm_instance_t *vm = router->vm;
    n_eth_addr_t *m;
    m_uint16_t pid;
 
@@ -489,7 +489,7 @@ static int c2691_init_platform(c2691_t *router)
 
 /* Boot the IOS image */
 static int c2691_boot_ios(c2691_t *router)
-{   
+{
    vm_instance_t *vm = router->vm;
    cpu_mips_t *cpu;
 
@@ -512,7 +512,7 @@ static int c2691_boot_ios(c2691_t *router)
    /* Load IOS image */
    if (mips64_load_elf_image(cpu,vm->ios_image,
                              (vm->ghost_status == VM_GHOST_RAM_USE),
-                             &vm->ios_entry_point) < 0) 
+                             &vm->ios_entry_point) < 0)
    {
       vm_error(vm,"failed to load Cisco IOS image '%s'.\n",vm->ios_image);
       return(-1);
@@ -580,7 +580,7 @@ static void c2691_clear_irq(vm_instance_t *vm,u_int irq)
 
 /* Initialize a Cisco 2691 instance */
 static int c2691_init_instance(vm_instance_t *vm)
-{ 
+{
    c2691_t *router = VM_C2691(vm);
    m_uint32_t rom_entry_point;
    cpu_mips_t *cpu0;
@@ -636,7 +636,7 @@ static int c2691_stop_instance(vm_instance_t *vm)
    /* Stop all CPUs */
    if (vm->cpu_group != NULL) {
       vm_stop(vm);
-      
+
       if (cpu_group_sync_state(vm->cpu_group) == -1) {
          vm_error(vm,"unable to sync with system CPUs.\n");
          return(-1);
@@ -647,7 +647,7 @@ static int c2691_stop_instance(vm_instance_t *vm)
    vm_slot_shutdown_all(vm);
    vm_hardware_shutdown(vm);
 
-   /* Cleanup */   
+   /* Cleanup */
    VM_C2691(vm)->iofpga_data = NULL;
    VM_C2691(vm)->gt_data = NULL;
    return(0);

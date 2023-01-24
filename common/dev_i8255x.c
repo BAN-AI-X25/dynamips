@@ -313,7 +313,7 @@ static m_uint16_t mii_reg_read(struct i8255x_data *d)
 static void mii_reg_write(struct i8255x_data *d)
 {
    u_int mii_phy,mii_reg,mii_data;
-   
+
    mii_phy = (d->mii_ctrl & I8255X_MDI_PHY_MASK) >> I8255X_MDI_PHY_SHIFT;
    mii_reg = (d->mii_ctrl & I8255X_MDI_REG_MASK) >> I8255X_MDI_REG_SHIFT;
    mii_data = d->mii_ctrl & I8255X_MDI_DATA_MASK;
@@ -386,7 +386,7 @@ static int dev_i8255x_send_tx_pkt(struct i8255x_data *d,m_uint32_t cb_addr,
       mem_bswap32(d->tx_buffer,norm_len);
       goto do_transmit;
    }
-   
+
    /* === Flexible mode === */
    tx_ptr  = d->tx_buffer;
    tx_size = 0;
@@ -409,10 +409,10 @@ static int dev_i8255x_send_tx_pkt(struct i8255x_data *d,m_uint32_t cb_addr,
 
       txbd_addr = action->txbd_addr;
    }
-   
+
    txbd_cnt = (action->txbd_count & TXCB_NUM_MASK) >> TXCB_NUM_SHIFT;
 
-   /* 
+   /*
     * Fetch all Tx buffer descriptors and copy data from each separate buffer.
     */
    for(i=0;i<txbd_cnt;i++) {
@@ -453,7 +453,7 @@ static void dev_i8255x_process_cb(struct i8255x_data *d,m_uint32_t cb_addr,
       case CB_CMD_NOP:
          res = TRUE;
          break;
-    
+
       /* Transmit a frame */
       case CB_CMD_TRANSMIT:
          res = dev_i8255x_send_tx_pkt(d,cb_addr,action);
@@ -483,7 +483,7 @@ static void dev_i8255x_process_cb(struct i8255x_data *d,m_uint32_t cb_addr,
                    d->iaddr.eth_addr_byte[0],d->iaddr.eth_addr_byte[1],
                    d->iaddr.eth_addr_byte[2],d->iaddr.eth_addr_byte[3],
                    d->iaddr.eth_addr_byte[4],d->iaddr.eth_addr_byte[5]);
-                  
+
          res = TRUE;
          break;
 
@@ -545,7 +545,7 @@ static void dev_i8255x_process_cbl(struct i8255x_data *d)
       /* Go to next descriptor */
       d->cu_offset = action.link_offset;
    }
-   
+
    /* Update interrupt status */
    dev_i8255x_update_irq_status(d);
 }
@@ -564,10 +564,10 @@ static int dev_i8255x_cu_resume(struct i8255x_data *d)
 
    /* Check if the previous block has still the S bit set */
    dev_i8255x_fetch_cb(d,cu_addr,&action);
-   
+
    if (action.ctrl & CB_CTRL_S)
       return(FALSE);
-   
+
    d->cu_offset = action.link_offset;
    d->cu_state  = CU_STATE_LPQ_ACT;
    dev_i8255x_process_cbl(d);
@@ -692,7 +692,7 @@ static int dev_i8255x_store_rx_pkt(struct i8255x_data *d,
       /* Get the current buffer size */
       buf_size = rxbd.buf_size & RXFD_SIZE_MASK;
       clen = m_min(tot_len,buf_size);
-      
+
       /* Copy the data into the buffer */
       norm_len = normalize_size(clen,4,0);
       mem_bswap32(pkt_ptr,norm_len);
@@ -706,7 +706,7 @@ static int dev_i8255x_store_rx_pkt(struct i8255x_data *d,
          rxbd.ctrl |= RXBD_CTRL_EOF;
          clen += 4;  /* Add CRC */
       }
-      
+
       rxbd.ctrl |= RXBD_CTRL_F | clen;
       physmem_copy_u32_to_vm(d->vm,rxbd_addr+0x00,rxbd.ctrl);
    }while(tot_len > 0);
@@ -721,7 +721,7 @@ static int dev_i8255x_store_rx_pkt(struct i8255x_data *d,
    rxfd.ctrl |= RXFD_CTRL_C | RXFD_CTRL_OK;
    rxfd.rxbd_size &= ~0xFFFF;
    rxfd.rxbd_size |= RXFD_EOF | (pkt_len + 4);
-   
+
    physmem_copy_u32_to_vm(d->vm,rxfd_addr+0x00,rxfd.ctrl);
    physmem_copy_u32_to_vm(d->vm,rxfd_addr+0x0c,rxfd.rxbd_size);
 
@@ -763,7 +763,7 @@ static int dev_i8255x_ru_resume(struct i8255x_data *d)
    /* Check if the previous frame descriptor has still the S bit set */
    if (rxfd.ctrl & RXFD_CTRL_S)
       return(FALSE);
-   
+
    d->ru_offset = rxfd.link_offset;
    d->ru_state  = RU_STATE_READY;
    return(TRUE);
@@ -789,10 +789,10 @@ static void dev_i8255x_process_ru_cmd(struct i8255x_data *d,u_int ruc)
          break;
 
       /* Load RU base */
-      case RU_CMD_LOAD_RU_BASE:         
+      case RU_CMD_LOAD_RU_BASE:
          d->ru_base = d->scb_gptr;
          break;
-         
+
       default:
          EEPRO_LOG(d,"unsupported RU command 0x%2.2x\n",ruc);
    }
@@ -864,7 +864,7 @@ void *dev_i8255x_access(cpu_gen_t *cpu,struct vdevice *dev,
       case 0x10:
          if (op_type == MTS_READ) {
             mii_op = (d->mii_ctrl & I8255X_MDI_OP_MASK) >> I8255X_MDI_OP_SHIFT;
-            
+
             if (mii_op == MII_OPCODE_READ) {
                d->mii_ctrl &= ~I8255X_MDI_DATA_MASK;
                d->mii_ctrl |= mii_reg_read(d);
@@ -904,14 +904,14 @@ void *dev_i8255x_access(cpu_gen_t *cpu,struct vdevice *dev,
 static int dev_i8255x_handle_rxring(netio_desc_t *nio,
                                     u_char *pkt,ssize_t pkt_len,
                                     struct i8255x_data *d)
-{  
+{
    int res = FALSE;
- 
+
    EEPRO_LOCK(d);
 
    if (d->ru_state == RU_STATE_READY)
       res = dev_i8255x_store_rx_pkt(d,pkt,pkt_len);
-   
+
    EEPRO_UNLOCK(d);
    return(res);
 }

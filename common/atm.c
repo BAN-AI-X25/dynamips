@@ -26,7 +26,7 @@
 #include "net_io.h"
 
 /* RFC1483 bridged mode header */
-m_uint8_t atm_rfc1483b_header[ATM_RFC1483B_HLEN] = { 
+m_uint8_t atm_rfc1483b_header[ATM_RFC1483B_HLEN] = {
    0xaa, 0xaa, 0x03, 0x00, 0x80, 0xc2, 0x00, 0x07, 0x00, 0x00,
 };
 
@@ -43,7 +43,7 @@ static void gen_syndrome_table(void)
 
    for(i=0;i<256;i++) {
       syndrome = i;
-      
+
       for(j=0;j<8;j++) {
          if (syndrome & 0x80)
             syndrome = (syndrome << 1) ^ HEC_GENERATOR;
@@ -60,13 +60,13 @@ m_uint8_t atm_compute_hec(m_uint8_t *cell_header)
    register m_uint8_t hec_accum = 0;
    register int i;
 
-   /* 
+   /*
     * calculate CRC-8 remainder over first four bytes of cell header.
     * exclusive-or with coset leader & insert into fifth header byte.
     */
    for(i=0;i<4;i++)
       hec_accum = hec_syndrome_table[hec_accum ^ cell_header[i]];
-   
+
    return(hec_accum ^ COSET_LEADER);
 }
 
@@ -99,7 +99,7 @@ atmsw_vp_conn_t *atmsw_vp_lookup(atmsw_table_t *t,netio_desc_t *input,
                                  u_int vpi)
 {
    atmsw_vp_conn_t *swc;
-   
+
    for(swc=t->vp_table[atmsw_vpc_hash(vpi)];swc;swc=swc->next)
       if ((swc->input == input) && (swc->vpi_in == vpi))
          return swc;
@@ -114,7 +114,7 @@ atmsw_vc_conn_t *atmsw_vc_lookup(atmsw_table_t *t,netio_desc_t *input,
    atmsw_vc_conn_t *swc;
 
    for(swc=t->vc_table[atmsw_vcc_hash(vpi,vci)];swc;swc=swc->next)
-      if ((swc->input == input) && (swc->vpi_in == vpi) && 
+      if ((swc->input == input) && (swc->vpi_in == vpi) &&
           (swc->vci_in == vci))
          return swc;
 
@@ -179,7 +179,7 @@ ssize_t atmsw_handle_cell(atmsw_table_t *t,netio_desc_t *input,
    if ((vpc = atmsw_vp_lookup(t,input,vpi)) != NULL) {
       atmsw_vp_switch(vpc,cell);
       output = vpc->output;
-   } else {  
+   } else {
       /* VC switching */
       if ((vcc = atmsw_vc_lookup(t,input,vpi,vci)) != NULL) {
          atmsw_vc_switch(vcc,cell);
@@ -188,7 +188,7 @@ ssize_t atmsw_handle_cell(atmsw_table_t *t,netio_desc_t *input,
    }
 
    len = netio_send(output,cell,ATM_CELL_SIZE);
-   
+
    if (len != ATM_CELL_SIZE) {
       t->cell_drop++;
       return(-1);
@@ -267,7 +267,7 @@ static void atmsw_release_vpc(atmsw_vp_conn_t *swc)
       }
 
       /* release output NIO */
-      if (swc->output) 
+      if (swc->output)
          netio_release(swc->output->name);
    }
 }
@@ -283,7 +283,7 @@ static void atmsw_release_vcc(atmsw_vc_conn_t *swc)
       }
 
       /* release output NIO */
-      if (swc->output) 
+      if (swc->output)
          netio_release(swc->output->name);
    }
 }
@@ -333,7 +333,7 @@ int atmsw_create_vpc(atmsw_table_t *t,char *nio_input,u_int vpi_in,
 /* Delete a VP switch connection */
 int atmsw_delete_vpc(atmsw_table_t *t,char *nio_input,u_int vpi_in,
                      char *nio_output,u_int vpi_out)
-{   
+{
    netio_desc_t *input,*output;
    atmsw_vp_conn_t **swc,*p;
    u_int hbucket;
@@ -349,7 +349,7 @@ int atmsw_delete_vpc(atmsw_table_t *t,char *nio_input,u_int vpi_in,
    }
 
    hbucket = atmsw_vpc_hash(vpi_in);
-   for(swc=&t->vp_table[hbucket];*swc;swc=&(*swc)->next) 
+   for(swc=&t->vp_table[hbucket];*swc;swc=&(*swc)->next)
    {
       p = *swc;
 
@@ -401,8 +401,8 @@ int atmsw_create_vcc(atmsw_table_t *t,
    }
 
    /* Check these NIOs are valid and the input VPI does not exists */
-   if (!swc->input || !swc->output || 
-       atmsw_vc_lookup(t,swc->input,vpi_in,vci_in)) 
+   if (!swc->input || !swc->output ||
+       atmsw_vc_lookup(t,swc->input,vpi_in,vci_in))
       goto error;
 
    /* Add as a RX listener */
@@ -427,7 +427,7 @@ int atmsw_create_vcc(atmsw_table_t *t,
 int atmsw_delete_vcc(atmsw_table_t *t,
                      char *nio_input,u_int vpi_in,u_int vci_in,
                      char *nio_output,u_int vpi_out,u_int vci_out)
-{  
+{
    netio_desc_t *input,*output;
    atmsw_vc_conn_t **swc,*p;
    u_int hbucket;
@@ -438,7 +438,7 @@ int atmsw_delete_vcc(atmsw_table_t *t,
    output = registry_exists(nio_output,OBJ_TYPE_NIO);
 
    hbucket = atmsw_vcc_hash(vpi_in,vci_in);
-   for(swc=&t->vc_table[hbucket];*swc;swc=&(*swc)->next) 
+   for(swc=&t->vc_table[hbucket];*swc;swc=&(*swc)->next)
    {
       p = *swc;
 
@@ -521,7 +521,7 @@ void atmsw_save_config(atmsw_table_t *t,FILE *fd)
                  vc->output->name,vc->vpi_out,vc->vci_out);
       }
    }
-   
+
    ATMSW_UNLOCK(t);
 
    fprintf(fd,"\n");
@@ -549,7 +549,7 @@ int atmsw_cfg_create_if(atmsw_table_t *t,char **tokens,int count)
       fprintf(stderr,"atmsw_cfg_create_if: invalid interface description\n");
       return(-1);
    }
-   
+
    nio_type = netio_get_type(tokens[2]);
    switch(nio_type) {
       case NETIO_TYPE_UNIX:
@@ -638,7 +638,7 @@ int atmsw_cfg_create_vcc(atmsw_table_t *t,char **tokens,int count)
 
 /* Handle an ATMSW configuration line */
 int atmsw_handle_cfg_line(atmsw_table_t *t,char *str)
-{  
+{
    char *tokens[ATMSW_MAX_TOKENS];
    int count;
 
@@ -667,11 +667,11 @@ int atmsw_read_cfg_file(atmsw_table_t *t,char *filename)
       perror("fopen");
       return(-1);
    }
-   
+
    while(!feof(fd)) {
       if (!fgets(buffer,sizeof(buffer),fd))
          break;
-      
+
       /* skip comments and end of line */
       if ((ptr = strpbrk(buffer,"#\r\n")) != NULL)
          *ptr = 0;
@@ -680,7 +680,7 @@ int atmsw_read_cfg_file(atmsw_table_t *t,char *filename)
       if (strchr(buffer,':'))
          atmsw_handle_cfg_line(t,buffer);
    }
-   
+
    fclose(fd);
    return(0);
 }

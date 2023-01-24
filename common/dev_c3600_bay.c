@@ -66,6 +66,6 @@ struct nm_bay_info *c3600_nm_get_bay_info(u_int chassis,u_int nm_bay)
 
    if (nm_bay >= max_bays)
       return NULL;
-   
+
    return(&bay_info[nm_bay]);
 }

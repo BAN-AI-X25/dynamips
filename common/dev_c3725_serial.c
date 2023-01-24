@@ -1,4 +1,4 @@
-/*  
+/*
  * Cisco router simulation platform.
  * Copyright (c) 2006 Christophe Fillot (cf@utc.fr)
  *
@@ -86,14 +86,14 @@ int dev_c3725_nm_4t_unset_nio(vm_instance_t *vm,struct cisco_card *card,
 
    if (!d || (port_id >= MUESLIX_NR_CHANNELS))
       return(-1);
-   
+
    return(dev_mueslix_unset_nio(d,port_id));
 }
 
 /* NM-4T driver */
 struct cisco_card_driver dev_c3725_nm_4t_driver = {
    "NM-4T", 1, 0,
-   dev_c3725_nm_4t_init, 
+   dev_c3725_nm_4t_init,
    dev_c3725_nm_4t_shutdown,
    NULL,
    dev_c3725_nm_4t_set_nio,

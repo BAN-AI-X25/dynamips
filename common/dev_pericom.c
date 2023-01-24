@@ -1,4 +1,4 @@
-/* 
+/*
  * Cisco router simulation platform.
  * Copyright (c) 2005,2006 Christophe Fillot (cf@utc.fr)
  *
@@ -26,7 +26,7 @@ int dev_pericom_init(struct pci_bus *pci_bus,int pci_device,
                      struct pci_bus *sec_bus)
 {
    struct pci_device *dev;
-   
+
    dev = pci_bridge_create_dev(pci_bus,"pericom",
                                PCI_VENDOR_PERICOM,PCI_PRODUCT_PERICOM,
                                pci_device,0,sec_bus,NULL,NULL);

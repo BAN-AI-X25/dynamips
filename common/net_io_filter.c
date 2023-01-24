@@ -85,7 +85,7 @@ int netio_filter_bind(netio_desc_t *nio,int direction,char *pf_name)
 
 /* Unbind a filter from a NIO */
 int netio_filter_unbind(netio_desc_t *nio,int direction)
-{  
+{
    netio_pktfilter_t *pf;
    void **opt;
 
@@ -171,7 +171,7 @@ static int pf_capture_setup(netio_desc_t *nio,void **opt,
 {
    struct netio_filter_capture *c;
    int link_type;
-   
+
    /* We must have a link type and a filename */
    if (argc != 2)
       return(-1);
@@ -185,26 +185,26 @@ static int pf_capture_setup(netio_desc_t *nio,void **opt,
 
    if (pthread_mutex_init(&c->lock,NULL)) {
       fprintf(stderr,"NIO %s: pthread_mutex_init failure (file %s)\n",
-              nio->name,argv[0]); 
+              nio->name,argv[0]);
       goto pcap_lock_err;
    }
 
    if ((link_type = pcap_datalink_name_to_val(argv[0])) == -1) {
       fprintf(stderr,"NIO %s: unknown link type %s, assuming Ethernet.\n",
-              nio->name,argv[0]); 
+              nio->name,argv[0]);
       link_type = DLT_EN10MB;
    }
 
    /* Open a dead pcap descriptor */
    if (!(c->desc = pcap_open_dead(link_type,65535))) {
-      fprintf(stderr,"NIO %s: pcap_open_dead failure\n",nio->name); 
+      fprintf(stderr,"NIO %s: pcap_open_dead failure\n",nio->name);
       goto pcap_open_err;
    }
 
    /* Open the output file */
    if (!(c->dumper = pcap_dump_open(c->desc,argv[1]))) {
       fprintf(stderr,"NIO %s: pcap_dump_open failure (file %s)\n",
-              nio->name,argv[0]); 
+              nio->name,argv[0]);
       goto pcap_dump_err;
    }
 
@@ -307,7 +307,7 @@ static int pf_freqdrop_pkt_handler(netio_desc_t *nio,void *pkt,size_t len,
             return(NETIO_FILTER_ACTION_PASS);
          default:
             data->current++;
-         
+
             if (data->current == data->frequency) {
                data->current = 0;
                return(NETIO_FILTER_ACTION_DROP);

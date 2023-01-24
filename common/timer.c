@@ -67,7 +67,7 @@ static inline void timer_free_id(timer_id id)
    hash_table_remove(timer_id_hash,&id);
 }
 
-/* 
+/*
  * Select the queue of the pool that has the lowest criticity level. This
  * is a stupid method.
  */
@@ -155,7 +155,7 @@ static inline void timer_remove_from_queue(timer_queue_t *queue,
 }
 
 /* Remove a timer from a queue atomically */
-static inline void 
+static inline void
 timer_remove_from_queue_atomic(timer_queue_t *queue,timer_entry_t *timer)
 {
    TIMERQ_LOCK(queue);
@@ -198,9 +198,9 @@ static inline void timer_schedule_in_queue(timer_queue_t *queue,
          (timer->interval - (current_adj % timer->interval));
    } else
       timer->expire += timer->interval;
-   
+
    timer->flags &= ~TIMER_RUNNING;
-   timer_add_to_queue(queue,timer);   
+   timer_add_to_queue(queue,timer);
 }
 
 /* Schedule a timer */
@@ -249,7 +249,7 @@ static void *timer_loop(timer_queue_t *queue)
       /* Get first event */
       timer = queue->list;
 
-      /* 
+      /*
        * If we have timers in queue, we setup a timer to wait for first one.
        * In all cases, thread is woken up when a reschedule occurs.
        */
@@ -269,7 +269,7 @@ static void *timer_loop(timer_queue_t *queue)
          break;
       }
 
-      /* 
+      /*
        * Now, we need to find why we were woken up. So, we compare current
        * time with first timer to see if we must execute action associated
        * with it.
@@ -285,13 +285,13 @@ static void *timer_loop(timer_queue_t *queue)
          continue;
       }
 
-      /* 
+      /*
        * We have a timer to manage. Remove it from queue and mark it as
        * running.
        */
       timer_remove_from_queue(queue,timer);
       timer->flags |= TIMER_RUNNING;
-      
+
       /* Execute user function and reschedule timer if required */
       if (timer_exec(timer))
          timer_schedule_in_queue(queue,timer);
@@ -309,7 +309,7 @@ int timer_remove(timer_id id)
    timer_entry_t *timer;
 
    TIMER_LOCK();
-   
+
    /* Find timer */
    if (!(timer = timer_find_by_id(id))) {
       TIMER_UNLOCK();
@@ -328,7 +328,7 @@ int timer_remove(timer_id id)
    /* Free memory used by timer */
    free(timer);
    TIMER_UNLOCK();
-   
+
    /* Signal to this queue that it has been modified */
    if (queue)
       pthread_cond_signal(&queue->schedule);
@@ -358,7 +358,7 @@ static timer_id timer_enable(timer_entry_t *timer)
    }
 
    /* Returns timer ID */
-   TIMER_UNLOCK();      
+   TIMER_UNLOCK();
    pthread_cond_signal(&timer->queue->schedule);
    return(timer->id);
 }

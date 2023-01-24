@@ -463,7 +463,7 @@ static void mii_access(struct i8254x_data *d)
             d->mii_state = 0;
          } else {
             d->mii_state++;
-         }        
+         }
 
          d->mii_data_pos--;
          break;
@@ -478,7 +478,7 @@ static inline void dev_i8254x_update_irq_status(struct i8254x_data *d)
 {
    if (d->icr & d->imr)
       pci_dev_trigger_irq(d->vm,d->pci_dev);
-   else 
+   else
       pci_dev_clear_irq(d->vm,d->pci_dev);
 }
 
@@ -574,8 +574,8 @@ void *dev_i8254x_access(cpu_gen_t *cpu,struct vdevice *dev,
       case I8254X_REG_CTRLEXT:
          if (op_type == MTS_WRITE) {
             /* MDIO clock set ? */
-            if (!(d->ctrl_ext & I8254X_CTRLEXT_SDP6_DATA) && 
-                (*data & I8254X_CTRLEXT_SDP6_DATA)) 
+            if (!(d->ctrl_ext & I8254X_CTRLEXT_SDP6_DATA) &&
+                (*data & I8254X_CTRLEXT_SDP6_DATA))
              {
                if (*data & I8254X_CTRLEXT_SDP7_IODIR)
                   d->mii_bit = (*data & I8254X_CTRLEXT_SDP7_DATA) ? 1 : 0;
@@ -592,7 +592,7 @@ void *dev_i8254x_access(cpu_gen_t *cpu,struct vdevice *dev,
                   *data |= I8254X_CTRLEXT_SDP7_DATA;
                else
                   *data &= ~I8254X_CTRLEXT_SDP7_DATA;
-            }           
+            }
          }
          break;
 
@@ -602,7 +602,7 @@ void *dev_i8254x_access(cpu_gen_t *cpu,struct vdevice *dev,
             *data = 1 << 28;
          break;
 
-      /* 
+      /*
        * Interrupt Cause Read Register.
        *
        * Notice: a read clears all interrupt bits.
@@ -708,7 +708,7 @@ void *dev_i8254x_access(cpu_gen_t *cpu,struct vdevice *dev,
             *data = d->tx_addr >> 32;
          }
          break;
-      
+
       /* RX Descriptor Length */
       case I8254X_REG_RDLEN:
       case I82542_REG_RDLEN:
@@ -726,7 +726,7 @@ void *dev_i8254x_access(cpu_gen_t *cpu,struct vdevice *dev,
          else
             *data = d->tdlen;
          break;
-         
+
       /* RX Descriptor Head */
       case I82542_REG_RDH:
       case I8254X_REG_RDH:
@@ -983,7 +983,7 @@ static int dev_i8254x_receive_pkt(struct i8254x_data *d,
 
       /* Set the status */
       rxd.rdes[3] = I8254X_RXDESC_IXSM|I8254X_RXDESC_DD;
-    
+
       if (!tot_len) {
          rxd.rdes[3] |= I8254X_RXDESC_EOP;
          icr |= I8254X_ICR_RXT0;
@@ -1012,7 +1012,7 @@ static int dev_i8254x_handle_rxring(netio_desc_t *nio,
                                     u_char *pkt,ssize_t pkt_len,
                                     struct i8254x_data *d)
 {
-   /* 
+   /*
     * Don't start receive if RX has not been enabled in RCTL register.
     */
    if (!(d->rctl & I8254X_RCTL_EN))
@@ -1023,8 +1023,8 @@ static int dev_i8254x_handle_rxring(netio_desc_t *nio,
    mem_dump(log_file,pkt,pkt_len);
 #endif
 
-   /* 
-    * Receive only multicast/broadcast trafic + unicast traffic 
+   /*
+    * Receive only multicast/broadcast trafic + unicast traffic
     * for this virtual machine.
     */
    //if (dec21140_handle_mac_addr(d,pkt))

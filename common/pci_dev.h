@@ -67,7 +67,7 @@ struct pci_bridge {
    int pri_bus;   /* Primary Bus */
    int sec_bus;   /* Secondary Bus */
    int sub_bus;   /* Subordinate Bus */
-   
+
    int skip_bus_check;
 
    /* Bus configuration register */
@@ -75,7 +75,7 @@ struct pci_bridge {
 
    /* PCI bridge device */
    struct pci_device *pci_dev;
-   
+
    /* Secondary PCI bus */
    struct pci_bus *pci_bus;
 

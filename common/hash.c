@@ -76,7 +76,7 @@ int ptr_equal(void *i1,void *i2)
 u_int ptr_hash(void *i)
 {
    m_uint64_t val = (m_uint64_t)(m_iptr_t)i;
-   return((u_int)((val & 0xFFFF) ^ ((val >> 24) & 0xFFFF) ^ 
+   return((u_int)((val & 0xFFFF) ^ ((val >> 24) & 0xFFFF) ^
                   ((val >> 48) & 0xFFFF)));
 }
 
@@ -106,7 +106,7 @@ hash_table_t *hash_table_create(hash_fcompute hash_func,hash_fcompare key_cmp,
    hash_table_t *ht;
 
    if (!hash_func || (hash_size <= 0))
-      return NULL;   
+      return NULL;
 
    ht = malloc(sizeof(*ht));
    assert(ht!=NULL);
@@ -232,6 +232,6 @@ int hash_table_foreach(hash_table_t *ht,hash_fforeach user_fn,void *opt_arg)
    for(i=0;i<ht->size;i++)
       for(node=ht->nodes[i];node;node=node->next)
          user_fn(node->key,node->value,opt_arg);
-   
+
    return(0);
 }

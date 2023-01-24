@@ -80,7 +80,7 @@ struct iofpga_data {
 
    /* DUART & Console Management */
    u_int duart_isr,duart_imr,duart_irq_seq;
-   
+
    /* IO control register */
    u_int io_ctrl_reg;
 
@@ -103,12 +103,12 @@ static const struct nmc93cX6_eeprom_def eeprom_midplane_def = {
 
 /* IOFPGA manages simultaneously CPU and Midplane EEPROM */
 static const struct nmc93cX6_group eeprom_cpu_midplane = {
-   EEPROM_TYPE_NMC93C56, 2, 0, 
+   EEPROM_TYPE_NMC93C56, 2, 0,
    EEPROM_DORD_NORMAL,
    EEPROM_DOUT_HIGH,
    EEPROM_DEBUG_DISABLED,
-   "CPU and Midplane EEPROM", 
-   { &eeprom_cpu_def, &eeprom_midplane_def }, 
+   "CPU and Midplane EEPROM",
+   { &eeprom_cpu_def, &eeprom_midplane_def },
 };
 
 /* Console port input */
@@ -144,7 +144,7 @@ static int tty_trigger_dummy_irq(struct iofpga_data *d,void *arg)
 
    IOFPGA_LOCK(d);
    d->duart_irq_seq++;
-   
+
    if (d->duart_irq_seq == 2) {
       mask = DUART_TXRDYA|DUART_TXRDYB;
       if (d->duart_imr & mask) {
@@ -154,7 +154,7 @@ static int tty_trigger_dummy_irq(struct iofpga_data *d,void *arg)
 
       d->duart_irq_seq = 0;
    }
-   
+
    IOFPGA_UNLOCK(d);
    return(0);
 }
@@ -207,12 +207,12 @@ void *dev_c6msfc1_iofpga_access(cpu_gen_t *cpu,struct vdevice *dev,
          else
             *data = nmc93cX6_read(&d->router->sys_eeprom_g1);
          break;
-         
+
       /* Watchdog */
       case 0x234:
          break;
 
-      /* 
+      /*
        * FPGA release/presence ? Flash SIMM size:
        *   0x0001: 2048K  Flash (2 banks)
        *   0x0504: 8192K  Flash (2 banks)
@@ -255,7 +255,7 @@ void *dev_c6msfc1_iofpga_access(cpu_gen_t *cpu,struct vdevice *dev,
                odata |= DUART_RX_READY;
 
             odata |= DUART_TX_READY;
-         
+
             vm_clear_irq(vm,C6MSFC1_DUART_IRQ);
             *data = odata;
          }
@@ -264,7 +264,7 @@ void *dev_c6msfc1_iofpga_access(cpu_gen_t *cpu,struct vdevice *dev,
       case 0x414:   /* Command Register A (CRA) */
          /* Disable TX = High */
          if ((op_type == MTS_WRITE) && (*data & 0x8)) {
-            vm->vtty_con->managed_flush = TRUE;          
+            vm->vtty_con->managed_flush = TRUE;
             vtty_flush(vm->vtty_con);
          }
          break;
@@ -302,7 +302,7 @@ void *dev_c6msfc1_iofpga_access(cpu_gen_t *cpu,struct vdevice *dev,
                odata |= DUART_RX_READY;
 
             odata |= DUART_TX_READY;
-         
+
             //vm_clear_irq(vm,C6MSFC1_DUART_IRQ);
             *data = odata;
          }

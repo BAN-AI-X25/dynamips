@@ -86,7 +86,7 @@ typedef int (*c3600_chassis_init_fn)(c3600_t *router);
 struct c3600_chassis_driver {
    char *chassis_type;
    int chassis_id;
-   int supported;  
+   int supported;
    c3600_chassis_init_fn chassis_init;
    struct cisco_eeprom *eeprom;
 };
@@ -108,7 +108,7 @@ struct c3600_router {
    struct c3600_chassis_driver *chassis_driver;
    m_uint16_t oir_status;
 
-   /* 
+   /*
     * Mainboard EEPROM.
     * It can be modified to change the chassis MAC address.
     */

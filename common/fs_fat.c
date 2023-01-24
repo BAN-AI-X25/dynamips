@@ -148,7 +148,7 @@ static void boot16(m_uint8_t *sector, struct fat16_data *fat16)
    sector[0x3B] = ' ';
    sector[0x3C] = ' ';
    sector[0x3D] = ' ';
-   
+
    /* boot program (empty) */
 
    /* Signature */

@@ -45,7 +45,7 @@ static m_uint16_t eeprom_c3620_mainboard_data[64] = {
 };
 
 struct cisco_eeprom eeprom_c3620_mainboard = {
-   "C3620 Mainboard", 
+   "C3620 Mainboard",
    eeprom_c3620_mainboard_data,
    sizeof(eeprom_c3620_mainboard_data)/2,
 };
@@ -63,7 +63,7 @@ static m_uint16_t eeprom_c3640_mainboard_data[64] = {
 };
 
 struct cisco_eeprom eeprom_c3640_mainboard = {
-   "C3640 Mainboard", 
+   "C3640 Mainboard",
    eeprom_c3640_mainboard_data,
    sizeof(eeprom_c3640_mainboard_data)/2,
 };
@@ -81,7 +81,7 @@ static m_uint16_t eeprom_c3660_backplane_data[64] = {
 };
 
 struct cisco_eeprom eeprom_c3660_backplane = {
-   "C3660 Backplane", 
+   "C3660 Backplane",
    eeprom_c3660_backplane_data,
    sizeof(eeprom_c3660_backplane_data)/2,
 };
@@ -167,7 +167,7 @@ static int c3600_delete_instance(vm_instance_t *vm)
    /* Stop all CPUs */
    if (vm->cpu_group != NULL) {
       vm_stop(vm);
-      
+
       if (cpu_group_sync_state(vm->cpu_group) == -1) {
          vm_error(vm,"unable to sync with system CPUs.\n");
          return(FALSE);
@@ -213,7 +213,7 @@ int c3600_set_slot_eeprom(c3600_t *router,u_int slot,
 }
 
 /* Get slot/port corresponding to specified network IRQ */
-static inline void 
+static inline void
 c3600_net_irq_get_slot_port(u_int irq,u_int *slot,u_int *port)
 {
    irq -= C3600_NETIO_IRQ_BASE;
@@ -314,7 +314,7 @@ int c3600_chassis_set_mac_addr(c3600_t *router,char *mac_addr)
 
 /* Set the chassis type */
 int c3600_chassis_set_type(c3600_t *router,char *chassis_type)
-{  
+{
    struct c3600_chassis_driver *driver;
 
    if (router->vm->status == VM_STATUS_RUNNING) {
@@ -368,7 +368,7 @@ static void c3600_chassis_show_drivers(void)
              chassis_drivers[i].chassis_type,
              !chassis_drivers[i].supported ? "(NOT WORKING)" : "");
    }
-   
+
    printf("\n");
 }
 
@@ -379,7 +379,7 @@ static int c3600_init_gt64010(c3600_t *router)
       vm_error(router->vm,"unable to create PCI data.\n");
       return(-1);
    }
-   
+
    return(dev_gt64010_init(router->vm,"gt64010",C3600_GT64K_ADDR,0x1000,
                            C3600_GT64K_IRQ));
 }
@@ -396,7 +396,7 @@ static int c3600_init_gt64120(c3600_t *router)
       vm_error(router->vm,"unable to create PCI data.\n");
       return(-1);
    }
-   
+
    return(dev_gt64120_init(vm,"gt64120",C3600_GT64K_ADDR,0x1000,
                            C3600_GT64K_IRQ));
 }
@@ -458,7 +458,7 @@ static int c3640_init(c3600_t *router)
 
 /* Initialize a Cisco 3660 */
 static int c3660_init(c3600_t *router)
-{   
+{
    vm_instance_t *vm = router->vm;
    struct nm_bay_info *bay;
    char bus_name[128];
@@ -520,8 +520,8 @@ void c3600_show_hardware(c3600_t *router)
 
 /* Initialize default parameters for a C3600 */
 static void c3600_init_defaults(c3600_t *router)
-{   
-   vm_instance_t *vm = router->vm;   
+{
+   vm_instance_t *vm = router->vm;
    n_eth_addr_t *m;
    m_uint16_t pid;
 
@@ -671,7 +671,7 @@ static int c3600_init_platform(c3600_t *router)
 
 /* Boot the IOS image */
 static int c3600_boot_ios(c3600_t *router)
-{   
+{
    vm_instance_t *vm = router->vm;
    cpu_mips_t *cpu;
 
@@ -694,7 +694,7 @@ static int c3600_boot_ios(c3600_t *router)
    /* Load IOS image */
    if (mips64_load_elf_image(cpu,vm->ios_image,
                              (vm->ghost_status == VM_GHOST_RAM_USE),
-                             &vm->ios_entry_point) < 0) 
+                             &vm->ios_entry_point) < 0)
    {
       vm_error(vm,"failed to load Cisco IOS image '%s'.\n",vm->ios_image);
       return(-1);
@@ -762,7 +762,7 @@ static void c3600_clear_irq(vm_instance_t *vm,u_int irq)
 
 /* Initialize a Cisco 3600 instance */
 static int c3600_init_instance(vm_instance_t *vm)
-{   
+{
    c3600_t *router = VM_C3600(vm);
    m_uint32_t rom_entry_point;
    cpu_mips_t *cpu0;
@@ -818,7 +818,7 @@ static int c3600_stop_instance(vm_instance_t *vm)
    /* Stop all CPUs */
    if (vm->cpu_group != NULL) {
       vm_stop(vm);
-      
+
       if (cpu_group_sync_state(vm->cpu_group) == -1) {
          vm_error(vm,"unable to sync with system CPUs.\n");
          return(-1);
@@ -860,7 +860,7 @@ static int c3600_nm_init_online(vm_instance_t *vm,u_int slot,u_int subslot)
       return(-1);
    }
 
-   /* 
+   /*
     * Suspend CPU activity while adding new hardware (since we change the
     * memory maps).
     */
@@ -886,7 +886,7 @@ static int c3600_nm_init_online(vm_instance_t *vm,u_int slot,u_int subslot)
 
 /* Stop a NM while the virtual router is online (OIR) */
 static int c3600_nm_stop_online(vm_instance_t *vm,u_int slot,u_int subslot)
-{   
+{
    if (!slot) {
       vm_error(vm,"OIR not supported on slot 0.\n");
       return(-1);
@@ -904,7 +904,7 @@ static int c3600_nm_stop_online(vm_instance_t *vm,u_int slot,u_int subslot)
    /* We can safely trigger the OIR event */
    c3600_trigger_oir_event(VM_C3600(vm),slot);
 
-   /* 
+   /*
     * Suspend CPU activity while removing the hardware (since we change the
     * memory maps).
     */

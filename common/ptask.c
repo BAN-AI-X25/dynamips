@@ -95,7 +95,7 @@ ptask_id_t ptask_add(ptask_callback cbk,void *object,void *arg)
 
 /* Remove a task */
 int ptask_remove(ptask_id_t id)
-{   
+{
    ptask_t **task,*p;
    int res = -1;
 
@@ -109,7 +109,7 @@ int ptask_remove(ptask_id_t id)
          res = 0;
          break;
       }
-   
+
    PTASK_UNLOCK();
    return(res);
 }

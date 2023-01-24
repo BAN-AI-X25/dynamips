@@ -107,7 +107,7 @@ static int cmd_delete(hypervisor_conn_t *conn,int argc,char *argv[])
    return(res);
 }
 
-/* 
+/*
  * Configure an ATM bridge
  *
  * Parameters: <atmbr_name> <eth_nio> <atm_nio> <vpi> <vci>
@@ -134,7 +134,7 @@ static int cmd_configure(hypervisor_conn_t *conn,int argc,char *argv[])
    return(0);
 }
 
-/* 
+/*
  * Unconfigure a bridge
  */
 static int cmd_unconfigure(hypervisor_conn_t *conn,int argc,char *argv[])

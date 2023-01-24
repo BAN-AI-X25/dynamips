@@ -1,4 +1,4 @@
-/*  
+/*
  * Cisco router simulation platform.
  * Copyright (c) 2007 Christophe Fillot (cf@utc.fr)
  *
@@ -31,7 +31,7 @@ static int dev_c3725_mb_wic_get_mpsc_chan(struct cisco_card *card,
    u_int cid;
 
    cid = card->subslot_id + port_id;
-   
+
    switch(cid) {
       /* WIC 0 port 0 mapped to GT96100 MPSC1 */
       case 0x10:
@@ -79,7 +79,7 @@ static int dev_c3725_mb_wic1t_init(vm_instance_t *vm,struct cisco_card *card)
 
    /* Create the WIC device */
    wic_id = (card->subslot_id >> 4) - 1;
-   
+
    if (c3725_get_onboard_wic_addr(wic_id,&phys_addr) == -1) {
       vm_error(vm,"WIC","invalid slot %u (subslot_id=%u)\n",
                wic_id,card->subslot_id);
@@ -101,7 +101,7 @@ static int dev_c3725_mb_wic1t_init(vm_instance_t *vm,struct cisco_card *card)
 }
 
 /* Remove a WIC-1T from the specified slot */
-static int 
+static int
 dev_c3725_mb_wic1t_shutdown(vm_instance_t *vm,struct cisco_card *card)
 {
    /* Remove the WIC device */
@@ -113,13 +113,13 @@ dev_c3725_mb_wic1t_shutdown(vm_instance_t *vm,struct cisco_card *card)
 }
 
 /* Bind a Network IO descriptor */
-static int 
+static int
 dev_c3725_mb_wic1t_set_nio(vm_instance_t *vm,struct cisco_card *card,
                            u_int port_id,netio_desc_t *nio)
 {
    u_int mpsc_chan;
 
-   if ((port_id > 0) || 
+   if ((port_id > 0) ||
        (dev_c3725_mb_wic_get_mpsc_chan(card,port_id,&mpsc_chan) == -1))
       return(-1);
 
@@ -127,13 +127,13 @@ dev_c3725_mb_wic1t_set_nio(vm_instance_t *vm,struct cisco_card *card,
 }
 
 /* Unbind a Network IO descriptor */
-static int 
+static int
 dev_c3725_mb_wic1t_unset_nio(vm_instance_t *vm,struct cisco_card *card,
                              u_int port_id)
 {
    u_int mpsc_chan;
 
-   if ((port_id > 0) || 
+   if ((port_id > 0) ||
        (dev_c3725_mb_wic_get_mpsc_chan(card,port_id,&mpsc_chan) == -1))
       return(-1);
 
@@ -149,7 +149,7 @@ static int dev_c3725_mb_wic2t_init(vm_instance_t *vm,struct cisco_card *card)
 
    /* Create the WIC device */
    wic_id = (card->subslot_id >> 4) - 1;
-   
+
    if (c3725_get_onboard_wic_addr(wic_id,&phys_addr) == -1) {
       vm_error(vm,"WIC","invalid slot %u (subslot_id=%u)\n",
                wic_id,card->subslot_id);
@@ -171,7 +171,7 @@ static int dev_c3725_mb_wic2t_init(vm_instance_t *vm,struct cisco_card *card)
 }
 
 /* Remove a WIC-2T from the specified slot */
-static int 
+static int
 dev_c3725_mb_wic2t_shutdown(vm_instance_t *vm,struct cisco_card *card)
 {
    /* Remove the WIC device */
@@ -183,13 +183,13 @@ dev_c3725_mb_wic2t_shutdown(vm_instance_t *vm,struct cisco_card *card)
 }
 
 /* Bind a Network IO descriptor */
-static int 
+static int
 dev_c3725_mb_wic2t_set_nio(vm_instance_t *vm,struct cisco_card *card,
                            u_int port_id,netio_desc_t *nio)
 {
    u_int mpsc_chan;
 
-   if ((port_id > 1) || 
+   if ((port_id > 1) ||
        (dev_c3725_mb_wic_get_mpsc_chan(card,port_id,&mpsc_chan) == -1))
       return(-1);
 
@@ -197,13 +197,13 @@ dev_c3725_mb_wic2t_set_nio(vm_instance_t *vm,struct cisco_card *card,
 }
 
 /* Unbind a Network IO descriptor */
-static int 
+static int
 dev_c3725_mb_wic2t_unset_nio(vm_instance_t *vm,struct cisco_card *card,
                              u_int port_id)
 {
    u_int mpsc_chan;
 
-   if ((port_id > 1) || 
+   if ((port_id > 1) ||
        (dev_c3725_mb_wic_get_mpsc_chan(card,port_id,&mpsc_chan) == -1))
       return(-1);
 

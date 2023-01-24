@@ -15,7 +15,7 @@
 
 int fd_count;
 int fd_array[GDB_SERVER_MAX_FD];
-                  
+
 /* Start tcp listener for the GDB stub */
 int gdb_server_start_listener(vm_instance_t *vm)
 {
@@ -72,7 +72,7 @@ int gdb_server_start_listener(vm_instance_t *vm)
 
          if (fd_array[i] == -1)
             continue;
-         
+
          if (!FD_ISSET(fd_array[i], &fds))
             continue;
 
@@ -84,7 +84,7 @@ int gdb_server_start_listener(vm_instance_t *vm)
             perror("gdb_tcp_server: accept");
             continue;
          }
-            
+
          /* create a new connection and start a thread to handle it */
          if (!gdb_server_create_conn(vm, clnt)) {
             fprintf(stderr,"gdb_tcp_server: unable to create new "
@@ -100,7 +100,7 @@ int gdb_server_start_listener(vm_instance_t *vm)
 
       /* Walk through the connection list to eliminate dead connections */
 //       hypervisor_close_conn_list(TRUE);
-   }   
+   }
 
    return 0; // success
 }
@@ -111,7 +111,7 @@ void gdb_server_close_control_sockets()
 
    /* Close all control sockets */
    printf("GDB Server: closing control sockets.\n");
-   
+
    for(i=0; i<fd_count; i++)
    {
       if (fd_array[i] != -1)
@@ -139,13 +139,13 @@ int gdb_server_stopsig(vm_instance_t *vm)
 gdb_server_conn_t *gdb_server_create_conn(vm_instance_t *vm, int client_fd)
 {
    gdb_server_conn_t *conn;
-   
+
    if (!(conn = malloc(sizeof(*conn))))
       goto err_malloc;
 
    // Set the connection information for the current VM
    vm->gdb_conn = conn;
-   
+
    // Initialize GDB connection structure members
    memset(conn,0,sizeof(gdb_server_conn_t));
    conn->active    = TRUE;
@@ -202,9 +202,9 @@ int waittoread(int s1)
       /* Create a descriptor set containing our two sockets.  */
    FD_ZERO(&fds);
    FD_SET(s1, &fds);
-   
+
    rc = select(sizeof(fds)*8, &fds, NULL, NULL, &timeout);
-   
+
    if (rc==-1) {
       perror("select failed");
       return -1;
@@ -228,13 +228,13 @@ void *gdb_server_thread(void *arg)
     printf("GDB Server: thread is now activated...\n");
 
     gdb_init_debug_context(vm);
-    
+
     while (vm->gdb_conn->active && vm->gdb_server_running)
     {
       if (vm->status == VM_STATUS_RUNNING)
       {
           //cpu_idle_loop(vm->boot_cpu);
-          
+
           // wait around for the start character, ignore all other characters
           if (!waittoread(vm->gdb_conn->client_fd))
              continue;
@@ -253,10 +253,10 @@ void *gdb_server_thread(void *arg)
 	       continue;
           }
 
-          
+
       }
 
-      // Enter GDB command processing loop and exit after all the user 
+      // Enter GDB command processing loop and exit after all the user
       // commands have been processed.
       switch (gdb_interface(vm->gdb_ctx))
       {
@@ -289,7 +289,7 @@ void *gdb_server_thread(void *arg)
       }
 
     }
-    
+
     free(vm->gdb_ctx);
     free(vm->gdb_conn);
     printf("GDB Server: thread is now deactivated...\n");

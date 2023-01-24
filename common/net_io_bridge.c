@@ -33,7 +33,7 @@ static int netio_bridge_recv_pkt(netio_desc_t *nio,u_char *pkt,ssize_t pkt_len,
    for(i=0;i<NETIO_BRIDGE_MAX_NIO;i++)
       if ((t->nio[i] != NULL) && (t->nio[i] != nio))
          netio_send(t->nio[i],pkt,pkt_len);
-   
+
    NETIO_BRIDGE_UNLOCK(t);
    return(0);
 }
@@ -93,7 +93,7 @@ int netio_bridge_add_netio(netio_bridge_t *t,char *nio_name)
    for(i=0;i<NETIO_BRIDGE_MAX_NIO;i++)
       if (t->nio[i] == NULL)
          break;
-   
+
    /* No free slot found ... */
    if (i == NETIO_BRIDGE_MAX_NIO)
       goto error;
@@ -154,7 +154,7 @@ int netio_bridge_remove_netio(netio_bridge_t *t,char *nio_name)
 void netio_bridge_save_config(netio_bridge_t *t,FILE *fd)
 {
    int i;
-   
+
    fprintf(fd,"nio_bridge create %s\n",t->name);
 
    for(i=0;i<NETIO_BRIDGE_MAX_NIO;i++)
@@ -277,7 +277,7 @@ static int netio_bridge_cfg_create_if(netio_bridge_t *t,
                     "for Generic Ethernet NIO\n");
             break;
          }
-         
+
          nio = netio_desc_create_geneth(tokens[0],tokens[2]);
          break;
 #endif
@@ -289,7 +289,7 @@ static int netio_bridge_cfg_create_if(netio_bridge_t *t,
                     "for Linux Ethernet NIO\n");
             break;
          }
-         
+
          nio = netio_desc_create_lnxeth(tokens[0],tokens[2]);
          break;
 #endif
@@ -318,7 +318,7 @@ static int netio_bridge_cfg_create_if(netio_bridge_t *t,
 
 /* Handle a configuration line */
 static int netio_bridge_handle_cfg_line(netio_bridge_t *t,char *str)
-{  
+{
    char *tokens[NETIO_BRIDGE_MAX_TOKENS];
    int count;
 
@@ -338,11 +338,11 @@ static int netio_bridge_read_cfg_file(netio_bridge_t *t,char *filename)
       perror("fopen");
       return(-1);
    }
-   
+
    while(!feof(fd)) {
       if (!fgets(buffer,sizeof(buffer),fd))
          break;
-      
+
       /* skip comments and end of line */
       if ((ptr = strpbrk(buffer,"#\r\n")) != NULL)
          *ptr = 0;
@@ -351,7 +351,7 @@ static int netio_bridge_read_cfg_file(netio_bridge_t *t,char *filename)
       if (strchr(buffer,':'))
          netio_bridge_handle_cfg_line(t,buffer);
    }
-   
+
    fclose(fd);
    return(0);
 }
@@ -370,7 +370,7 @@ int netio_bridge_start(char *filename)
       fprintf(stderr,"NETIO_BRIDGE: unable to parse configuration file.\n");
       return(-1);
    }
-   
+
    netio_bridge_release("default");
    return(0);
 }

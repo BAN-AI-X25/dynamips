@@ -28,7 +28,7 @@
 #define DEBUG_INSN_PERF_CNT    0   /* Instruction performance counter */
 #define DEBUG_BLOCK_PERF_CNT   0   /* Block performance counter */
 #define DEBUG_DEV_PERF_CNT     1   /* Device performance counter */
-#define DEBUG_TLB_ACTIVITY     0 
+#define DEBUG_TLB_ACTIVITY     0
 #define DEBUG_SYSCALL          0
 #define DEBUG_CACHE            0
 #define DEBUG_JR0              0   /* Debug register jumps to 0 */

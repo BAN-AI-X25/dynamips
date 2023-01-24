@@ -1,4 +1,4 @@
-/*  
+/*
  * Cisco router simulation platform.
  * Copyright (c) 2007 Christophe Fillot (cf@utc.fr)
  *
@@ -25,10 +25,10 @@
 /* Initialize a NM PC module in the specified slot */
 static int dev_c3745_pcmod_init(vm_instance_t *vm,struct cisco_card *card)
 {
- 
+
    struct i8255x_data *data;
    u_int slot = card->slot_id;
- 
+
    /* Set the PCI bus */
    card->pci_bus = vm->slots_pci_bus[slot];
 
@@ -89,8 +89,8 @@ static int dev_c3745_pcmod_unset_nio(vm_instance_t *vm,struct cisco_card *card,
 /* NM-NAM driver */
 struct cisco_card_driver dev_c3745_nm_nam_driver = {
    "NM-NAM", 0, 0,
-   dev_c3745_pcmod_init, 
-   dev_c3745_pcmod_shutdown, 
+   dev_c3745_pcmod_init,
+   dev_c3745_pcmod_shutdown,
    NULL,
    dev_c3745_pcmod_set_nio,
    dev_c3745_pcmod_unset_nio,
@@ -100,8 +100,8 @@ struct cisco_card_driver dev_c3745_nm_nam_driver = {
 /* NM-CIDS driver */
 struct cisco_card_driver dev_c3745_nm_cids_driver = {
    "NM-CIDS", 0, 0,
-   dev_c3745_pcmod_init, 
-   dev_c3745_pcmod_shutdown, 
+   dev_c3745_pcmod_init,
+   dev_c3745_pcmod_shutdown,
    NULL,
    dev_c3745_pcmod_set_nio,
    dev_c3745_pcmod_unset_nio,

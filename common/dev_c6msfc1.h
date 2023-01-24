@@ -100,7 +100,7 @@ struct c6msfc1_router {
 
    /* Midplane FPGA */
    struct c6msfc1_mpfpga_data *mpfpga_data;
-  
+
    /* Midplane EEPROM can be modified to change the chassis MAC address... */
    struct cisco_eeprom cpu_eeprom,mp_eeprom;
 

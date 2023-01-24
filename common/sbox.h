@@ -15,7 +15,7 @@ extern m_uint32_t sbox_array[];
 static inline m_uint32_t sbox_compute(m_uint8_t *data,int len)
 {
    m_uint32_t hash = 0;
-   
+
    while(len > 0) {
       hash ^= sbox_array[*data];
       hash *= 3;

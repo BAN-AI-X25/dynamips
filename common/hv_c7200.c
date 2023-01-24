@@ -147,7 +147,7 @@ static int cmd_set_mac_addr(hypervisor_conn_t *conn,int argc,char *argv[])
    return(0);
 }
 
-/* 
+/*
  * Set temperature for a DS1620 sensor.
  * This can be used to simulate environmental problems (overheat)
  */
@@ -174,7 +174,7 @@ static int cmd_set_temp_sensor(hypervisor_conn_t *conn,int argc,char *argv[])
    return(0);
 }
 
-/* 
+/*
  * Set power supply status.
  * This can be used to simulate environmental problems (power loss)
  */

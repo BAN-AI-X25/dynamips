@@ -289,7 +289,7 @@ int netio_get_fd(netio_desc_t *nio)
          break;
 #endif
    }
-   
+
    return(fd);
 }
 
@@ -349,7 +349,7 @@ static int netio_unix_create(netio_unix_desc_t *nud,char *local,char *remote)
 
    if (netio_unix_create_socket(nud) == -1)
       return(-1);
-      
+
    /* prepare the remote info */
    nud->remote_sock.sun_family = AF_UNIX;
    strcpy(nud->remote_sock.sun_path,remote);
@@ -387,7 +387,7 @@ static void netio_unix_save_cfg(netio_desc_t *nio,FILE *fd)
 netio_desc_t *netio_desc_create_unix(char *nio_name,char *local,char *remote)
 {
    netio_desc_t *nio;
-   
+
    if (!(nio = netio_create(nio_name)))
       return NULL;
 
@@ -420,10 +420,10 @@ netio_desc_t *netio_desc_create_unix(char *nio_name,char *local,char *remote)
 /* Free a NetIO VDE descriptor */
 static void netio_vde_free(netio_vde_desc_t *nvd)
 {
-   if (nvd->data_fd != -1) 
+   if (nvd->data_fd != -1)
       close(nvd->data_fd);
 
-   if (nvd->ctrl_fd != -1) 
+   if (nvd->ctrl_fd != -1)
       close(nvd->ctrl_fd);
 
    if (nvd->local_filename) {
@@ -461,7 +461,7 @@ static int netio_vde_create(netio_vde_desc_t *nvd,char *control,char *local)
       perror("netio_vde_create: socket(control)");
       return(-1);
    }
-      
+
    memset(&ctrl_sock,0,sizeof(ctrl_sock));
    ctrl_sock.sun_family = AF_UNIX;
    strcpy(ctrl_sock.sun_path,control);
@@ -496,7 +496,7 @@ static int netio_vde_create(netio_vde_desc_t *nvd,char *control,char *local)
    req.magic   = VDE_SWITCH_MAGIC;
    req.version = VDE_SWITCH_VERSION;
    req.type    = VDE_REQ_NEW_CONTROL;
-   
+
    len = write(nvd->ctrl_fd,&req,sizeof(req));
    if (len != sizeof(req)) {
       perror("netio_vde_create: write(req)");
@@ -540,7 +540,7 @@ netio_desc_t *netio_desc_create_vde(char *nio_name,char *control,char *local)
 {
    netio_vde_desc_t *nvd;
    netio_desc_t *nio;
-   
+
    if (!(nio = netio_create(nio_name)))
       return NULL;
 
@@ -575,13 +575,13 @@ netio_desc_t *netio_desc_create_vde(char *nio_name,char *control,char *local)
 /* Free a NetIO TAP descriptor */
 static void netio_tap_free(netio_tap_desc_t *ntd)
 {
-   if (ntd->fd != -1) 
+   if (ntd->fd != -1)
       close(ntd->fd);
 }
 
 /* Open a TAP device */
 static int netio_tap_open(char *tap_devname)
-{     
+{
 #ifdef __linux__
    struct ifreq ifr;
    int fd,err;
@@ -590,7 +590,7 @@ static int netio_tap_open(char *tap_devname)
       return(-1);
 
    memset(&ifr,0,sizeof(ifr));
-   
+
    /* Flags: IFF_TUN   - TUN device (no Ethernet headers)
     *        IFF_TAP   - TAP device
     *
@@ -604,27 +604,27 @@ static int netio_tap_open(char *tap_devname)
       close(fd);
       return err;
    }
-   
+
    strcpy(tap_devname,ifr.ifr_name);
    return(fd);
 #else
    int i,fd = -1;
    char tap_fullname[NETIO_DEV_MAXLEN];
-   
+
    if (*tap_devname) {
       snprintf(tap_fullname,NETIO_DEV_MAXLEN,"/dev/%s",tap_devname);
       fd = open(tap_fullname,O_RDWR);
    } else {
       for(i=0;i<16;i++) {
          snprintf(tap_devname,NETIO_DEV_MAXLEN,"/dev/tap%d",i);
-      
+
          if ((fd = open(tap_devname,O_RDWR)) >= 0)
             break;
       }
    }
 
    return(fd);
-#endif   
+#endif
 }
 
 /* Allocate a new NetIO TAP descriptor */
@@ -672,7 +672,7 @@ netio_desc_t *netio_desc_create_tap(char *nio_name,char *tap_name)
 {
    netio_tap_desc_t *ntd;
    netio_desc_t *nio;
-   
+
    if (!(nio = netio_create(nio_name)))
       return NULL;
 
@@ -707,7 +707,7 @@ netio_desc_t *netio_desc_create_tap(char *nio_name,char *tap_name)
 /* Free a NetIO TCP descriptor */
 static void netio_tcp_free(netio_inet_desc_t *nid)
 {
-   if (nid->fd != -1) 
+   if (nid->fd != -1)
       close(nid->fd);
 }
 
@@ -786,7 +786,7 @@ static int netio_tcp_cli_create(netio_inet_desc_t *nid,char *host,char *port)
 netio_desc_t *netio_desc_create_tcp_cli(char *nio_name,char *host,char *port)
 {
    netio_desc_t *nio;
-   
+
    if (!(nio = netio_create(nio_name)))
       return NULL;
 
@@ -868,7 +868,7 @@ static int netio_tcp_ser_create(netio_inet_desc_t *nid,char *port)
 netio_desc_t *netio_desc_create_tcp_ser(char *nio_name,char *port)
 {
    netio_desc_t *nio;
-   
+
    if (!(nio = netio_create(nio_name)))
       return NULL;
 
@@ -905,7 +905,7 @@ static void netio_udp_free(netio_inet_desc_t *nid)
       nid->remote_host = NULL;
    }
 
-   if (nid->fd != -1) 
+   if (nid->fd != -1)
       close(nid->fd);
 }
 
@@ -935,7 +935,7 @@ netio_desc_t *netio_desc_create_udp(char *nio_name,int local_port,
 {
    netio_inet_desc_t *nid;
    netio_desc_t *nio;
-   
+
    if (!(nio = netio_create(nio_name)))
       return NULL;
 
@@ -982,7 +982,7 @@ int netio_udp_auto_get_local_port(netio_desc_t *nio)
 {
    if (nio->type != NETIO_TYPE_UDP_AUTO)
       return(-1);
-   
+
    return(nio->u.nid.local_port);
 }
 
@@ -994,20 +994,20 @@ int netio_udp_auto_connect(netio_desc_t *nio,char *host,int port)
    /* NIO already connected */
    if (nid->remote_host != NULL)
       return(-1);
-   
+
    if (!(nid->remote_host = strdup(host))) {
       fprintf(stderr,"netio_desc_create_udp_auto: insufficient memory\n");
       return(-1);
    }
-   
+
    nid->remote_port = port;
-   
+
    if (ip_connect_fd(nid->fd,nid->remote_host,nid->remote_port) < 0) {
       free(nid->remote_host);
       nid->remote_host = NULL;
       return(-1);
    }
-   
+
    return(0);
 }
 
@@ -1017,17 +1017,17 @@ netio_desc_t *netio_desc_create_udp_auto(char *nio_name,char *local_addr,
 {
    netio_inet_desc_t *nid;
    netio_desc_t *nio;
-   
+
    if (!(nio = netio_create(nio_name)))
       return NULL;
-   
+
    nid = &nio->u.nid;
    nid->local_port  = -1;
    nid->remote_host = NULL;
    nid->remote_port = -1;
-      
+
    if ((nid->fd = udp_listen_range(local_addr,port_start,port_end,
-                                   &nid->local_port)) < 0) 
+                                   &nid->local_port)) < 0)
    {
       fprintf(stderr,
               "netio_desc_create_udp_auto: unable to create socket "
@@ -1035,19 +1035,19 @@ netio_desc_t *netio_desc_create_udp_auto(char *nio_name,char *local_addr,
               local_addr,port_start,port_end);
       goto error;
    }
-   
+
    nio->type     = NETIO_TYPE_UDP_AUTO;
    nio->send     = (void *)netio_udp_send;
    nio->recv     = (void *)netio_udp_recv;
    nio->free     = (void *)netio_udp_free;
    nio->save_cfg = netio_udp_save_cfg;
    nio->dptr     = &nio->u.nid;
-   
+
    if (netio_record(nio) == -1)
       goto error;
-   
+
    return nio;
-   
+
 error:
    netio_free(nio,NULL);
    return NULL;
@@ -1062,7 +1062,7 @@ error:
 /* Free a NetIO raw ethernet descriptor */
 static void netio_lnxeth_free(netio_lnxeth_desc_t *nled)
 {
-   if (nled->fd != -1) 
+   if (nled->fd != -1)
       close(nled->fd);
 }
 
@@ -1092,7 +1092,7 @@ netio_desc_t *netio_desc_create_lnxeth(char *nio_name,char *dev_name)
 {
    netio_lnxeth_desc_t *nled;
    netio_desc_t *nio;
-   
+
    if (!(nio = netio_create(nio_name)))
       return NULL;
 
@@ -1169,7 +1169,7 @@ netio_desc_t *netio_desc_create_geneth(char *nio_name,char *dev_name)
 {
    netio_geneth_desc_t *nged;
    netio_desc_t *nio;
-      
+
    if (!(nio = netio_create(nio_name)))
       return NULL;
 
@@ -1213,9 +1213,9 @@ netio_desc_t *netio_desc_create_geneth(char *nio_name,char *dev_name)
 
 /* Extract the first packet of the FIFO */
 static netio_fifo_pkt_t *netio_fifo_extract_pkt(netio_fifo_desc_t *nfd)
-{ 
+{
    netio_fifo_pkt_t *p;
-      
+
    if (!(p = nfd->head))
       return NULL;
 
@@ -1230,7 +1230,7 @@ static netio_fifo_pkt_t *netio_fifo_extract_pkt(netio_fifo_desc_t *nfd)
 
 /* Insert a packet into the FIFO (in tail) */
 static void netio_fifo_insert_pkt(netio_fifo_desc_t *nfd,netio_fifo_pkt_t *p)
-{   
+{
    pthread_mutex_lock(&nfd->lock);
 
    nfd->pkt_count++;
@@ -1250,7 +1250,7 @@ static void netio_fifo_insert_pkt(netio_fifo_desc_t *nfd,netio_fifo_pkt_t *p)
 static void netio_fifo_free_pkt_list(netio_fifo_desc_t *nfd)
 {
    netio_fifo_pkt_t *p,*next;
-   
+
    for(p=nfd->head;p;p=next) {
       next = p->next;
       free(p);
@@ -1340,7 +1340,7 @@ static ssize_t netio_fifo_send(netio_fifo_desc_t *nfd,void *pkt,size_t pkt_len)
 /* Read a packet from the local FIFO queue */
 static ssize_t netio_fifo_recv(netio_fifo_desc_t *nfd,void *pkt,size_t max_len)
 {
-   struct timespec ts; 
+   struct timespec ts;
    m_tmcnt_t expire;
    netio_fifo_pkt_t *p;
    size_t len = -1;
@@ -1362,7 +1362,7 @@ static ssize_t netio_fifo_recv(netio_fifo_desc_t *nfd,void *pkt,size_t max_len)
       memcpy(pkt,p->pkt,len);
       free(p);
    }
-   
+
    return(len);
 }
 
@@ -1371,7 +1371,7 @@ netio_desc_t *netio_desc_create_fifo(char *nio_name)
 {
    netio_fifo_desc_t *nfd;
    netio_desc_t *nio;
-   
+
    if (!(nio = netio_create(nio_name)))
       return NULL;
 
@@ -1419,7 +1419,7 @@ static void netio_null_save_cfg(netio_desc_t *nio,FILE *fd)
 netio_desc_t *netio_desc_create_null(char *nio_name)
 {
    netio_desc_t *nio;
-   
+
    if (!(nio = netio_create(nio_name)))
       return NULL;
 
@@ -1539,7 +1539,7 @@ static int netio_rxl_remove_internal(netio_desc_t *nio)
          /* remove this listener from the double linked list */
          if (rxl->next)
             rxl->next->prev = rxl->prev;
-      
+
          if (rxl->prev)
             rxl->prev->next = rxl->next;
          else
@@ -1550,21 +1550,21 @@ static int netio_rxl_remove_internal(netio_desc_t *nio)
             rxl->running = FALSE;
             pthread_join(rxl->spec_thread,NULL);
          }
-         
+
          free(rxl);
       }
 
       res = 0;
    }
-   
+
    return(res);
 }
 
 /* Add a RXL listener to the listener list */
 static void netio_rxl_add_internal(struct netio_rx_listener *rxl)
-{  
+{
    struct netio_rx_listener *tmp;
-   
+
    if ((tmp = netio_rxl_find(rxl->nio))) {
       tmp->ref_count++;
       free(rxl);
@@ -1595,7 +1595,7 @@ static void *netio_rxl_spec_thread(void *arg)
 
 /* RX Listener General Thread */
 void *netio_rxl_gen_thread(void *arg)
-{ 
+{
    struct netio_rx_listener *rxl;
    ssize_t pkt_len;
    netio_desc_t *nio;
@@ -1666,7 +1666,7 @@ void *netio_rxl_gen_thread(void *arg)
 
       NETIO_RXL_UNLOCK();
    }
-   
+
    return NULL;
 }
 
@@ -1693,7 +1693,7 @@ int netio_rxl_add(netio_desc_t *nio,netio_rx_handler_t rx_handler,
    rxl->running = TRUE;
 
    if ((netio_get_fd(rxl->nio) == -1) &&
-       pthread_create(&rxl->spec_thread,NULL,netio_rxl_spec_thread,rxl)) 
+       pthread_create(&rxl->spec_thread,NULL,netio_rxl_spec_thread,rxl))
    {
       NETIO_RXQ_UNLOCK();
       fprintf(stderr,"netio_rxl_add: unable to create specific thread.\n");
