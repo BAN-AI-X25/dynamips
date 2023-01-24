@@ -94,7 +94,7 @@ ssize_t gen_eth_send(pcap_t *p,char *buffer,size_t len)
 ssize_t gen_eth_recv(pcap_t *p,char *buffer,size_t len)
 {
    struct pcap_pkthdr pkt_info;
-   u_char *pkt_ptr;
+   u_char *pkt_ptr = NULL;
    ssize_t rlen;
 
    if (!(pkt_ptr = (u_char *)pcap_next(p,&pkt_info)))
